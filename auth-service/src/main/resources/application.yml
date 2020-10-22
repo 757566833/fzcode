@@ -1,0 +1,36 @@
+
+server:
+  port: 9011
+spring:
+  application:
+    name: auth-service
+  security:
+    user:
+      name: admin
+      password: 123456
+  #    oauth2:
+#      client:
+#        registration:
+#          github:
+#            client-id: 1aeb61169dcca263aa3c
+#            client-secret: 9e9a8e8d52f0ea128bc123f1be769bee0c74d8aa
+#            scope : user
+
+  # 文档首页点击 spring 相关 进入 spring文档
+  # https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-usagenotes-spring-config.html
+  datasource:
+    username: fzcode
+    password: Wuyaowang9876
+    url: jdbc:mysql://192.168.31.150:3306/fzcode
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 192.168.31.150
+    port: 6378
+    password: 123456789
+    timeout : 5000
+    database: 14
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7900/eureka/
