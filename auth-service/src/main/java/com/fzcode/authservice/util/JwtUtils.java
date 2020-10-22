@@ -49,7 +49,6 @@ public class JwtUtils {
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-            jws.getBody().getExpiration();
             uid = jws.getHeader().get("email");
         } catch (JwtException e) {
             e.printStackTrace();

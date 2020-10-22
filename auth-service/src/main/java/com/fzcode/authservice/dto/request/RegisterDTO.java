@@ -13,6 +13,9 @@ public class RegisterDTO {
     @NotEmpty(message = "密码不能为空")
     private String password;
 
+    @NotEmpty(message = "验证码")
+    private String code;
+
     private List<GrantedAuthority> authorities;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -21,7 +24,7 @@ public class RegisterDTO {
     @Pattern(regexp = "^1$|^2$" ,message = "注册方式未明")
     private String registerType;
 
-    public RegisterDTO(@Email(message = "请输入正确的邮箱") String email, @NotEmpty(message = "密码不能为空") String password, List<GrantedAuthority> authorities, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, String registerType) {
+    public RegisterDTO(@Email(message = "请输入正确的邮箱") String email, @NotEmpty(message = "密码不能为空") String password, List<GrantedAuthority> authorities, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, String registerType,String code) {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
@@ -30,6 +33,7 @@ public class RegisterDTO {
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.isEnabled = isEnabled;
         this.registerType = registerType;
+        this.code = code;
     }
 
     public String getEmail() {
@@ -96,11 +100,20 @@ public class RegisterDTO {
         this.registerType = registerType;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "RegisterDTO{" +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", code='" + code + '\'' +
                 ", authorities=" + authorities +
                 ", isAccountNonExpired=" + isAccountNonExpired +
                 ", isAccountNonLocked=" + isAccountNonLocked +

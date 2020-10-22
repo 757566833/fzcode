@@ -1,4 +1,4 @@
-package com.fzcode.mailservice.controller;
+package com.fzcode.mailservice.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;

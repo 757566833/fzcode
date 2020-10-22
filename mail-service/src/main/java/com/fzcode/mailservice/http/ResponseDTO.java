@@ -6,6 +6,15 @@ public class ResponseDTO {
     private Object data;
     private String message;
 
+    public ResponseDTO() {
+    }
+
+    public ResponseDTO(String code, Object data, String message) {
+        this.code = code;
+        this.data = data;
+        this.message = message;
+    }
+
     public Object getData() {
         return data;
     }
