@@ -11,6 +11,7 @@ import com.fzcode.authservice.exception.CustomizeException;
 import com.fzcode.authservice.service.UserService;
 import com.fzcode.authservice.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,10 +28,13 @@ public class AuthController {
     @Autowired
     DataSource dataSource;
 
+    @Value("${auth.secret:N/A}")
+    private String greeting;
+
 
     @GetMapping(value = "/test")
     public String test() {
-        return "test";
+        return greeting;
     }
 
     @PostMapping(value = "/test2")

@@ -16,7 +16,7 @@ public class GateServiceApplication {
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
 		return builder
 				.routes()
-				.route("resource-service",r->r.path("/resource/**").uri("http://127.0.0.1:9001"))
+//				.route("resource-service",r->r.path("/resource/**").uri("http://127.0.0.1:9001"))
 				.route("auth-service",r->r.path("/auth/**").uri("http://127.0.0.1:9011"))
 				.route("examination-service",r->r.path("/examination/**").uri("http://127.0.0.1:9021"))
 				.route("excel-service",r->r.path("/excel/**").uri("http://127.0.0.1:9031"))

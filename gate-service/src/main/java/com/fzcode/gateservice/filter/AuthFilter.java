@@ -1,6 +1,7 @@
 package com.fzcode.gateservice.filter;
 
 import com.fzcode.gateservice.dto.common.TokenDTO;
+import com.fzcode.gateservice.util.JwtUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -27,34 +28,28 @@ public class AuthFilter implements Ordered, GlobalFilter {
         HttpHeaders httpHeaders = request.getHeaders();
         String auth = httpHeaders.getFirst(HttpHeaders.AUTHORIZATION);
         URI uri = request.getURI();
-        System.out.println("filter");
-//        List<String> l = new ArrayList<String>();
-//        l.add("/auth/login");
-//        l.add("/auth/register");
-//        l.add("/auth/forget");
         if (uri.getPath().indexOf("/auth/login") == 0
                 || uri.getPath().indexOf("/auth/register") == 0
                 || uri.getPath().indexOf("/auth/forget") == 0) {
             return chain.filter(exchange);
         }else if(auth == null){
-            DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("xiake~!!".getBytes());
+            DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token不存在".getBytes());
 
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
 
             return exchange.getResponse().writeWith(Mono.just(dataBuffer));
         }else{
-            Mono<String> resp = client
-                    .post()
-                    .uri("/token/parse")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(new TokenDTO(auth)), TokenDTO.class)
-                    .retrieve()
-                    .bodyToMono(String.class);
-//                    .map(email->{
-//                        httpHeaders.set("email", email);
-//                    });
+            String email=null;
+            try{
+                email = JwtUtils.parseToken(auth);
+            }catch (Exception e){
+                DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token不存在".getBytes());
 
-            String email = resp.block();
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+
+                return exchange.getResponse().writeWith(Mono.just(dataBuffer));
+            }
+
 
             System.out.println(email);
             if (email == null) {

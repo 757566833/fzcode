@@ -1,4 +1,4 @@
-package com.fzcode.authservice.util;
+package com.fzcode.gateservice.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -49,11 +49,10 @@ public class JwtUtils {
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-            jws.getBody().getExpiration();
             uid = jws.getHeader().get("email");
         } catch (JwtException e) {
             e.printStackTrace();
-            System.out.println("token过期了");
+            System.out.println("jwt过期了");
         }
 
         return uid.toString();
