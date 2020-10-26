@@ -30,6 +30,7 @@ class MailServiceApplicationTests {
 //        ReactiveValueOperations<String, String> keyValue = reactiveRedisTemplate.opsForValue();
 //        Mono mono4 = keyValue.set("apple2", "x");
 //        mono4.subscribe(System.out::println);
+
         Mono mono5 =RedisUtil.setString("apple4", "x");
         mono5.subscribe(System.out::println);
     }
