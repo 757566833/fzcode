@@ -17,8 +17,7 @@ public class GateServiceApplication {
 		return builder
 				.routes()
 				.route("auth-service",r->r.path("/auth/**").uri("http://127.0.0.1:9011"))
-				.route("examination-service",r->r.path("/examination/**").uri("http://127.0.0.1:9021"))
-//				.route("excel-service",r->r.path("/excel/**").uri("http://127.0.0.1:9031"))
+				.route("elastic-service",r->r.path("/elastic/**").uri("http://127.0.0.1:9021"))
 				.route("file-service",r->r.path("/file/**").uri("http://127.0.0.1:9041"))
 				.route("mail-service",r->r.path("/mail/**").uri("http://127.0.0.1:9051"))
 
