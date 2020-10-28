@@ -1,34 +1,31 @@
-package com.fzcode.elasticservice.dto;
+package com.fzcode.elasticservice.dto.response;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 
-public class NoteDTO {
-    @NotEmpty
-    private String id;
-    @NotEmpty
+public class NoteResDTO {
+
+    private Integer id;
     private String title;
-    //    @NotEmpty
+    private String description;
     private String subTitle;
-    @NotEmpty
     private String text;
-    @NotEmpty
     private ArrayList<String> tags;
 
-
-    public NoteDTO(@NotEmpty String id, @NotEmpty String title, String subTitle, @NotEmpty String text, @NotEmpty ArrayList<String> tags) {
+    public NoteResDTO(Integer id, String title, String description, String subTitle, String text, ArrayList<String> tags) {
         this.id = id;
         this.title = title;
+        this.description = description;
         this.subTitle = subTitle;
         this.text = text;
         this.tags = tags;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -38,6 +35,14 @@ public class NoteDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getSubTitle() {
@@ -63,6 +68,4 @@ public class NoteDTO {
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
-
-
 }
