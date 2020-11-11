@@ -45,23 +45,26 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public SuccessResDTO login(@RequestBody @Validated LoginDTO loginDTO) throws UsernameNotFoundException {
-        return authFlow.login(loginDTO.getEmail(), loginDTO.getPassword());
+        String token = authFlow.login(loginDTO.getEmail(), loginDTO.getPassword());
+        return new SuccessResDTO("登陆成功", new TokenDTO(token));
     }
 
     @PostMapping(value = "/register")
     public SuccessResDTO register(@RequestBody @Validated RegisterDTO registerDTO) throws CustomizeException {
-        return authFlow.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getCode(), registerDTO.getRegisterType());
+        String token = authFlow.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getCode(), registerDTO.getRegisterType());
+        return new SuccessResDTO("创建成功", new TokenDTO(token));
     }
 
     @PostMapping(value = "/forget")
     public SuccessResDTO forget(@RequestBody @Validated ForgetDTO forgetDTO) throws CustomizeException {
-        return authFlow.forget(forgetDTO.getEmail(), forgetDTO.getPassword(), forgetDTO.getCode());
+        String email = authFlow.forget(forgetDTO.getEmail(), forgetDTO.getPassword(), forgetDTO.getCode());
+        return new SuccessResDTO("修改成功", email);
     }
 
     @PutMapping(value = "/reset")
     public SuccessResDTO reset(@RequestBody @Validated ResetDTO resetDTO, @RequestHeader HttpHeaders httpHeaders) throws CustomizeException {
-        String email = httpHeaders.getFirst("email");
-        return authFlow.reset(email, resetDTO.getOldPassword(), resetDTO.getNewPassword());
+        String email =authFlow.reset(httpHeaders.getFirst("email"), resetDTO.getOldPassword(), resetDTO.getNewPassword());
+        return new SuccessResDTO("修改成功", email);
     }
 
 }

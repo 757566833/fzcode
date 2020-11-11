@@ -4,22 +4,13 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 
 public class NoteReqPatchDTO {
-    @NotEmpty
-    private Integer nid;
+
 
     private String title;
     private String description;
     private String subTitle;
     private String text;
     private ArrayList<String> tags;
-
-    public Integer getNid() {
-        return nid;
-    }
-
-    public void setNid(Integer nid) {
-        this.nid = nid;
-    }
 
     public String getTitle() {
         return title;

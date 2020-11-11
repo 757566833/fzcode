@@ -58,21 +58,21 @@ public class NoteFlow {
         return noteElasticService.create(noteESCreateDTO);
     }
 
-    public Page<Notes> findAll(NoteReqGetListDTO noteReqGetListDTO) {
-        return noteDBService.findAll(noteReqGetListDTO.getPage(), noteReqGetListDTO.getSize());
+    public Page<Notes> findAll(Integer page,Integer size) {
+        return noteDBService.findAll(page, size);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String update(NoteReqUpdateDTO noteReqUpdateDTO) throws CustomizeException {
+    public String update(Integer id ,NoteReqUpdateDTO noteReqUpdateDTO) throws CustomizeException {
         if (noteReqUpdateDTO.getDescription() != null) {
             Notes notes = new Notes();
-            notes.setNid(noteReqUpdateDTO.getNid());
+            notes.setNid(id);
             notes.setTitle(noteReqUpdateDTO.getTitle());
             notes.setDescription(noteReqUpdateDTO.getDescription());
             noteDBService.update(notes);
 
         }
-        NoteESUpdateDTO noteESUpdateDTO = new NoteESUpdateDTO(noteReqUpdateDTO.getNid().toString(), noteReqUpdateDTO.getTitle());
+        NoteESUpdateDTO noteESUpdateDTO = new NoteESUpdateDTO(id.toString(), noteReqUpdateDTO.getTitle());
         noteESUpdateDTO.setSubTitle(noteReqUpdateDTO.getSubTitle());
         noteESUpdateDTO.setTags(noteReqUpdateDTO.getTags());
         noteESUpdateDTO.setText(noteReqUpdateDTO.getText());
@@ -80,10 +80,10 @@ public class NoteFlow {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String patch(NoteReqPatchDTO noteReqPatchDTO) throws CustomizeException {
+    public String patch(Integer nid,NoteReqPatchDTO noteReqPatchDTO) throws CustomizeException {
         if (noteReqPatchDTO.getDescription() != null || noteReqPatchDTO.getTitle() != null) {
             Notes notes = new Notes();
-            notes.setNid(noteReqPatchDTO.getNid());
+            notes.setNid(nid);
             if (noteReqPatchDTO.getTitle() != null) {
                 notes.setTitle(noteReqPatchDTO.getTitle());
             }
@@ -92,7 +92,7 @@ public class NoteFlow {
             }
             noteDBService.patch(notes);
         }
-        NoteESPatchDTO noteESPatchDTO = new NoteESPatchDTO(noteReqPatchDTO.getNid().toString());
+        NoteESPatchDTO noteESPatchDTO = new NoteESPatchDTO(nid.toString());
         noteESPatchDTO.setSubTitle(noteReqPatchDTO.getSubTitle());
         noteESPatchDTO.setTags(noteReqPatchDTO.getTags());
         noteESPatchDTO.setText(noteReqPatchDTO.getText());
@@ -102,9 +102,9 @@ public class NoteFlow {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public String delete(NoteReqDeleteDTO noteReqDeleteDTO) throws CustomizeException {
-        noteDBService.delete(noteReqDeleteDTO.getNid());
-        return noteElasticService.delete(noteReqDeleteDTO.getNid().toString());
+    public String delete(Integer nid) throws CustomizeException {
+        noteDBService.delete(nid);
+        return noteElasticService.delete(nid.toString());
     }
 
     public NoteResDTO findById(Integer nid) throws CustomizeException {

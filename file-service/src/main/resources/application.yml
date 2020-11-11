@@ -7,9 +7,9 @@ spring:
   application:
     name: excel-service
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:7900/eureka/
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:7900/eureka/
 
 filePath: /Volumes/c2000/my

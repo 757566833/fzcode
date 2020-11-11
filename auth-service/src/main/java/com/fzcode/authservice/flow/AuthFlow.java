@@ -33,17 +33,17 @@ public class AuthFlow {
         this.dataSource = dataSource;
     }
 
-    public SuccessResDTO login(String email, String password) throws UsernameNotFoundException {
+    public String login(String email, String password) throws UsernameNotFoundException {
         UserService userService = new UserService(dataSource);
         UserDetails userDetails = userService.loadUserByUsername(email);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
             throw new UsernameNotFoundException("用户名密码错误");
         }
-        return new SuccessResDTO("登陆成功", new TokenDTO(email));
+        return JwtUtils.createToken(email);
     }
 
-    public SuccessResDTO register(String email, String password, String code, String registerType) throws CustomizeException {
+    public String register(String email, String password, String code, String registerType) throws CustomizeException {
         UserService userService = new UserService(dataSource);
         boolean b = userService.userExists(email);
         if (b) {
@@ -67,11 +67,12 @@ public class AuthFlow {
             System.out.println(e.getMessage());
             throw new CustomizeException("账号创建失败");
         }
-        return new SuccessResDTO("创建成功", new TokenDTO(JwtUtils.createToken(email)));
+        return JwtUtils.createToken(email);
+//        return new SuccessResDTO("创建成功", new TokenDTO(JwtUtils.createToken(email)));
 
     }
 
-    public SuccessResDTO forget(String email, String password, String code) throws CustomizeException {
+    public String forget(String email, String password, String code) throws CustomizeException {
         UserService userService = new UserService(dataSource);
         boolean b = userService.userExists(email);
         if (!b) {
@@ -87,11 +88,11 @@ public class AuthFlow {
             System.out.println(e.getMessage());
             throw new CustomizeException("修改失败");
         }
-        return new SuccessResDTO("修改成功");
+        return email;
 
     }
 
-    public SuccessResDTO reset(String email, String oldPassword, String newPassword) throws CustomizeException {
+    public String reset(String email, String oldPassword, String newPassword) throws CustomizeException {
         UserService userService = new UserService(dataSource);
         boolean b = userService.userExists(email);
         if (!b) {
@@ -108,7 +109,7 @@ public class AuthFlow {
             System.out.println(e.getMessage());
             throw new CustomizeException("修改失败");
         }
-        return new SuccessResDTO("修改成功");
+        return email;
 
     }
 }
