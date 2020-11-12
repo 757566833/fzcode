@@ -1,0 +1,13 @@
+
+
+
+server:
+  port: 9041
+spring:
+  application:
+    name: excel-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7900/eureka/

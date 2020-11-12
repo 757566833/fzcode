@@ -1,41 +1,41 @@
 package com.fzcode.fileservice.controller;
 
-import com.fzcode.fileservice.bean.FileBean;
 import com.fzcode.fileservice.config.Config;
+import com.fzcode.fileservice.dto.Base64DTO;
 import com.fzcode.fileservice.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.Part;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.Disposable;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Base64;
 
 
 @RestController
 @RequestMapping(value = "/file")
 public class FileController {
-    @Autowired
+
     private Config config;
+
+    @Autowired
+    public void setConfig(Config config) {
+        this.config = config;
+    }
 
     @GetMapping(value = "/getFile")
     public Mono<String> getFile() {
 
-        return Mono.just("file");
+        return Mono.just(config.getFilePath());
     }
 
     @PostMapping(value = "/postForm", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -60,13 +60,9 @@ public class FileController {
             String fileName = part.headers().getContentDisposition().getFilename();
             String preFix = FileUtil.getFilePrefix(fileName);
             String suffix = FileUtil.getFileSuffix(fileName);
-            FileBean fileBean = new FileBean();
-            fileBean.setPreFix(preFix);
-            fileBean.setSuffix(suffix);
-            fileBean.setPart(part);
             Path tempFile = null;
             try {
-                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), fileBean.getPreFix(), fileBean.getSuffix());
+                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix, suffix);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -77,17 +73,11 @@ public class FileController {
                 e.printStackTrace();
             }
             final AsynchronousFileChannel currentChannel = channel;
-            final  Path currentTempFile = tempFile;
-            Mono<String> m = Mono.create(stringMonoSink -> {
-                Flux<DataBuffer> flux = DataBufferUtils.write(fileBean.getPart().content(), currentChannel, 0).doOnComplete(() -> {
-                    System.out.println("结束");
-                    stringMonoSink.success(currentTempFile.toString());
-                });
-                flux.subscribe(System.out::println);
-            });
+            final Path currentTempFile = tempFile;
+            return DataBufferUtils.write(part.content(), currentChannel, 0).doOnComplete(() -> {
+                System.out.println("结束");
+            }).then(Mono.just(currentTempFile.toString()));
 
-
-            return m;
         });
 
 //        return multipartData.map(multiValueMap -> {
@@ -121,4 +111,40 @@ public class FileController {
 //            return tempFile.toString();
 //        });
     }
+
+    @PostMapping(value = "/base64/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<String> base64Upload(@RequestBody Base64DTO base64DTO) throws IOException {
+        return Mono.create(stringMonoSink -> {
+            byte[] bytes = Base64.getDecoder().decode(base64DTO.getBase64());
+//        bytes.
+            File file = new File(config.getFilePath() + File.separator + base64DTO.getFileName());
+            FileOutputStream fileOutputStream = null;
+            try {
+                fileOutputStream = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+            try {
+                bufferedOutputStream.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                bufferedOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            stringMonoSink.success("321");
+        });
+
+    }
+
+
 }

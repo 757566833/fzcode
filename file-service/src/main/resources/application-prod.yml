@@ -1,0 +1,11 @@
+
+
+
+
+
+
+spring:
+  profiles:
+    include: common
+
+filePath: /src/file
