@@ -1,0 +1,10 @@
+
+spring:
+  cloud:
+    config:
+      uri: http://config:8888
+      profile: docker
+#      discovery:
+#        enabled: true
+#        service-id: config-service
+      label: master
