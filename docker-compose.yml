@@ -1,0 +1,39 @@
+version: '3'
+services:
+  eureka:
+    container_name: fzcode_eureka
+    restart: always
+    image: openjdk:8
+    working_dir: /src
+    ports:
+      - "7900:7900"
+    volumes:
+      - ./:/src
+    entrypoint: bash -c "java -jar eureka-service-0.0.1-SNAPSHOT.jar"
+
+  config:
+    container_name: fzcode_config
+    restart: always
+    image: openjdk:8
+    working_dir: /src
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/src
+    depends_on:
+      - eureka
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:7900 -- java -jar config-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+#    entrypoint: bash -c "java -jar config-service-0.0.1-SNAPSHOT.jar"
+
+  gate:
+    container_name: fzcode_gate
+    restart: always
+    image: openjdk:8
+    working_dir: /src
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./:/src
+    depends_on:
+      - eureka
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:8888 -- java -jar gate-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"

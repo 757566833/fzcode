@@ -3,14 +3,18 @@ server:
   port: 8888
 spring:
   application:
-    name: config-service
-  profiles:
-    active: native
+    name: config
   cloud:
     config:
       server:
         git:
-          uri: git@github.com:757566833/fzcode-config-center.git
+          uri: https://github.com/fuzhoucode/fzcode-config-center.git
+#          strict-host-key-checking: false
+          force-pull: true
+          clone-on-start: true
+          username: fzcode@126.com
+          password: fzcode_123
+          skipSslValidation: true
 #    config:
 #      server:
 #        native:

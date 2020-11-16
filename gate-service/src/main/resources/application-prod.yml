@@ -1,8 +1,0 @@
-spring:
-  profiles:
-    include: common
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka:7900/eureka/
