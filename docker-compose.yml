@@ -3,7 +3,6 @@ services:
   eureka:
     container_name: fzcode_eureka
     restart: always
-#    image: openjdk:8
     image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
@@ -24,7 +23,7 @@ services:
     depends_on:
       - eureka
     entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:7900 -- java -jar config-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
-#    entrypoint: bash -c "java -jar config-service-0.0.1-SNAPSHOT.jar"
+  # entrypoint: bash -c "java -jar config-service-0.0.1-SNAPSHOT.jar"
 
   gate:
     container_name: fzcode_gate
@@ -36,5 +35,41 @@ services:
     volumes:
       - ./:/src
     depends_on:
-      - eureka
+      - config
     entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:8888 -- java -jar gate-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+
+  auth:
+    container_name: fzcode_auth
+    restart: always
+    image: adoptopenjdk:8-openj9
+    working_dir: /src
+    ports:
+      - "9011:9011"
+    volumes:
+      - ./:/src
+    depends_on:
+      - config
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:8888 -- java -jar auth-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+
+  mysql:
+    container_name: fzcode_mysql
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 9306:3306
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+
+  redis:
+    container_name: fzcode_redis
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: always
+    ports:
+      - "9379:6379"
+    volumes:
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf

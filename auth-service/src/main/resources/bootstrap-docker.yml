@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    include: common
+  cloud:
+    config:
+      uri: http://config:8888
+      profile: docker
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+  datasource:
+    username: fzcode
+    password: Wuyaowang9876
+    url: jdbc:mysql://mysql:9306/fzcode
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: redis
+    port: 9379
+    password: 123456789
+    timeout: 5000
+    database: 15
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:7900/eureka/

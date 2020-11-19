@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    include: common
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+      profile: prod
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+  datasource:
+    username: fzcode
+    password: Wuyaowang9876
+    url: jdbc:mysql://127.0.0.1:3306/fzcode
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: redis
+    port: 6379
+    password: 123456789
+    timeout: 5000
+    database: 15
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7900/eureka/
