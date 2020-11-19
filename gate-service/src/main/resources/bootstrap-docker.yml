@@ -1,10 +1,6 @@
-server:
-  port: 9000
 spring:
-  application:
-    name: gate
   profiles:
-    active: docker
+    include: common
   cloud:
     config:
       uri: http://config:8888
@@ -13,15 +9,7 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      #          以上是自动从eureka获取服务列表  如果不配置映射规则 可以直接通过服务名访问
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedHeaders: "*"
-            allowedOrigins: "*"
-            allowedMethods: "*"
-
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:7900/eureka/

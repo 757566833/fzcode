@@ -3,7 +3,8 @@ services:
   eureka:
     container_name: fzcode_eureka
     restart: always
-    image: openjdk:8
+#    image: openjdk:8
+    image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
       - "7900:7900"
@@ -14,7 +15,7 @@ services:
   config:
     container_name: fzcode_config
     restart: always
-    image: openjdk:8
+    image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
       - "8888:8888"
@@ -28,7 +29,7 @@ services:
   gate:
     container_name: fzcode_gate
     restart: always
-    image: openjdk:8
+    image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
       - "9000:9000"

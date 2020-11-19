@@ -1,5 +1,14 @@
-
 spring:
+  profiles:
+    include: common
   cloud:
     config:
       uri: http://127.0.0.1:8888
+      profile: dev
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+eureka:
+  client:
+    enabled: false

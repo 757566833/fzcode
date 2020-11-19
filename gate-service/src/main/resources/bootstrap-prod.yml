@@ -1,5 +1,16 @@
-
 spring:
+  profiles:
+    include: common
   cloud:
     config:
       uri: http://127.0.0.1:8888
+      profile: prod
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7900/eureka/

@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/fuzhoucode/fzcode-config-center.git
+          uri: https://gitee.com/fuzhoucode/fzcode-config-center.git
 #          strict-host-key-checking: false
           force-pull: true
           clone-on-start: true
