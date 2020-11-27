@@ -1,5 +1,7 @@
 package com.fzcode.gateservice;
 
+import com.fzcode.gateservice.config.Config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -8,18 +10,25 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class GateServiceApplication {
+	Config config;
+	@Autowired
+	public void setConfig(Config config) {
+		this.config = config;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(GateServiceApplication.class, args);
 	}
 	@Bean
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
+
 		return builder
 				.routes()
-				.route("auth-service",r->r.path("/auth/**").uri("http://127.0.0.1:9011"))
-				.route("elastic-service",r->r.path("/elastic/**").uri("http://127.0.0.1:9021"))
-				.route("file-service",r->r.path("/file/**").uri("http://127.0.0.1:9041"))
-				.route("mail-service",r->r.path("/mail/**").uri("http://127.0.0.1:9051"))
+				.route("auth-service",r->r.path("/auth/**").uri(config.getUrl()+":9111"))
+				.route("oauth2-service",r->r.path("/oauth2/**").uri(config.getUrl()+":9111"))
+				.route("note-service",r->r.path("/note/**").uri(config.getUrl()+":9121"))
+				.route("file-service",r->r.path("/file/**").uri(config.getUrl()+":9141"))
+				.route("mail-service",r->r.path("/mail/**").uri(config.getUrl()+":9151"))
 
 
 				// 这里面如果指向 http://www.baidu.com 之类的 他会直接转发到https上

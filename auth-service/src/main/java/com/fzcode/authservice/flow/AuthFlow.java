@@ -112,4 +112,36 @@ public class AuthFlow {
         return email;
 
     }
+
+    public String githubRegister(String email, String password, String registerType) throws CustomizeException {
+        UserService userService = new UserService(dataSource);
+        boolean b = userService.userExists(email);
+        if (b) {
+            UserDetails userDetails = userService.loadUserByUsername(email);
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
+                return "账号或密码错误，请找回密码";
+            }
+        } else {
+            try {
+                userService.createUser(
+                        MyUser
+                                .withMyUsername(email)
+                                .password(new BCryptPasswordEncoder().encode(password))
+                                .accountExpired(true)
+                                .accountLocked(true)
+                                .registerType(registerType)
+                                .roles("USER")
+                                .build()
+                );
+            } catch (Exception e) {
+                return "账号创建失败";
+            }
+
+        }
+        return JwtUtils.createToken(email);
+
+//        return new SuccessResDTO("创建成功", new TokenDTO(JwtUtils.createToken(email)));
+
+    }
 }

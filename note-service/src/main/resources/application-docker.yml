@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    include: common
+  datasource:
+    username: fzcode
+    password: fzcode_123
+    url: jdbc:mysql://192.168.31.150:9306/fzcode
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:9999/eureka/
+
+elastic:
+  host: elasticsearch
+  port: 9200
+  scheme : http
+  index : note

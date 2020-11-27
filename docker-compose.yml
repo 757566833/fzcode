@@ -6,10 +6,10 @@ services:
     image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
-      - "7900:7900"
+      - "9999:9999"
     volumes:
       - ./:/src
-    entrypoint: bash -c "java -jar eureka-service-0.0.1-SNAPSHOT.jar"
+    entrypoint: bash -c "java -jar ./eureka/eureka-service-0.0.1-SNAPSHOT.jar"
 
   config:
     container_name: fzcode_config
@@ -17,13 +17,12 @@ services:
     image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
-      - "8888:8888"
+      - "9899:9899"
     volumes:
       - ./:/src
     depends_on:
       - eureka
-    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:7900 -- java -jar config-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
-  # entrypoint: bash -c "java -jar config-service-0.0.1-SNAPSHOT.jar"
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:9999 -- java -jar ./config/config-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
 
   gate:
     container_name: fzcode_gate
@@ -31,12 +30,12 @@ services:
     image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
-      - "9000:9000"
+      - "9100:9100"
     volumes:
       - ./:/src
     depends_on:
       - config
-    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:8888 -- java -jar gate-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:9899 -- java -jar ./gate/gate-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
 
   auth:
     container_name: fzcode_auth
@@ -44,12 +43,94 @@ services:
     image: adoptopenjdk:8-openj9
     working_dir: /src
     ports:
-      - "9011:9011"
+      - "9111:9111"
     volumes:
       - ./:/src
     depends_on:
       - config
-    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:8888 -- java -jar auth-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:9899 -- java -jar ./auth/auth-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+  note:
+    container_name: fzcode_note
+    restart: always
+    image: adoptopenjdk:8-openj9
+    working_dir: /src
+    ports:
+      - "9121:9121"
+    volumes:
+      - ./:/src
+    depends_on:
+      - config
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:9899 -- java -jar ./note/note-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+
+  file:
+    container_name: fzcode_file
+    restart: always
+    image: adoptopenjdk:8-openj9
+    working_dir: /src
+    ports:
+      - "9141:9141"
+    volumes:
+      - ./:/src
+    depends_on:
+      - config
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:9899 -- java -jar ./file/file-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+
+  mail:
+    container_name: fzcode_mail
+    restart: always
+    image: adoptopenjdk:8-openj9
+    working_dir: /src
+    ports:
+      - "9151:9151"
+    volumes:
+      - ./:/src
+    depends_on:
+      - config
+    entrypoint: bash -c "./wait-for-it.sh -t 0 192.168.31.150:9899 -- java -jar ./mail/mail-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker"
+
+
+  websocket:
+    container_name: fzcode_websocket
+    restart: always
+    image: node:14.15.1
+    working_dir: /websocket
+    ports:
+      - "9799:9799"
+    volumes:
+      - ./:/websocket
+    entrypoint: bash -c "node ./websocket/index.js"
+
+  web:
+    container_name: fzcode_web
+    restart: always
+    image: nginx:1.19.4
+    working_dir: /src
+    ports:
+      - "9000:80"
+    volumes:
+      - ./web/dist:/src
+      - ./web/nginx/conf.d:/etc/nginx/conf.d
+
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    container_name: fzcode_elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+    restart: always
+    environment:
+      discovery.type: single-node
+
+  kibana:
+    image: kibana:7.9.2
+    container_name: fzcode_kibana
+    ports:
+      - 5601:5601
+    restart: always
+    volumes:
+      - ./kibana/config:/usr/share/kibana/config
+    depends_on:
+      - elasticsearch
 
   mysql:
     container_name: fzcode_mysql
@@ -65,7 +146,7 @@ services:
 
   redis:
     container_name: fzcode_redis
-    image: redis
+    image: redis:6.0.9
     command: redis-server /usr/local/etc/redis/redis.conf
     restart: always
     ports:

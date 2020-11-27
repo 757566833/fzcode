@@ -22,6 +22,7 @@ import java.net.URI;
 @Component
 public class AuthFilter implements Ordered, GlobalFilter {
     private WebClient client = WebClient.create();
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
@@ -34,9 +35,10 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 || uri.getPath().indexOf("/auth/forget") == 0
                 || uri.getPath().indexOf("/mail/register") == 0
                 || uri.getPath().indexOf("/mail/forget") == 0
+                || uri.getPath().indexOf("/oauth2") == 0
         ) {
             return chain.filter(exchange);
-        }else if(request.getMethod() == HttpMethod.GET){
+        } else if (request.getMethod() == HttpMethod.GET) {
             return chain.filter(exchange);
         } else if (auth == null) {
             DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token不存在".getBytes());
@@ -44,6 +46,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
             return exchange.getResponse().writeWith(Mono.just(dataBuffer));
         } else {
             String email = null;
+            System.out.println("auth:" + auth);
             try {
                 email = JwtUtils.parseToken(auth);
             } catch (Exception e) {

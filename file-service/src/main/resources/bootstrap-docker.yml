@@ -3,14 +3,13 @@ spring:
     include: common
   cloud:
     config:
-      uri: http://127.0.0.1:9899
-      profile: dev
+      uri: http://config:9899
+      profile: docker
       #      discovery:
       #        enabled: true
       #        service-id: config-service
       label: master
 eureka:
   client:
-    enabled: false
-services:
-  uri: http://127.0.0.1
+    service-url:
+      defaultZone: http://eureka:9999/eureka/

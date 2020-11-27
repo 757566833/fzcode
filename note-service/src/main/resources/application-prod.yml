@@ -1,0 +1,25 @@
+
+server:
+  port: 9121
+spring:
+  application:
+    name: elastic-service
+  datasource:
+    username: fzcode
+    password: Wuyaowang9876
+    url: jdbc:mysql://127.0.0.1:3306/fzcode
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:9999/eureka/
+
+elastic:
+  host: 192.168.31.150
+  port: 9200
+  scheme : http
+  index : note

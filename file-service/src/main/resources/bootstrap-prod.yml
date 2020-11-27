@@ -4,13 +4,12 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:9899
-      profile: dev
+      profile: docker
       #      discovery:
       #        enabled: true
       #        service-id: config-service
       label: master
 eureka:
   client:
-    enabled: false
-services:
-  uri: http://127.0.0.1
+    service-url:
+      defaultZone: http://127.0.0.1:9999/eureka/

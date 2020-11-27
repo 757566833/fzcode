@@ -18,7 +18,8 @@ public class JwtUtils {
 
     @Value("${auth.secret}")
     public void setKey(String secret) {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        System.out.println("secret" + secret);
+        JwtUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
     public static String createToken(String username) {
@@ -34,25 +35,29 @@ public class JwtUtils {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(c.getTime())
-                .signWith(JwtUtils.key, SignatureAlgorithm.HS512)
+                .signWith(JwtUtils.key, SignatureAlgorithm.HS256)
                 .compact();
-        return compactJws;
+        return "bearer "+compactJws;
 
     }
 
     public static String parseToken(String token) {
-
+        int preIndex = token.indexOf("bearer ");
+        if(preIndex==-1){
+            throw new JwtException("token格式不对");
+        }
+        String jwsStr = token.substring(7);
         Object uid = "";
         Jws<Claims> jws;
         try {
             jws = Jwts.parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(JwtUtils.key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(jwsStr);
             uid = jws.getHeader().get("email");
         } catch (JwtException e) {
-            e.printStackTrace();
-            System.out.println("jwt过期了");
+            throw e;
+
         }
 
         return uid.toString();

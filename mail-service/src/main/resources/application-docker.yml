@@ -1,7 +1,12 @@
-
 spring:
   profiles:
     include: common
+  redis:
+    host: fzcode_redis
+    port: 9379
+    password: 123456789
+    database: 15
+
 eureka:
   client:
     service-url:

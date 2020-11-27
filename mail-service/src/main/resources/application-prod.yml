@@ -1,7 +1,12 @@
-
 spring:
   profiles:
     include: common
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456789
+    database: 15
+
 eureka:
   client:
     service-url:

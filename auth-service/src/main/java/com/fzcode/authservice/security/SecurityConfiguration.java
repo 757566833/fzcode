@@ -17,8 +17,12 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity//开启权限验证
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
+
     DataSource dataSource;
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .usernameParameter("email")
 //                .and()
                 .authorizeRequests()
-                .antMatchers("/auth/*").permitAll()
+                .antMatchers("/auth/*","/oauth2/*").permitAll()
 //                .anyRequest().authenticated()
                 .and()
         ;

@@ -1,0 +1,9 @@
+
+
+
+server:
+  port: 9141
+spring:
+  application:
+    name: file
+

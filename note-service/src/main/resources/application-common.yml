@@ -1,0 +1,7 @@
+
+server:
+  port: 9121
+spring:
+  application:
+    name: elastic
+

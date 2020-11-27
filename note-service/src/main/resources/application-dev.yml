@@ -1,9 +1,8 @@
-
 server:
-  port: 9021
+  port: 9121
 spring:
   application:
-    name: elastic-service
+    name: elastic
   datasource:
     username: fzcode
     password: Wuyaowang9876
@@ -17,11 +16,10 @@ spring:
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://127.0.0.1:7900/eureka/
+    enabled: false
 
 elastic:
   host: 192.168.31.150
   port: 9200
-  scheme : http
-  index : note
+  scheme: http
+  index: note

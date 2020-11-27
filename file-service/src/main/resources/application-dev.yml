@@ -1,9 +1,0 @@
-
-
-
-
-spring:
-  profiles:
-    include: common
-
-filePath: /Volumes/c2000/my

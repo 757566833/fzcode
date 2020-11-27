@@ -14,6 +14,7 @@ import reactor.core.publisher.MonoSink;
 @Component
 public class EmailFlow {
     private EmailService emailService;
+
     @Autowired
     public void setUserDao(EmailService emailService) {
         this.emailService = emailService;
@@ -21,17 +22,21 @@ public class EmailFlow {
 
     public Mono<ResponseDTO> sendEmail(String email, String type) {
         String checkCode = CharUtil.getCharAndNumber(6).toUpperCase();
-        return Mono.create(sink->{
+        System.out.println(checkCode);
+        return Mono.create(sink -> {
             Mono<Boolean> redisMono = RedisUtil.setString(email + ":" + type, checkCode, 600);
             redisMono.subscribe(bool -> {
+                System.out.println("redis结果" + bool.toString());
                 try {
                     this.sendEmailMono(bool, email, checkCode, sink);
-                } catch (Exception e) {
+                } catch (CustomizeException e) {
                     e.printStackTrace();
                 }
             });
+
         });
     }
+
     public Mono<Boolean> sendEmailMono(Boolean bool, String email, String checkCode, MonoSink<ResponseDTO> sink) throws CustomizeException {
         if (!bool) {
             throw new CustomizeException("redis不可用");
@@ -39,7 +44,7 @@ public class EmailFlow {
         Mono<Boolean> emailMono = emailService.sendEmail(email, checkCode);
         emailMono.subscribe(l -> {
             try {
-                result(l, sink);
+                this.result(l, sink);
             } catch (Exception e) {
                 e.printStackTrace();
             }

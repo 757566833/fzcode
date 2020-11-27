@@ -12,7 +12,7 @@
 		<module>config-service</module>
 		<module>auth-service</module>
 		<module>eureka-service</module>
-		<module>elastic-service</module>
+		<module>note-service</module>
 		<module>file-service</module>
 		<module>gate-service</module>
 		<module>mail-service</module>

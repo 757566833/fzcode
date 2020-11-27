@@ -1,0 +1,8 @@
+
+
+server:
+  port: 9151
+spring:
+  application:
+    name: mail
+
