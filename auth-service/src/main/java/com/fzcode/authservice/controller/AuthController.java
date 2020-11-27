@@ -1,6 +1,7 @@
 package com.fzcode.authservice.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.fzcode.authservice.config.Config;
 import com.fzcode.authservice.dto.common.TokenDTO;
 import com.fzcode.authservice.dto.request.*;
 import com.fzcode.authservice.dto.response.GithubAccessToken;
@@ -32,6 +33,13 @@ public class AuthController {
     @Autowired
     public void setAuthFlow(AuthFlow authFlow) {
         this.authFlow = authFlow;
+    }
+
+    private Config config;
+
+    @Autowired
+    public void setConfig(Config config) {
+        this.config = config;
     }
 
     @Value("${auth.secret:N/A}")
@@ -76,7 +84,11 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "application/json");
         GithubAccessToken githubAccessToken = restTemplate.postForObject(
-                "https://github.com/login/oauth/access_token?client_id=1aeb61169dcca263aa3c&client_secret=9e9a8e8d52f0ea128bc123f1be769bee0c74d8aa&code=" + code,
+                "https://github.com/login/oauth/access_token?client_id="
+                        + config.getClient_id() +
+                        "&client_secret=" +
+                        config.getClient_secret() +
+                        "&code=" + code,
                 headers,
                 GithubAccessToken.class
         );
@@ -98,11 +110,31 @@ public class AuthController {
                 map.add("token", result);
                 HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
                 String response = restTemplate.postForObject(
-                        "http://192.168.31.150:9799/login",
+                        config.getWebsocket() + "/login",
                         httpEntity,
                         String.class
                 );
-                return "ddddd";
+                return "<!DOCTYPE html>\n" +
+                        "<html lang=\"en\">\n" +
+                        "<head>\n" +
+                        "  <meta charset=\"UTF-8\">\n" +
+                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                        "  <title>Document</title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "  <div>登陆成功,<span id ='second'>5</span>秒后关闭页面，原页面未刷新请手动刷新</div>\n" +
+                        "</body>\n" +
+                        "<script>\n" +
+                        "  var secondDom =  document.getElementById(\"second\");\n" +
+                        "  var second = 5\n" +
+                        "  setInterval(()=>{\n" +
+                        "    secondDom.innerText=--second;\n" +
+                        "    if(second==0){\n" +
+                        "      window.close();\n" +
+                        "    }\n" +
+                        "  },1000);\n" +
+                        "</script>\n" +
+                        "</html>\n";
             }
             return result;
         }

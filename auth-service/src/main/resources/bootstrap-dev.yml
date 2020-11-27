@@ -23,3 +23,10 @@ spring:
 eureka:
   client:
     enabled: false
+
+domain:
+  websocket: http://127.0.0.1:9799
+
+auth:
+  clientId: 90f700c2634fcadd2084
+  clientSecret: f2fb1d682093a4e08f08e79b25da67334a13c9fb
