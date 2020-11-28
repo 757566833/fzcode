@@ -40,7 +40,7 @@ CREATE TABLE `group_members` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `notes` (
+CREATE TABLE `texts` (
   `nid` int(255) NOT NULL AUTO_INCREMENT,
   `create_by` varchar(255) DEFAULT NULL,
   `create_time` datetime(6) DEFAULT NULL,

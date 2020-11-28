@@ -35,7 +35,6 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 || uri.getPath().indexOf("/auth/forget") == 0
                 || uri.getPath().indexOf("/mail/register") == 0
                 || uri.getPath().indexOf("/mail/forget") == 0
-                || uri.getPath().indexOf("/oauth2") == 0
         ) {
             return chain.filter(exchange);
         } else if (request.getMethod() == HttpMethod.GET) {

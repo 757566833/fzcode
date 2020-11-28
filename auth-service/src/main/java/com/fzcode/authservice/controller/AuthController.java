@@ -76,7 +76,7 @@ public class AuthController {
     }
 
     @GetMapping(value = "/github")
-    public String oauth2(@RequestParam(value = "code") String code, @RequestParam(value = "uHash") String uHash) throws CustomizeException {
+    public String oauth2(@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId) throws CustomizeException {
 //        System.out.println(principal.toString());
 //        WebClient webClient = WebClient.create();
 //        OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/{registrationId}"。
@@ -106,7 +106,7 @@ public class AuthController {
             String result = authFlow.githubRegister(githubUserInfo.getEmail(), githubUserInfo.getNode_id(), "1");
             if (result.length() > 15) {
                 MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-                map.add("uHash", uHash);
+                map.add("socketId", socketId);
                 map.add("token", result);
                 HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
                 String response = restTemplate.postForObject(
