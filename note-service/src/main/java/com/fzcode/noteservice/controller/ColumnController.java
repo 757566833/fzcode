@@ -38,6 +38,7 @@ public class ColumnController {
 
     @PostMapping(value = "/add")
     public SuccessResDTO add(@RequestBody @Validated ColumnReqCreateDTO columnReqCreateDTO) throws CustomizeException {
+        System.out.println("controller.dtoTitle:"+columnReqCreateDTO.getTitle());
         Integer cid = columnFlow.create(columnReqCreateDTO);
         return new SuccessResDTO("创建成功", cid);
     }

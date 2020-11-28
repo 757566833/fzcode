@@ -59,10 +59,15 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
             } else {
-                httpHeaders.set("email", email);
+                ServerHttpRequest nextRequest =request
+                        .mutate()
+                        .header("email", email)
+                        .build();
+                ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
+//                httpHeaders.set("email", email);
+                return chain.filter(nextExchange);
             }
         }
-        return chain.filter(exchange);
     }
 
     @Override

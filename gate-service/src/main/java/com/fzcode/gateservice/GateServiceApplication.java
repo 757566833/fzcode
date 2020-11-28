@@ -25,8 +25,7 @@ public class GateServiceApplication {
 		return builder
 				.routes()
 				.route("auth-service",r->r.path("/auth/**").uri(config.getUrl()+":9111"))
-				.route("oauth2-service",r->r.path("/oauth2/**").uri(config.getUrl()+":9111"))
-				.route("note-service",r->r.path("/note/**").uri(config.getUrl()+":9121"))
+				.route("note-service",r->r.path("/note/**").filters(f->f.stripPrefix(1)).uri(config.getUrl()+":9121"))
 				.route("file-service",r->r.path("/file/**").uri(config.getUrl()+":9141"))
 				.route("mail-service",r->r.path("/mail/**").uri(config.getUrl()+":9151"))
 

@@ -24,11 +24,10 @@ public class ColumnFlow {
     }
 
     public Integer create(ColumnReqCreateDTO columnReqCreateDTO) throws CustomizeException {
+        System.out.println("dtoTitle:"+columnReqCreateDTO.getTitle());
         Columns columns = new Columns();
-        columns.setTitle(columnReqCreateDTO.getTitle());
-        columns.setDescription(columnReqCreateDTO.getDescription());
-        columns.setImg(columnReqCreateDTO.getImg());
-        columns.setDetail(columnReqCreateDTO.getDetail());
+        BeanUtils.copyProperties(columnReqCreateDTO,columns);
+        System.out.println("saveTitle:"+columns.getTitle());
         Columns saveResult;
         try {
             saveResult = columnDBService.save(columns);
