@@ -6,11 +6,13 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Columns {
     @Id
@@ -19,18 +21,18 @@ public class Columns {
 
     @Column(name = "create_time")
     @CreatedDate
-    private  Date createTime;
+    private Date createTime;
 
     @Column(name = "update_time")
     @LastModifiedDate
     private Date updateTime;
 
     @Column(name = "create_by")
-    @CreatedBy
+//    @CreatedBy
     private String createBy;
 
     @Column(name = "update_by")
-    @LastModifiedBy
+//    @LastModifiedBy
     private String updateBy;
 
     private String title;
@@ -43,6 +45,9 @@ public class Columns {
 
     @Column(name = "is_delete")
     private Boolean isDelete = false;
+
+    @Column(name = "delete_by")
+    private String deleteBy;
 
 
 }

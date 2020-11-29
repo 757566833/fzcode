@@ -4,9 +4,14 @@ import com.fzcode.fileservice.config.Config;
 import com.fzcode.fileservice.dto.Base64DTO;
 import com.fzcode.fileservice.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ZeroCopyHttpOutputMessage;
 import org.springframework.http.codec.multipart.Part;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
@@ -22,7 +27,7 @@ import java.util.Base64;
 
 
 @RestController
-@RequestMapping(value = "/file")
+@RequestMapping(value = "/upload")
 public class FileController {
 
     private Config config;
@@ -51,7 +56,18 @@ public class FileController {
         });
     }
 
-    @PostMapping(value = "/formData/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/test")
+    public Mono<Void> downloadByWriteWith(ServerHttpResponse response) throws IOException {
+        ZeroCopyHttpOutputMessage zeroCopyResponse = (ZeroCopyHttpOutputMessage) response;
+        response.getHeaders().set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=parallel.png");
+        response.getHeaders().setContentType(MediaType.IMAGE_PNG);
+
+        Resource resource = new ClassPathResource("parallel.png");
+        File file = resource.getFile();
+        return zeroCopyResponse.writeWith(file, 0, file.length());
+    }
+
+    @PostMapping(value = "/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<String> upload(ServerWebExchange serverWebExchange) {
         Mono<MultiValueMap<String, Part>> multipartData = serverWebExchange.getMultipartData();
         return multipartData.flatMap(multiValueMap -> {
@@ -62,7 +78,7 @@ public class FileController {
             String suffix = FileUtil.getFileSuffix(fileName);
             Path tempFile = null;
             try {
-                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix, suffix);
+                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix,"."+ suffix);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -112,7 +128,7 @@ public class FileController {
 //        });
     }
 
-    @PostMapping(value = "/base64/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<String> base64Upload(@RequestBody Base64DTO base64DTO) throws IOException {
         return Mono.create(stringMonoSink -> {
             byte[] bytes = Base64.getDecoder().decode(base64DTO.getBase64());

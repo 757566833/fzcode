@@ -8,6 +8,7 @@ import com.fzcode.noteservice.dto.response.SuccessResDTO;
 import com.fzcode.noteservice.entity.Columns;
 import com.fzcode.noteservice.exception.CustomizeException;
 import com.fzcode.noteservice.flow.ColumnFlow;
+import com.sun.net.httpserver.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,27 +38,28 @@ public class ColumnController {
     }
 
     @PostMapping(value = "/add")
-    public SuccessResDTO add(@RequestBody @Validated ColumnReqCreateDTO columnReqCreateDTO) throws CustomizeException {
-        System.out.println("controller.dtoTitle:"+columnReqCreateDTO.getTitle());
-        Integer cid = columnFlow.create(columnReqCreateDTO);
+    public SuccessResDTO add(@RequestBody @Validated ColumnReqCreateDTO columnReqCreateDTO, @RequestHeader("email") String email) throws CustomizeException {
+        System.out.println("controller.dtoTitle:" + columnReqCreateDTO.getTitle());
+        System.out.println("controller.headers:" + email);
+        Integer cid = columnFlow.create(columnReqCreateDTO, email);
         return new SuccessResDTO("创建成功", cid);
     }
 
     @PutMapping(value = "/update")
-    public SuccessResDTO update(@RequestBody @Validated ColumnReqUpdateDTO columnReqUpdateDTO) throws CustomizeException {
-        Integer cid = columnFlow.update(columnReqUpdateDTO);
+    public SuccessResDTO update(@RequestBody @Validated ColumnReqUpdateDTO columnReqUpdateDTO, @RequestHeader("email") String email) throws CustomizeException {
+        Integer cid = columnFlow.update(columnReqUpdateDTO,email);
         return new SuccessResDTO("更新成功", cid);
     }
 
     @PatchMapping(value = "/patch")
-    public SuccessResDTO patch(@RequestBody @Validated ColumnReqPatchDTO columnReqPatchDTO) throws CustomizeException {
-        Integer cid = columnFlow.patch(columnReqPatchDTO);
+    public SuccessResDTO patch(@RequestBody @Validated ColumnReqPatchDTO columnReqPatchDTO, @RequestHeader("email") String email) throws CustomizeException {
+        Integer cid = columnFlow.patch(columnReqPatchDTO,email);
         return new SuccessResDTO("更新成功", cid);
     }
 
     @DeleteMapping(value = "/delete")
-    public SuccessResDTO del(@RequestBody @Validated ColumnReqDeleteDTO columnReqDeleteDTO) throws CustomizeException {
-        Integer cid = columnFlow.delete(columnReqDeleteDTO);
+    public SuccessResDTO del(@RequestBody @Validated ColumnReqDeleteDTO columnReqDeleteDTO, @RequestHeader("email") String email) throws CustomizeException {
+        Integer cid = columnFlow.delete(columnReqDeleteDTO,email);
         return new SuccessResDTO("删除", cid);
     }
 }

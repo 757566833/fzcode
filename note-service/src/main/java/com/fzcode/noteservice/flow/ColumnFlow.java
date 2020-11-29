@@ -23,11 +23,10 @@ public class ColumnFlow {
         this.columnDBService = columnDBService;
     }
 
-    public Integer create(ColumnReqCreateDTO columnReqCreateDTO) throws CustomizeException {
-        System.out.println("dtoTitle:"+columnReqCreateDTO.getTitle());
+    public Integer create(ColumnReqCreateDTO columnReqCreateDTO,String createdBy) throws CustomizeException {
         Columns columns = new Columns();
         BeanUtils.copyProperties(columnReqCreateDTO,columns);
-        System.out.println("saveTitle:"+columns.getTitle());
+        columns.setCreateBy(createdBy);
         Columns saveResult;
         try {
             saveResult = columnDBService.save(columns);
@@ -42,11 +41,12 @@ public class ColumnFlow {
         return columnDBService.findAll();
     }
 
-    public Integer update(ColumnReqUpdateDTO columnReqUpdateDTO) throws CustomizeException {
+    public Integer update(ColumnReqUpdateDTO columnReqUpdateDTO,String updateBy) throws CustomizeException {
         Boolean isHas = columnDBService.isHas(columnReqUpdateDTO.getCid());
         if (isHas) {
             Columns columns = new Columns();
             BeanUtils.copyProperties(columnReqUpdateDTO, columns);
+            columns.setUpdateBy(updateBy);
             Columns columnsResult = columnDBService.update(columns);
             return columnsResult.getCid();
         } else {
@@ -55,11 +55,12 @@ public class ColumnFlow {
 
     }
 
-    public Integer patch(ColumnReqPatchDTO columnReqPatchDTO) throws CustomizeException {
+    public Integer patch(ColumnReqPatchDTO columnReqPatchDTO,String updateBy) throws CustomizeException {
         Boolean isHas = columnDBService.isHas(columnReqPatchDTO.getCid());
         if (isHas) {
             Columns columns = new Columns();
             BeanUtils.copyProperties(columnReqPatchDTO, columns);
+            columns.setUpdateBy(updateBy);
             Columns columnsResult = columnDBService.patch(columns);
             return columnsResult.getCid();
         } else {
@@ -67,12 +68,10 @@ public class ColumnFlow {
         }
     }
 
-
-    @Transactional(rollbackFor = Exception.class)
-    public Integer delete(ColumnReqDeleteDTO columnReqDeleteDTO) throws CustomizeException {
+    public Integer delete(ColumnReqDeleteDTO columnReqDeleteDTO,String deleteBy) throws CustomizeException {
         Boolean isHas = columnDBService.isHas(columnReqDeleteDTO.getCid());
         if (isHas) {
-            Columns columnsResult = columnDBService.delete(columnReqDeleteDTO.getCid());
+            Columns columnsResult = columnDBService.delete(columnReqDeleteDTO.getCid(),deleteBy);
             return columnsResult.getCid();
         } else {
             throw new CustomizeException("不存在");

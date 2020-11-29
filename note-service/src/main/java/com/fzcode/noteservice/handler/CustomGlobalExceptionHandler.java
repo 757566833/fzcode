@@ -4,7 +4,6 @@ package com.fzcode.noteservice.handler;
 import com.fzcode.noteservice.dto.response.ErrorResDTO;
 import com.fzcode.noteservice.exception.CustomizeException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,11 +35,11 @@ public class CustomGlobalExceptionHandler {
         return new ErrorResDTO(400, customizeException.getMessage());
     }
 
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ErrorResDTO usernameNotFound(UsernameNotFoundException usernameNotFoundException) {
-        return new ErrorResDTO(400, usernameNotFoundException.getMessage());
-    }
+//    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+//    @ResponseBody
+//    @ExceptionHandler(UsernameNotFoundException.class)
+//    public ErrorResDTO usernameNotFound(UsernameNotFoundException usernameNotFoundException) {
+//        return new ErrorResDTO(400, usernameNotFoundException.getMessage());
+//    }
 
 }

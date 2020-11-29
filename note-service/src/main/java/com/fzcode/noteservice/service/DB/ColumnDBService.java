@@ -52,10 +52,11 @@ public class ColumnDBService {
         return columnsResult;
     }
 
-    public Columns delete(Integer id) {
+    public Columns delete(Integer id,String deleteBy) {
         Columns columns = new Columns();
         columns.setIsDelete(true);
         columns.setCid(id);
+        columns.setDeleteBy(deleteBy);
         Columns columnsResult = columnRepository.save(columns);
         return columnsResult;
     }
