@@ -2,6 +2,7 @@ package com.fzcode.fileservice.controller;
 
 import com.fzcode.fileservice.config.Config;
 import com.fzcode.fileservice.dto.Base64DTO;
+import com.fzcode.fileservice.dto.SuccessResDTO;
 import com.fzcode.fileservice.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Base64;
+import java.util.Date;
 
 
 @RestController
@@ -68,7 +70,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<String> upload(ServerWebExchange serverWebExchange) {
+    public Mono<SuccessResDTO> upload(ServerWebExchange serverWebExchange) {
         Mono<MultiValueMap<String, Part>> multipartData = serverWebExchange.getMultipartData();
         return multipartData.flatMap(multiValueMap -> {
             System.out.println(multiValueMap);
@@ -77,8 +79,9 @@ public class FileController {
             String preFix = FileUtil.getFilePrefix(fileName);
             String suffix = FileUtil.getFileSuffix(fileName);
             Path tempFile = null;
+            String timeStr = String.valueOf(new Date().getTime());
             try {
-                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix,"."+ suffix);
+                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix + timeStr, "." + suffix);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,42 +93,15 @@ public class FileController {
             }
             final AsynchronousFileChannel currentChannel = channel;
             final Path currentTempFile = tempFile;
+            String filePath = currentTempFile.toString();
+            String[] nameArray = filePath.split("/");
+            String fileResName = nameArray[nameArray.length - 1];
+            String fileResPath = config.getNetworkFilePath() + "/" + fileResName;
             return DataBufferUtils.write(part.content(), currentChannel, 0).doOnComplete(() -> {
                 System.out.println("结束");
-            }).then(Mono.just(currentTempFile.toString()));
+            }).then(Mono.just(new SuccessResDTO("上传成功", fileResPath)));
 
         });
-
-//        return multipartData.map(multiValueMap -> {
-//            Part part = multiValueMap.getFirst("file");
-//            System.out.println(part.name());
-//            System.out.println(part.headers());
-//
-//            String fileName = part.headers().getContentDisposition().getFilename();
-//            System.out.println(fileName);
-//            String preFix = FileUtil.getFilePrefix(fileName);
-//            String suffix = FileUtil.getFileSuffix(fileName);
-//
-//            System.out.println(config.getFilePath());
-//            Path tempFile = null;
-//            try {
-//                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix, suffix);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            AsynchronousFileChannel channel = null;
-//            try {
-//                channel = AsynchronousFileChannel.open(tempFile, StandardOpenOption.WRITE);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            DataBufferUtils.write(part.content(), channel, 0).doOnComplete(() -> {
-//                System.out.println("结束");
-//            }).subscribe();
-//            return tempFile;
-//        }).map(tempFile -> {
-//            return tempFile.toString();
-//        });
     }
 
     @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)

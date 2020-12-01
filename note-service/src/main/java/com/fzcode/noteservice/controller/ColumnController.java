@@ -8,7 +8,6 @@ import com.fzcode.noteservice.dto.response.SuccessResDTO;
 import com.fzcode.noteservice.entity.Columns;
 import com.fzcode.noteservice.exception.CustomizeException;
 import com.fzcode.noteservice.flow.ColumnFlow;
-import com.sun.net.httpserver.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +38,6 @@ public class ColumnController {
 
     @PostMapping(value = "/add")
     public SuccessResDTO add(@RequestBody @Validated ColumnReqCreateDTO columnReqCreateDTO, @RequestHeader("email") String email) throws CustomizeException {
-        System.out.println("controller.dtoTitle:" + columnReqCreateDTO.getTitle());
-        System.out.println("controller.headers:" + email);
         Integer cid = columnFlow.create(columnReqCreateDTO, email);
         return new SuccessResDTO("创建成功", cid);
     }

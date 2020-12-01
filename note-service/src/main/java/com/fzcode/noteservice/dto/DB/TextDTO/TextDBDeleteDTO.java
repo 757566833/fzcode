@@ -1,10 +1,11 @@
 package com.fzcode.noteservice.dto.DB.TextDTO;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class TextDBDeleteDTO {
 
-    @NotEmpty
+    @NotNull
     private Integer nid;
 
     public Integer getNid() {
