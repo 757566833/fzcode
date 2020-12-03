@@ -64,9 +64,14 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("xiake~!!".getBytes());
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
-            } else {
+            }  else {
                 String finalEmail = email;
                 return authorityFlow.getAuthority(email).flatMap(authority->{
+                     if(uri.getPath().indexOf("admin") > 0&&authority!="ADMIN"){
+                         DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("没权限".getBytes());
+                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                         return exchange.getResponse().writeWith(Mono.just(dataBuffer));
+                    }
                     ServerHttpRequest nextRequest = request
                             .mutate()
                             .header("email", finalEmail)
