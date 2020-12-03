@@ -1,18 +1,15 @@
 package com.fzcode.gateservice.config;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Data
 public class Config {
     @Value("${services.uri}")
     public String url ;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    @Value("${uri.authService}")
+    private String authService ;
 }

@@ -60,5 +60,8 @@ public class EmailFlow {
         sink.success(new ResponseDTO("200", "", "success"));
     }
 
+    public Mono<String> getStringFromRedis(String email, String type) {
+        return RedisUtil.getString(email + ":" + type);
+    }
 
 }

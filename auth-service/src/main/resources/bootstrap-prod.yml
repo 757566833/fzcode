@@ -20,6 +20,9 @@ spring:
     password: 123456789
     timeout: 5000
     database: 15
+  jpa:
+    hibernate:
+      ddl-auto: update
 eureka:
   client:
     service-url:
