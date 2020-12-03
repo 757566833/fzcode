@@ -66,7 +66,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
             } else {
                 String finalEmail = email;
-                return authorityFlow.saveAuthFromSqlToRedis(email).flatMap(authority->{
+                return authorityFlow.getAuthority(email).flatMap(authority->{
                     ServerHttpRequest nextRequest = request
                             .mutate()
                             .header("email", finalEmail)

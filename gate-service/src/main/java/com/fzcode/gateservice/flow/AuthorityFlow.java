@@ -1,24 +1,35 @@
 package com.fzcode.gateservice.flow;
 
-import com.alibaba.fastjson.JSON;
-import com.fzcode.gateservice.dto.common.AuthorityDTO;
-import com.fzcode.gateservice.http.Auth;
+import com.fzcode.gateservice.service.AuthorityService;
 import com.fzcode.gateservice.util.RedisUtils;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 @Component
 public class AuthorityFlow {
+    AuthorityService authorityService;
 
-    public Mono<String> saveAuthFromSqlToRedis(String email) {
-        System.out.println("http");
-        Mono<AuthorityDTO> authorityDTOMono = Auth.getAuthority(email);
-        return authorityDTOMono.flatMap(authorityDTO -> RedisUtils.setHashReturnValue("authority", authorityDTO.getAccount(), authorityDTO.getAuthority()));
+    @Autowired
+    public void setAuthorityService(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
+
+    public Mono<String> getAuthority(String email) {
+        return RedisUtils.getHash("authority", email).flatMap(authority -> {
+            if (authority != null) {
+                return Mono.just(authority);
+            } else {
+                return authorityService.saveAuthFromSqlToRedis(email);
+            }
+        });
+    }
+
+
+//    public Mono<String> saveAuthFromSqlToRedis(String email) {
+//        Mono<AuthorityDTO> authorityDTOMono = Auth.getAuthority(email);
+//        return authorityDTOMono.flatMap(authorityDTO -> RedisUtils.setHashReturnValue("authority", authorityDTO.getAccount(), authorityDTO.getAuthority()));
+//    }
 }
