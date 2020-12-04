@@ -4,6 +4,7 @@ import com.fzcode.authservice.entity.Accounts;
 import com.fzcode.authservice.entity.Authorities;
 import com.fzcode.authservice.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface AuthorityRepository extends JpaRepository<Authorities, Integer>
 
 //    List<Users> findByIsDelete(Boolean bool);
     Authorities findOneByAccount(String account);
+    @Query(nativeQuery = true, value = "UPDATE authorities SET authority = ?2 WHERE account = ?1")
+    Authorities updateByAccount(String account,String authority);
 }

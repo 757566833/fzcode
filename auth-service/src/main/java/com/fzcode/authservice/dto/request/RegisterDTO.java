@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class RegisterDTO {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
-    @Pattern(regexp = "^1$|^2$" ,message = "注册方式未明")
+    @NotNull(message = "注册方式未明")
     private Integer registerType;
 
     public RegisterDTO(@Email(message = "请输入正确的邮箱") String email, @NotEmpty(message = "密码不能为空") String password, List<GrantedAuthority> authorities, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer registerType,String code) {

@@ -1,24 +1,28 @@
 package com.fzcode.authservice.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fzcode.authservice.config.Config;
 import com.fzcode.authservice.dto.request.*;
+import com.fzcode.authservice.dto.request.list.AccountDTO;
 import com.fzcode.authservice.dto.response.GithubAccessToken;
 import com.fzcode.authservice.dto.response.GithubUserInfo;
 import com.fzcode.authservice.dto.response.LoginResDTO;
 import com.fzcode.authservice.dto.response.SuccessResDTO;
+import com.fzcode.authservice.entity.Accounts;
 import com.fzcode.authservice.exception.CustomizeException;
 import com.fzcode.authservice.flow.AccountFlow;
 import com.fzcode.authservice.http.Oauth;
 import com.fzcode.authservice.http.Websocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController()
-@RequestMapping(value = "/pub/account")
+@RequestMapping(value = "/pub")
 public class AccountController {
 
     private AccountFlow accountFlow;
@@ -48,15 +52,6 @@ public class AccountController {
         return new SuccessResDTO("创建成功", loginResDTO);
     }
 
-    @GetMapping(value = "/test")
-    public String dsdd() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String oldStr = bCryptPasswordEncoder.encode("test");
-        System.out.println(oldStr);
-//        bCryptPasswordEncoder.matches("test", oldStr);
-        System.out.println(bCryptPasswordEncoder.matches("test", oldStr));
-        return "dsadsa";
-    }
 //    @PostMapping(value = "/forget")
 //    public SuccessResDTO forget(@RequestBody @Validated ForgetDTO forgetDTO) throws CustomizeException {
 //        String email = accountFlow.forget(forgetDTO.getEmail(), forgetDTO.getPassword(), forgetDTO.getCode());
@@ -104,7 +99,11 @@ public class AccountController {
             }
             return loginResDTO.getToken();
         }
-//        return anotherExchange.getBody();
+    }
 
+    @GetMapping(value = "/admin/account")
+    public List<Accounts> getAccountList( @Validated AccountDTO accountDTO) {
+        System.out.println(JSON.toJSONString(accountDTO));
+        return accountFlow.findAllAccount(accountDTO);
     }
 }

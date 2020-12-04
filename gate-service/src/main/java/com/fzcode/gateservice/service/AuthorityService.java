@@ -10,6 +10,10 @@ import reactor.core.publisher.Mono;
 public class AuthorityService {
     public Mono<String> saveAuthFromSqlToRedis(String email) {
         Mono<AuthorityDTO> authorityDTOMono = Auth.getAuthority(email);
-        return authorityDTOMono.flatMap(authorityDTO -> RedisUtils.setHashReturnValue("authority", authorityDTO.getAccount(), authorityDTO.getAuthority()));
+
+        return authorityDTOMono.flatMap(authorityDTO -> {
+            System.out.println("AuthorityService:"+authorityDTO);
+            return RedisUtils.setHashReturnValue("authority", authorityDTO.getAccount(), authorityDTO.getAuthority());
+        });
     }
 }

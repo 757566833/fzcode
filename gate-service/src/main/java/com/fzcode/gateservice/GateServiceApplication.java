@@ -34,7 +34,6 @@ public class GateServiceApplication {
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-
         return builder
                 .routes()
                 .route("auth-service", r -> r.path("/auth/pub/**").filters(f -> f.stripPrefix(1)).uri(config.getUrl() + ":9111"))

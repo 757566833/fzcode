@@ -1,5 +1,6 @@
 package com.fzcode.mailservice.util;
 
+import com.fzcode.mailservice.exception.CustomizeException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,13 +11,15 @@ import java.util.Properties;
 
 public class MailUtil {
     private static JavaMailSenderImpl javaMailSender;
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
+
     static {
         javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setHost("smtp.163.com");//链接服务器
+        javaMailSender.setHost("smtp.126.com");//链接服务器
         //javaMailSender.setPort(25);//默认使用25端口发送
-        javaMailSender.setUsername("zhj757566833@163.com");//账号
-        javaMailSender.setPassword("SJPWMSMZBHJEZMLU");//授权码
+        // IMAP ： TKOMBJXTWWYJQTMS
+        javaMailSender.setUsername("fzcode@126.com");//账号
+        javaMailSender.setPassword("TKOMBJXTWWYJQTMS");//授权码
         javaMailSender.setDefaultEncoding("UTF-8");
 
         Properties properties = new Properties();
@@ -30,18 +33,17 @@ public class MailUtil {
         javaMailSender.setJavaMailProperties(properties);
     }
 
-    public static Mono<Boolean> sendMail(String email, String checkCode){
+    public static Mono<Boolean> sendMail(String email, String checkCode) throws CustomizeException{
         System.out.println("await sendMail");
-        return Mono.create(sink->{
+        return Mono.create(sink -> {
             System.out.println("async");
             try {
-                MimeMessage message=javaMailSender.createMimeMessage();
-                MimeMessageHelper helper=new MimeMessageHelper(message,true);
-                helper.setFrom("zhj757566833@163.com","zhj757566833");
+                MimeMessage message = javaMailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom("fzcode@126.com", "fzcode");
                 helper.setTo(email);
-                helper.setSubject("验证码");
+                helper.setSubject("您好");
                 helper.setText("<div>\n" +
-                        "    <h3>感谢您使用xxx系统，您本次的信息为</h3>\n" +
                         "    <div style=\"\n" +
                         "    color: #ffffff;\n" +
                         "    background: #000000;\n" +
@@ -49,17 +51,17 @@ public class MailUtil {
                         "    padding: 12px;\n" +
                         "    text-align: center;\n" +
                         "    \"><h2>\n" +
-                        "    "+checkCode+ "\n" +
+                        "    " + checkCode + "\n" +
                         "    </h2></div>\n" +
                         "    <h3>十分钟内有效</h3>\n" +
-                        "</div>",true);
+                        "</div>", true);
                 javaMailSender.send(message);
             } catch (Exception e) {
-            System.out.println("邮件发送失败:"+ e.getMessage());
-                e.printStackTrace();
-                 sink.success(false);
+                System.out.println("邮件发送失败:" + e.getMessage());
+                sink.error(new CustomizeException("邮件发送失败"));
+                return;
             }
-             sink.success(true);
+            sink.success(true);
         });
 
     }

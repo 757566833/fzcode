@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(value = "/pub/email", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/pub", consumes = MediaType.APPLICATION_JSON_VALUE)
 public class PubEmailController {
 
 

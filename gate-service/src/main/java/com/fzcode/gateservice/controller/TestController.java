@@ -30,9 +30,9 @@ public class TestController {
         this.key = secret;
     }
 
-//    @GetMapping("/current")
-//    public Mono<String> test(Mono<Principal> principalMono) {
-//        return Mono.just(this.key);
-//    }
-//
+    @GetMapping("/current")
+    public Mono<String> test(Mono<Principal> principalMono) {
+        return Mono.just(this.key);
+    }
+
 }

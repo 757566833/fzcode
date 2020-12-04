@@ -29,4 +29,8 @@ public class AuthorityService {
     public List<Authorities> findAll() {
         return authorityRepository.findAll();
     }
+
+    public Authorities update(String account,String authority) {
+        return authorityRepository.updateByAccount(account,authority);
+    }
 }

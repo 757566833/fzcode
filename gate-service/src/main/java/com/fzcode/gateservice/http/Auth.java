@@ -11,7 +11,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class Auth {
@@ -27,9 +29,9 @@ public class Auth {
 
     public static Mono<AuthorityDTO> getAuthority(String email) {
         System.out.println(JSON.toJSONString("getAuthority"));
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("account", email);
-        return webClient.post().uri("/pri/authority/get").bodyValue(map).retrieve().bodyToMono(AuthorityDTO.class);
+        Map<String, String> map = new HashMap<>();
+        map.put("account", email);
+        return webClient.post().uri("/pri/authority/get").header("Content-type",MediaType.APPLICATION_JSON_VALUE).bodyValue(map).retrieve().bodyToMono(AuthorityDTO.class);
 
     }
 }

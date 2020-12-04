@@ -18,4 +18,7 @@ public class Config {
 
     @Value("${uri.mailService}")
     private String mailService;
+
+    @Value("${uri.mailService}")
+    private String gateService;
 }

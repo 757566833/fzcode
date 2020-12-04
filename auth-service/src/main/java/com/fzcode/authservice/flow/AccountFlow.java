@@ -1,8 +1,6 @@
 package com.fzcode.authservice.flow;
 
-import com.alibaba.fastjson.JSON;
-import com.fzcode.authservice.bean.MyUser;
-import com.fzcode.authservice.bean.MyUserDetails;
+import com.fzcode.authservice.dto.request.list.AccountDTO;
 import com.fzcode.authservice.dto.response.GithubUserInfo;
 import com.fzcode.authservice.dto.response.LoginResDTO;
 import com.fzcode.authservice.entity.Accounts;
@@ -14,17 +12,13 @@ import com.fzcode.authservice.service.AccountService;
 import com.fzcode.authservice.service.AuthorityService;
 import com.fzcode.authservice.service.UserService;
 import com.fzcode.authservice.util.JwtUtils;
-import com.fzcode.authservice.util.RedisUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import javax.sql.DataSource;
+import java.util.List;
 
 
 @Component
@@ -71,6 +65,7 @@ public class AccountFlow {
             throw new CustomizeException("邮箱已存在");
         }
         String redisCode = Mail.getRegisterCode(email);
+        System.out.println("redisCode:"+redisCode);
         if (!redisCode.equals(code)) {
             throw new CustomizeException("验证码错误");
         }
@@ -211,5 +206,9 @@ public class AccountFlow {
 
 //        return new SuccessResDTO("创建成功", new TokenDTO(JwtUtils.createToken(email)));
 
+    }
+
+    public List<Accounts> findAllAccount(AccountDTO accountDTO){
+       return  accountService.findList(accountDTO);
     }
 }

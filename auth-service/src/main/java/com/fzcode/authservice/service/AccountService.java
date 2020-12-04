@@ -1,12 +1,11 @@
 package com.fzcode.authservice.service;
 
+import com.fzcode.authservice.dto.request.list.AccountDTO;
 import com.fzcode.authservice.entity.Accounts;
 import com.fzcode.authservice.repositroy.AccountRepository;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,10 +28,16 @@ public class AccountService {
         return accountRepository.save(accounts);
     }
 
-    public Page<Accounts> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-//        Page page1 = new Page<>()
+    public Page<Accounts> findAll(Integer page, Integer size, String asc, String desc) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(asc).ascending().and(Sort.by(desc).descending()));
         Page<Accounts> accounts = accountRepository.findAll(pageable);
+        return accounts;
+    }
+
+    public List<Accounts> findList(AccountDTO accountDTO) {
+        Integer offset = (accountDTO.getPage() - 1) * accountDTO.getSize();
+        Integer length = accountDTO.getSize();
+        List<Accounts> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), accountDTO.getDesc(), accountDTO.getAsc());
         return accounts;
     }
 
@@ -42,17 +47,9 @@ public class AccountService {
     }
 
     public boolean isHas(String email) {
-        Accounts accounts = new Accounts();
-        accounts.setAccount(email);
-        Example<Accounts> example = Example.of(accounts);
-        Optional<Accounts> optional = accountRepository.findOne(example);
-        Accounts current = optional.get();
-        if (current != null) {
-            return true;
-        } else {
-            return false;
-
-        }
+        Boolean bool = accountRepository.existsByAccount(email);
+        System.out.println("isHas:" + bool);
+        return bool;
 //        return accountRepository.findOne(example);
     }
 }
