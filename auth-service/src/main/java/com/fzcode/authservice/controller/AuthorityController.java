@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController()
-@RequestMapping(value = "/pri/authority")
+@RequestMapping(value = "/pri/authority",consumes = MediaType.APPLICATION_JSON_VALUE)
 public class AuthorityController {
     private AuthorityService authorityService;
 
@@ -23,7 +23,7 @@ public class AuthorityController {
     }
 
     @PostMapping(value = "/get")
-    public Authorities getAuth(@RequestBody GateReqDTO gateReqDTO) throws Exception {
+    public Authorities getAuth(@RequestBody GateReqDTO gateReqDTO) {
         System.out.println("被请求了一次:" + gateReqDTO.getAccount());
         Authorities authorities = authorityService.findByAccount(gateReqDTO.getAccount());
         System.out.println(JSON.toJSONString(authorities));

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/pub/column")
+@RequestMapping(value = "/column")
 public class ColumnController {
     ColumnFlow columnFlow;
 

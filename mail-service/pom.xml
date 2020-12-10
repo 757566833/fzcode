@@ -8,7 +8,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
-	<groupId>com.fzcode</groupId>
 	<artifactId>mail-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mail-service</name>

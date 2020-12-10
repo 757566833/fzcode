@@ -1,26 +1,21 @@
 package com.fzcode.authservice.http;
 
-import com.fzcode.authservice.config.Config;
+import com.fzcode.authservice.config.Services;
 import com.fzcode.authservice.dto.pri.mail.EmailReqDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 @Component
 public class Mail {
-    private static Config config;
+    private Services services;
     private static WebClient webClient;
-
     @Autowired
-    public void setConfig(Config config) {
-
-        Mail.config = config;
-        Mail.webClient = WebClient.create(Mail.config.getMailService());
+    public void setServices(Services services) {
+        this.services = services;
+        Mail.webClient = WebClient.create(services.getHost().get("mail"));
     }
+
 
     public static String getRegisterCode(String email) {
         EmailReqDTO emailReqDTO = new EmailReqDTO();

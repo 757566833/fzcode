@@ -1,7 +1,6 @@
 package com.fzcode.authservice.http;
 
-import com.fzcode.authservice.config.Config;
-import com.fzcode.authservice.dto.pri.mail.EmailReqDTO;
+import com.fzcode.authservice.config.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,14 +10,12 @@ import java.util.Map;
 
 @Component
 public class Gate {
-    private static Config config;
+    private Services services;
     private static WebClient webClient;
-
     @Autowired
-    public void setConfig(Config config) {
-
-        Gate.config = config;
-        Gate.webClient = WebClient.create(Gate.config.getGateService());
+    public void setServices(Services services) {
+        this.services = services;
+        Gate.webClient = WebClient.create(services.getHost().get("gate"));
     }
 
     public static void updateAuthority(String account, String authority) {

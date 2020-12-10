@@ -20,5 +20,3 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:9999/eureka/
 
-services:
-  uri: http://127.0.0.1

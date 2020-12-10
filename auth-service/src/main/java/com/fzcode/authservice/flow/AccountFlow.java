@@ -11,14 +11,14 @@ import com.fzcode.authservice.http.Mail;
 import com.fzcode.authservice.service.AccountService;
 import com.fzcode.authservice.service.AuthorityService;
 import com.fzcode.authservice.service.UserService;
-import com.fzcode.authservice.util.JwtUtils;
+import com.fzcode.authservice.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -44,13 +44,13 @@ public class AccountFlow {
         this.authorityService = authorityService;
     }
 
-    public LoginResDTO login(String email, String password) throws UsernameNotFoundException {
+    public LoginResDTO login(String email, String password) throws CustomizeException {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (!bCryptPasswordEncoder.matches(password, accountService.findByAccount(email).getPassword())) {
-            throw new UsernameNotFoundException("用户名密码错误");
+            throw new CustomizeException("用户名密码错误");
         }
-        return new LoginResDTO(JwtUtils.createToken(email), authorityService.findByAccount(email).getAuthority());
+        return new LoginResDTO(TokenUtils.createBearer(email), authorityService.findByAccount(email).getAuthority());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -65,7 +65,7 @@ public class AccountFlow {
             throw new CustomizeException("邮箱已存在");
         }
         String redisCode = Mail.getRegisterCode(email);
-        System.out.println("redisCode:"+redisCode);
+        System.out.println("redisCode:" + redisCode);
         if (!redisCode.equals(code)) {
             throw new CustomizeException("验证码错误");
         }
@@ -97,7 +97,7 @@ public class AccountFlow {
             System.out.println(e.getMessage());
             throw new CustomizeException("权限创建失败");
         }
-        return new LoginResDTO(JwtUtils.createToken(email), "USER");
+        return new LoginResDTO(TokenUtils.createBearer(email), "USER");
 
     }
 
@@ -143,18 +143,18 @@ public class AccountFlow {
 //    }
     @Transactional(rollbackFor = Exception.class)
     public LoginResDTO githubRegister(GithubUserInfo githubUserInfo) throws CustomizeException {
-        System.out.println("node_id:"+githubUserInfo.getNode_id());
+        System.out.println("node_id:" + githubUserInfo.getNode_id());
         String email = githubUserInfo.getEmail();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String password = bCryptPasswordEncoder.encode(githubUserInfo.getNode_id());
-        System.out.println("password:"+password);
+        System.out.println("password:" + password);
         Accounts account = accountService.findByAccount(email);
         if (account != null) {
             if (!bCryptPasswordEncoder.matches(githubUserInfo.getNode_id(), account.getPassword())) {
                 return new LoginResDTO("账号或密码错误，请找回密码", "USER");
 //                return "账号或密码错误，请找回密码";
             } else {
-                return new LoginResDTO(JwtUtils.createToken(email), authorityService.findByAccount(email).getAuthority());
+                return new LoginResDTO(TokenUtils.createBearer(email), authorityService.findByAccount(email).getAuthority());
             }
         } else {
             Accounts saveAccount = new Accounts();
@@ -179,7 +179,12 @@ public class AccountFlow {
             }
             Users users = new Users();
             users.setUid(accountResult.getAid());
-            users.setUsername(githubUserInfo.getName());
+            if (githubUserInfo.getName() != null) {
+                users.setUsername(githubUserInfo.getName());
+            } else {
+                users.setUsername(email);
+            }
+
             users.setAvatar(githubUserInfo.getAvatar_url());
             users.setBlog(githubUserInfo.getBlog());
             users.setGithubUrl(githubUserInfo.getGists_url());
@@ -200,7 +205,7 @@ public class AccountFlow {
             } catch (Exception e) {
                 return new LoginResDTO("权限创建失败", "USER");
             }
-            return new LoginResDTO(JwtUtils.createToken(email), "USER");
+            return new LoginResDTO(TokenUtils.createBearer(email), "USER");
         }
 //        return JwtUtils.createToken(email);
 
@@ -208,7 +213,7 @@ public class AccountFlow {
 
     }
 
-    public List<Accounts> findAllAccount(AccountDTO accountDTO){
-       return  accountService.findList(accountDTO);
+    public List<Map<String,Object>> findAllAccount(AccountDTO accountDTO) {
+        return accountService.findList(accountDTO);
     }
 }

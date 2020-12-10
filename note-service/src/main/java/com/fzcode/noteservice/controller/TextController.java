@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/pub/text")
+@RequestMapping(value = "/text")
 public class TextController {
 
     TextFlow textFlow;

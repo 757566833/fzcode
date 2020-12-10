@@ -1,5 +1,8 @@
 package com.fzcode.gateservice.dto.common;
 
+import lombok.Data;
+
+@Data
 public class TokenDTO {
     private String token;
 
@@ -8,12 +11,5 @@ public class TokenDTO {
     }
     public TokenDTO() {
 
-    }
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }

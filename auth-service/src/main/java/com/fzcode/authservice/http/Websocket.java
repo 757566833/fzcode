@@ -1,26 +1,21 @@
 package com.fzcode.authservice.http;
 
-import com.fzcode.authservice.config.Config;
-import com.fzcode.authservice.dto.pri.mail.EmailReqDTO;
+import com.fzcode.authservice.config.Oauth;
+import com.fzcode.authservice.config.Services;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Collection;
-
 @Component
 public class Websocket {
-    private static Config config;
+    private Services services;
     private static WebClient webClient;
-
     @Autowired
-    public void setConfig(Config config) {
-
-        Websocket.config = config;
-        Websocket.webClient = WebClient.create(Websocket.config.getWebsocket());
+    public void setServices(Services services) {
+        this.services = services;
+        Websocket.webClient = WebClient.create(services.getHost().get("websocket"));
     }
 
     public static void sendUserCode(String socketId, String token, String role) {

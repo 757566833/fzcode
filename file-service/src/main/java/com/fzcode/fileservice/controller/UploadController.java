@@ -29,7 +29,7 @@ import java.util.Date;
 
 
 @RestController
-@RequestMapping(value = "/pub/upload")
+@RequestMapping(value = "/upload")
 public class UploadController {
 
     private Config config;

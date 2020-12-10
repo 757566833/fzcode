@@ -1,28 +1,26 @@
 package com.fzcode.authservice.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.fzcode.authservice.config.Config;
 import com.fzcode.authservice.dto.request.*;
 import com.fzcode.authservice.dto.request.list.AccountDTO;
 import com.fzcode.authservice.dto.response.GithubAccessToken;
 import com.fzcode.authservice.dto.response.GithubUserInfo;
 import com.fzcode.authservice.dto.response.LoginResDTO;
 import com.fzcode.authservice.dto.response.SuccessResDTO;
-import com.fzcode.authservice.entity.Accounts;
 import com.fzcode.authservice.exception.CustomizeException;
 import com.fzcode.authservice.flow.AccountFlow;
-import com.fzcode.authservice.http.Oauth;
+import com.fzcode.authservice.http.Auth;
 import com.fzcode.authservice.http.Websocket;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
-@RestController()
-@RequestMapping(value = "/pub")
+@RestController
 public class AccountController {
 
     private AccountFlow accountFlow;
@@ -32,21 +30,14 @@ public class AccountController {
         this.accountFlow = accountFlow;
     }
 
-    private Config config;
 
-    @Autowired
-    public void setConfig(Config config) {
-        this.config = config;
-    }
-
-
-    @PostMapping(value = "/login")
-    public SuccessResDTO login(@RequestBody @Validated LoginDTO loginDTO) throws UsernameNotFoundException {
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public SuccessResDTO login(@RequestBody @Validated LoginDTO loginDTO) throws CustomizeException {
         LoginResDTO loginResDTO = accountFlow.login(loginDTO.getEmail(), loginDTO.getPassword());
         return new SuccessResDTO("登陆成功", loginResDTO);
     }
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResDTO register(@RequestBody @Validated RegisterDTO registerDTO) throws CustomizeException {
         LoginResDTO loginResDTO = accountFlow.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getCode(), registerDTO.getRegisterType());
         return new SuccessResDTO("创建成功", loginResDTO);
@@ -66,8 +57,9 @@ public class AccountController {
 
     @GetMapping(value = "/github")
     public String oauth2(@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId) throws CustomizeException {
-        GithubAccessToken githubAccessToken = Oauth.getGithubAccessToken(code);
-        GithubUserInfo githubUserInfo = Oauth.getGithubUserInfo(githubAccessToken.getAccess_token());
+        System.out.println("dsa");
+        GithubAccessToken githubAccessToken = Auth.getGithubAccessToken(code);
+        GithubUserInfo githubUserInfo = Auth.getGithubUserInfo(githubAccessToken.getAccess_token());
         if (githubUserInfo.getEmail() == null) {
             return "您的github尚未绑定邮箱，具体设置方法，右上角=>settings=>profile=>public email 选择您的邮箱";
         } else {
@@ -99,11 +91,21 @@ public class AccountController {
             }
             return loginResDTO.getToken();
         }
+//        return "dsadsa";
     }
 
     @GetMapping(value = "/admin/account")
-    public List<Accounts> getAccountList( @Validated AccountDTO accountDTO) {
+    public List<Map<String, Object>> getAccountList(@Validated AccountDTO accountDTO) {
         System.out.println(JSON.toJSONString(accountDTO));
         return accountFlow.findAllAccount(accountDTO);
+    }
+
+    @GetMapping(value = "/test222")
+    public String test() {
+        return "ddd";
+    }
+    @GetMapping(value = "/pir/test222")
+    public String testpir() {
+        return "pir";
     }
 }

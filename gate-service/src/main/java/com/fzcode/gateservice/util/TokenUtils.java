@@ -1,4 +1,4 @@
-package com.fzcode.authservice.util;
+package com.fzcode.gateservice.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -13,52 +13,51 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtUtils {
+public class TokenUtils {
     private static SecretKey key;
 
     @Value("${auth.secret}")
     public void setKey(String secret) {
         System.out.println("secret" + secret);
-        JwtUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    public static String createToken(String username) {
+    public static String createBearer(String username) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, 3);
 
         Map<String, Object> header = new HashMap<String, Object>();
         header.put("email", username);
-        System.out.println("JwtUtils.key:" + JwtUtils.key);
+
         String compactJws = Jwts.builder()
                 .setHeader(header)
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(c.getTime())
-                .signWith(JwtUtils.key, SignatureAlgorithm.HS256)
+                .signWith(TokenUtils.key, SignatureAlgorithm.HS256)
                 .compact();
         return "bearer "+compactJws;
 
     }
 
-    public static String parseToken(String token) {
+    public static String parseBearer(String token) {
         int preIndex = token.indexOf("bearer ");
         if(preIndex==-1){
             throw new JwtException("token格式不对");
         }
         String jwsStr = token.substring(7);
-        Object uid = "";
         Jws<Claims> jws;
-        try {
-            jws = Jwts.parserBuilder()
-                    .setSigningKey(JwtUtils.key)
-                    .build()
-                    .parseClaimsJws(jwsStr);
-            uid = jws.getHeader().get("email");
-        } catch (JwtException e) {
-            throw e;
-        }
+        jws = Jwts.parserBuilder()
+                .setSigningKey(TokenUtils.key)
+                .build()
+                .parseClaimsJws(jwsStr);
+        Object uid = jws.getHeader().get("email");
 
         return uid.toString();
+    }
+
+    public static String createBasic(String serviceName, String password) {
+        return "basic " + serviceName+":"+password;
     }
 }

@@ -18,5 +18,3 @@ spring:
 eureka:
   client:
     enabled: false
-services:
-  uri: http://127.0.0.1
