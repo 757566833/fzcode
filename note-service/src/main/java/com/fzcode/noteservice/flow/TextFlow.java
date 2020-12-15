@@ -13,10 +13,14 @@ import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
 import com.fzcode.noteservice.service.DB.TextDBService;
 import com.fzcode.noteservice.service.elastic.TextElasticService;
+import com.fzcode.noteservice.utils.MarkdownUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 @Component
 public class TextFlow {
@@ -37,14 +41,17 @@ public class TextFlow {
     @Transactional(rollbackFor = Exception.class)
     public String create(TextReqCreateDTO textReqCreateDTO) throws CustomizeException {
         Texts texts = new Texts();
-        texts.setTitle(textReqCreateDTO.getTitle());
-        texts.setDescription(textReqCreateDTO.getDescription());
-
-        Texts saveResult = textDBService.save(texts);
-
-        Integer nid = saveResult.getNid();
+        BeanUtils.copyProperties(textReqCreateDTO, texts);
+        texts.setTags(String.join(",", textReqCreateDTO.getTags()));
+        Texts saveResult;
+        try {
+            saveResult = textDBService.save(texts);
+        } catch (Exception e) {
+            throw new CustomizeException("db存储失败");
+        }
+        Integer tid = saveResult.getTid();
         TextESCreateDTO textESCreateDTO = new TextESCreateDTO(
-                nid.toString(),
+                tid.toString(),
                 textReqCreateDTO.getTitle()
         );
         if (textReqCreateDTO.getSubTitle() != null) {
@@ -54,7 +61,7 @@ public class TextFlow {
             textESCreateDTO.setTags(textReqCreateDTO.getTags());
         }
         if (textReqCreateDTO.getText() != null) {
-            textESCreateDTO.setText(textReqCreateDTO.getText());
+            textESCreateDTO.setText(MarkdownUtils.markdown2string(textReqCreateDTO.getText()));
         }
 
         return textElasticService.create(textESCreateDTO);
@@ -65,19 +72,19 @@ public class TextFlow {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String update(Integer id , TextReqUpdateDTO textReqUpdateDTO) throws CustomizeException {
+    public String update(Integer id, TextReqUpdateDTO textReqUpdateDTO) throws CustomizeException {
         if (textReqUpdateDTO.getDescription() != null) {
             Texts texts = new Texts();
-            texts.setNid(id);
+            texts.setTid(id);
             texts.setTitle(textReqUpdateDTO.getTitle());
             texts.setDescription(textReqUpdateDTO.getDescription());
+            texts.setText(textReqUpdateDTO.getText());
             textDBService.update(texts);
-
         }
         TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textReqUpdateDTO.getTitle());
         textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
         textESUpdateDTO.setTags(textReqUpdateDTO.getTags());
-        textESUpdateDTO.setText(textReqUpdateDTO.getText());
+        textESUpdateDTO.setText(MarkdownUtils.markdown2string(textReqUpdateDTO.getText()));
         return textElasticService.update(textESUpdateDTO);
     }
 
@@ -85,7 +92,7 @@ public class TextFlow {
     public String patch(Integer nid, TextReqPatchDTO textReqPatchDTO) throws CustomizeException {
         if (textReqPatchDTO.getDescription() != null || textReqPatchDTO.getTitle() != null) {
             Texts texts = new Texts();
-            texts.setNid(nid);
+            texts.setTid(nid);
             if (textReqPatchDTO.getTitle() != null) {
                 texts.setTitle(textReqPatchDTO.getTitle());
             }
@@ -97,7 +104,7 @@ public class TextFlow {
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
         textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());
         textESPatchDTO.setTags(textReqPatchDTO.getTags());
-        textESPatchDTO.setText(textReqPatchDTO.getText());
+        textESPatchDTO.setText(MarkdownUtils.markdown2string(textReqPatchDTO.getText()));
         textESPatchDTO.setTitle(textReqPatchDTO.getTitle());
         return textElasticService.patch(textESPatchDTO);
     }
@@ -111,15 +118,15 @@ public class TextFlow {
 
     public TextResDTO findById(Integer nid) throws CustomizeException {
         Texts texts = textDBService.findById(nid);
-        String sourceString = textElasticService.getById(nid.toString());
-        TextESDTO textESDTO = JSON.parseObject(sourceString, TextESDTO.class);
+//        String sourceString = textElasticService.getById(nid.toString());
+//        TextESDTO textESDTO = JSON.parseObject(sourceString, TextESDTO.class);
         TextResDTO textResDTO = new TextResDTO(
                 nid,
                 texts.getTitle(),
                 texts.getDescription(),
-                textESDTO.getSubTitle(),
-                textESDTO.getText(),
-                textESDTO.getTags()
+                texts.getText(),
+                Arrays.asList(texts.getTags().split(","))
+
         );
         return textResDTO;
     }

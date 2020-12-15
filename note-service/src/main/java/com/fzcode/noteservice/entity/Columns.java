@@ -27,11 +27,11 @@ public class Columns {
 
     @Column(name = "create_by")
 //    @CreatedBy
-    private String createBy;
+    private Integer createBy;
 
     @Column(name = "update_by")
 //    @LastModifiedBy
-    private String updateBy;
+    private Integer updateBy;
 
     private String title;
 
@@ -42,10 +42,10 @@ public class Columns {
     private String detail;
 
     @Column(name = "is_delete")
-    private Boolean isDelete = false;
+    private Integer isDelete = 0;
 
     @Column(name = "delete_by")
-    private String deleteBy;
+    private Integer deleteBy;
 
 
 }

@@ -28,7 +28,7 @@ public class ColumnDBService {
     }
 
     public List<Columns> findAll() {
-        List<Columns> list = columnRepository.findByIsDelete(false);
+        List<Columns> list = columnRepository.findByIsDelete(0);
         return list;
     }
 
@@ -52,9 +52,9 @@ public class ColumnDBService {
         return columnsResult;
     }
 
-    public Columns delete(Integer id,String deleteBy) {
+    public Columns delete(Integer id,Integer deleteBy) {
         Columns columns = new Columns();
-        columns.setIsDelete(true);
+        columns.setIsDelete(1);
         columns.setCid(id);
         columns.setDeleteBy(deleteBy);
         Columns columnsResult = columnRepository.save(columns);

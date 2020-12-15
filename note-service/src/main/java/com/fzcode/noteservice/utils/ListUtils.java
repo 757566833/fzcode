@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BeanUtils {
+public class ListUtils {
     public static <T> Map<String, ?> bean2Map(T bean) {
         BeanMap beanMap = BeanMap.create(bean);
         Map<String, Object> map = new HashMap<>();

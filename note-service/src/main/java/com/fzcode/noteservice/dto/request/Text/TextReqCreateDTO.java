@@ -1,8 +1,13 @@
 package com.fzcode.noteservice.dto.request.Text;
 
-import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
+import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
 public class TextReqCreateDTO {
 
     @NotEmpty
@@ -10,45 +15,7 @@ public class TextReqCreateDTO {
     private String description;
     private String subTitle;
     private String text;
-    private ArrayList<String> tags;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public ArrayList<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
+    @NotNull
+    private Integer cid;
+    private List<String> tags;
 }

@@ -16,20 +16,12 @@ public class RegisterDTO {
     @NotEmpty(message = "验证码")
     private String code;
 
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private boolean isEnabled;
     @NotNull(message = "注册方式未明")
     private Integer registerType;
 
-    public RegisterDTO(@Email(message = "请输入正确的邮箱") String email, @NotEmpty(message = "密码不能为空") String password,  boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer registerType,String code) {
+    public RegisterDTO(@Email(message = "请输入正确的邮箱") String email, @NotEmpty(message = "密码不能为空") String password,  Integer registerType,String code) {
         this.email = email;
         this.password = password;
-        this.isAccountNonExpired = isAccountNonExpired;
-        this.isAccountNonLocked = isAccountNonLocked;
-        this.isCredentialsNonExpired = isCredentialsNonExpired;
-        this.isEnabled = isEnabled;
         this.registerType = registerType;
         this.code = code;
     }

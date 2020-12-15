@@ -22,13 +22,14 @@ public class TokenUtils {
         TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    public static String createBearer(String username) {
+    public static String createBearer(Integer aid,String username) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, 3);
 
         Map<String, Object> header = new HashMap<>();
         header.put("email", username);
+        header.put("aid", aid);
         System.out.println("JwtUtils.key:" + TokenUtils.key);
         String compactJws = Jwts.builder()
                 .setHeader(header)

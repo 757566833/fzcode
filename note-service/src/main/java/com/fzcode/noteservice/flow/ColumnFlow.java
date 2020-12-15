@@ -23,10 +23,10 @@ public class ColumnFlow {
         this.columnDBService = columnDBService;
     }
 
-    public Integer create(ColumnReqCreateDTO columnReqCreateDTO,String createdBy) throws CustomizeException {
+    public Integer create(ColumnReqCreateDTO columnReqCreateDTO,Integer aid) throws CustomizeException {
         Columns columns = new Columns();
         BeanUtils.copyProperties(columnReqCreateDTO,columns);
-        columns.setCreateBy(createdBy);
+        columns.setCreateBy(aid);
         Columns saveResult;
         try {
             saveResult = columnDBService.save(columns);
@@ -41,7 +41,7 @@ public class ColumnFlow {
         return columnDBService.findAll();
     }
 
-    public Integer update(ColumnReqUpdateDTO columnReqUpdateDTO,String updateBy) throws CustomizeException {
+    public Integer update(ColumnReqUpdateDTO columnReqUpdateDTO,Integer updateBy) throws CustomizeException {
         Boolean isHas = columnDBService.isHas(columnReqUpdateDTO.getCid());
         if (isHas) {
             Columns columns = new Columns();
@@ -55,7 +55,7 @@ public class ColumnFlow {
 
     }
 
-    public Integer patch(ColumnReqPatchDTO columnReqPatchDTO,String updateBy) throws CustomizeException {
+    public Integer patch(ColumnReqPatchDTO columnReqPatchDTO,Integer updateBy) throws CustomizeException {
         Boolean isHas = columnDBService.isHas(columnReqPatchDTO.getCid());
         if (isHas) {
             Columns columns = new Columns();
@@ -68,7 +68,7 @@ public class ColumnFlow {
         }
     }
 
-    public Integer delete(ColumnReqDeleteDTO columnReqDeleteDTO,String deleteBy) throws CustomizeException {
+    public Integer delete(ColumnReqDeleteDTO columnReqDeleteDTO,Integer deleteBy) throws CustomizeException {
         Boolean isHas = columnDBService.isHas(columnReqDeleteDTO.getCid());
         if (isHas) {
             Columns columnsResult = columnDBService.delete(columnReqDeleteDTO.getCid(),deleteBy);

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
-class ElasticServiceApplicationTests {
+class NoteServiceApplicationTests {
 
     @Autowired
     TextElasticService textElasticService;

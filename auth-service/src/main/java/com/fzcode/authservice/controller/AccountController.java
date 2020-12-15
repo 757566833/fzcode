@@ -1,6 +1,7 @@
 package com.fzcode.authservice.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.fzcode.authservice.dto.common.ListResDTO;
 import com.fzcode.authservice.dto.request.*;
 import com.fzcode.authservice.dto.request.list.AccountDTO;
 import com.fzcode.authservice.dto.response.GithubAccessToken;
@@ -94,18 +95,17 @@ public class AccountController {
 //        return "dsadsa";
     }
 
-    @GetMapping(value = "/admin/account")
-    public List<Map<String, Object>> getAccountList(@Validated AccountDTO accountDTO) {
-        System.out.println(JSON.toJSONString(accountDTO));
-        return accountFlow.findAllAccount(accountDTO);
+    @GetMapping("/self")
+    public SuccessResDTO getSelf(@RequestHeader("aid") String aid) throws CustomizeException {
+
+        return new SuccessResDTO("查询成功", accountFlow.findByAid(Integer.parseInt(aid)));
     }
 
-    @GetMapping(value = "/test222")
-    public String test() {
-        return "ddd";
+    @GetMapping(value = "/admin/account")
+    public SuccessResDTO getAccountList(@Validated AccountDTO accountDTO) {
+        System.out.println(JSON.toJSONString(accountDTO));
+        return new SuccessResDTO("查询成功", accountFlow.findAllAccount(accountDTO));
     }
-    @GetMapping(value = "/pir/test222")
-    public String testpir() {
-        return "pir";
-    }
+
+
 }

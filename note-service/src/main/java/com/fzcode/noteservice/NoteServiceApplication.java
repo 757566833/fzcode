@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @SpringBootApplication
-public class ElasticServiceApplication {
+public class NoteServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ElasticServiceApplication.class, args);
+		SpringApplication.run(NoteServiceApplication.class, args);
 
 	}
 

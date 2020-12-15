@@ -8,7 +8,7 @@ import com.fzcode.noteservice.dto.response.SuccessResDTO;
 import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
 import com.fzcode.noteservice.flow.TextFlow;
-import com.fzcode.noteservice.utils.BeanUtils;
+import com.fzcode.noteservice.utils.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -50,40 +50,40 @@ public class TextController {
             currentSize = size;
         }
         Page<Texts> pageList = textFlow.findAll(currentPage, currentSize);
-        return new SuccessResDTO("查询成功", BeanUtils.pageList2ResList(pageList));
+        return new SuccessResDTO("查询成功", ListUtils.pageList2ResList(pageList));
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResDTO create(@RequestBody @Validated TextReqCreateDTO textReqCreateDTO) throws CustomizeException {
-        String nid = textFlow.create(textReqCreateDTO);
+        String tid = textFlow.create(textReqCreateDTO);
         Map map = new HashMap();
-        map.put("nid", nid);
+        map.put("tid", tid);
         return new SuccessResDTO("存储成功", map);
     }
 
 
     @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResDTO update(@RequestBody @Validated TextReqUpdateDTO textReqUpdateDTO, @PathVariable(name = "id") Integer id) throws CustomizeException {
-        String nid = textFlow.update(id, textReqUpdateDTO);
+        String tid = textFlow.update(id, textReqUpdateDTO);
         Map map = new HashMap();
-        map.put("nid", nid);
+        map.put("tid", tid);
         return new SuccessResDTO("更新成功", map);
     }
 
     @PatchMapping(value = "/patch/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResDTO patch(@RequestBody @Validated TextReqPatchDTO textReqPatchDTO, @PathVariable(name = "id") Integer id) throws CustomizeException {
-        String nid = textFlow.patch(id, textReqPatchDTO);
+        String tid = textFlow.patch(id, textReqPatchDTO);
         Map map = new HashMap();
-        map.put("nid", nid);
+        map.put("tid", tid);
         return new SuccessResDTO("更新成功", map);
     }
 
     @DeleteMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResDTO delete(@PathVariable(name = "id") Integer id) throws CustomizeException {
-        String nid = textFlow.delete(id);
+        String tid = textFlow.delete(id);
         Map map = new HashMap();
-        map.put("nid", nid);
+        map.put("tid", tid);
         return new SuccessResDTO("更新成功", map);
     }
 

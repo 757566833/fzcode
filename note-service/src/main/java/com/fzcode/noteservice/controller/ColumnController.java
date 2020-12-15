@@ -37,26 +37,26 @@ public class ColumnController {
     }
 
     @PostMapping(value = "/add")
-    public SuccessResDTO add(@RequestBody @Validated ColumnReqCreateDTO columnReqCreateDTO, @RequestHeader("email") String email) throws CustomizeException {
-        Integer cid = columnFlow.create(columnReqCreateDTO, email);
+    public SuccessResDTO add(@RequestBody @Validated ColumnReqCreateDTO columnReqCreateDTO, @RequestHeader("aid") Integer aid) throws CustomizeException {
+        Integer cid = columnFlow.create(columnReqCreateDTO, aid);
         return new SuccessResDTO("创建成功", cid);
     }
 
     @PutMapping(value = "/update")
-    public SuccessResDTO update(@RequestBody @Validated ColumnReqUpdateDTO columnReqUpdateDTO, @RequestHeader("email") String email) throws CustomizeException {
-        Integer cid = columnFlow.update(columnReqUpdateDTO,email);
+    public SuccessResDTO update(@RequestBody @Validated ColumnReqUpdateDTO columnReqUpdateDTO, @RequestHeader("aid") Integer aid) throws CustomizeException {
+        Integer cid = columnFlow.update(columnReqUpdateDTO,aid);
         return new SuccessResDTO("更新成功", cid);
     }
 
     @PatchMapping(value = "/patch")
-    public SuccessResDTO patch(@RequestBody @Validated ColumnReqPatchDTO columnReqPatchDTO, @RequestHeader("email") String email) throws CustomizeException {
-        Integer cid = columnFlow.patch(columnReqPatchDTO,email);
+    public SuccessResDTO patch(@RequestBody @Validated ColumnReqPatchDTO columnReqPatchDTO, @RequestHeader("aid") Integer aid) throws CustomizeException {
+        Integer cid = columnFlow.patch(columnReqPatchDTO,aid);
         return new SuccessResDTO("更新成功", cid);
     }
 
     @DeleteMapping(value = "/delete")
-    public SuccessResDTO del(@RequestBody @Validated ColumnReqDeleteDTO columnReqDeleteDTO, @RequestHeader("email") String email) throws CustomizeException {
-        Integer cid = columnFlow.delete(columnReqDeleteDTO,email);
+    public SuccessResDTO del(@RequestBody @Validated ColumnReqDeleteDTO columnReqDeleteDTO, @RequestHeader("aid") Integer aid) throws CustomizeException {
+        Integer cid = columnFlow.delete(columnReqDeleteDTO,aid);
         return new SuccessResDTO("删除", cid);
     }
 }

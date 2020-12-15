@@ -1,6 +1,7 @@
 package com.fzcode.gateservice.filter;
 
 import com.fzcode.gateservice.config.Services;
+import com.fzcode.gateservice.dto.common.TokenInfoDTO;
 import com.fzcode.gateservice.flow.AuthorityFlow;
 import com.fzcode.gateservice.util.TokenUtils;
 import lombok.SneakyThrows;
@@ -44,6 +45,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
         HttpHeaders httpHeaders = request.getHeaders();
         String auth = httpHeaders.getFirst(HttpHeaders.AUTHORIZATION);
         URI uri = request.getURI();
+        System.out.println(uri.getPath());
         if (uri.getPath().indexOf("/auth/login") == 0
                 || uri.getPath().indexOf("/auth/register") == 0
                 || uri.getPath().indexOf("/auth/forget") == 0
@@ -53,7 +55,25 @@ public class AuthFilter implements Ordered, GlobalFilter {
         ) {
             return chain.filter(exchange);
         } else if (request.getMethod() == HttpMethod.GET && uri.getPath().indexOf("admin") < 0) {
-            return chain.filter(exchange);
+
+            try {
+                TokenInfoDTO tokenInfoDTO = TokenUtils.parseBearer(auth);
+                String  email = tokenInfoDTO.getEmail();
+                Integer aid = tokenInfoDTO.getAid();
+                return authorityFlow.getAuthority(email).flatMap(authority -> {
+                    ServerHttpRequest nextRequest = request
+                            .mutate()
+                            .header("email", email)
+                            .header("aid", aid.toString())
+                            .header("userAuthority", authority)
+                            .build();
+                    ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
+                    return chain.filter(nextExchange);
+                });
+            } catch (Exception e) {
+                return chain.filter(exchange);
+            }
+
         } else if (auth.indexOf("basic") == 0) {
             String[] infoArray = auth.split(":");
             String serviceName = infoArray[0];
@@ -67,8 +87,12 @@ public class AuthFilter implements Ordered, GlobalFilter {
             }
         } else {
             String email = null;
+            Integer aid = null;
             try {
-                email = TokenUtils.parseBearer(auth);
+                TokenInfoDTO tokenInfoDTO = TokenUtils.parseBearer(auth);
+                email = tokenInfoDTO.getEmail();
+                aid = tokenInfoDTO.getAid();
+                System.out.println("email:"+email+",aid:"+aid);
             } catch (Exception e) {
                 DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token不存在".getBytes());
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -80,6 +104,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
             } else {
                 String finalEmail = email;
+                Integer finalAid = aid;
                 return authorityFlow.getAuthority(email).flatMap(authority -> {
                     if (uri.getPath().indexOf("admin") > 0 && !authority.equals("ADMIN")) {
                         DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("没权限".getBytes());
@@ -89,6 +114,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                     ServerHttpRequest nextRequest = request
                             .mutate()
                             .header("email", finalEmail)
+                            .header("aid", finalAid.toString())
                             .header("userAuthority", authority)
                             .build();
                     ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
@@ -100,6 +126,6 @@ public class AuthFilter implements Ordered, GlobalFilter {
 
     @Override
     public int getOrder() {
-        return 10;
+        return -10;
     }
 }

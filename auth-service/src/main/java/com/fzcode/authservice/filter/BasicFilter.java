@@ -38,14 +38,20 @@ public class BasicFilter implements Filter {
         String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (request.getRequestURI().contains("/pir/") && !auth.contains("basic")) {
-            throw new CustomizeException("token不对");
+            if(!auth.contains("basic")){
+                throw new CustomizeException("token不对");
+            }else{
+                String jwsStr = auth.substring(6);
+                String[] infoArray = jwsStr.split(":");
+                String serviceName = infoArray[0];
+                String password = infoArray[1];
+                if (services.getAuth().get(serviceName) != password) {
+                    throw new CustomizeException("token不对");
+                }
+            }
+
         }
-        String[] infoArray = auth.split(":");
-        String serviceName = infoArray[0];
-        String password = infoArray[1];
-        if (services.getAuth().get(serviceName) != password) {
-            throw new CustomizeException("token不对");
-        }
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

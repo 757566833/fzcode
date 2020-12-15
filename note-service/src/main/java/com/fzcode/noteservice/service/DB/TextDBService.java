@@ -46,8 +46,8 @@ public class TextDBService {
     }
 
     public Texts patch(Texts texts) {
-        Integer nid = texts.getNid();
-        Texts oldText = this.findById(nid);
+        Integer tid = texts.getTid();
+        Texts oldText = this.findById(tid);
         Texts newText = new Texts();
         BeanUtils.copyProperties(oldText,newText);
         BeanUtils.copyProperties(texts,newText);
@@ -58,7 +58,7 @@ public class TextDBService {
     public Texts delete(Integer id) {
         Texts texts = new Texts();
         texts.setIsDelete(true);
-        texts.setNid(id);
+        texts.setTid(id);
         Texts textsResult = textRepository.save(texts);
         return textsResult;
     }

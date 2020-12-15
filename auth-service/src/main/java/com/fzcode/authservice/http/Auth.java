@@ -19,7 +19,9 @@ public class Auth {
 
     public static GithubAccessToken getGithubAccessToken(String code) {
         return WebClient.create("https://github.com")
+
                 .get()
+
                 .uri("/login/oauth/access_token?client_id="
                         + oauth.getClientId() +
                         "&client_secret=" +

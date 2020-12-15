@@ -1,5 +1,6 @@
 package com.fzcode.authservice.flow;
 
+import com.fzcode.authservice.dto.common.ListResDTO;
 import com.fzcode.authservice.dto.request.list.AccountDTO;
 import com.fzcode.authservice.dto.response.GithubUserInfo;
 import com.fzcode.authservice.dto.response.LoginResDTO;
@@ -50,7 +51,7 @@ public class AccountFlow {
         if (!bCryptPasswordEncoder.matches(password, accountService.findByAccount(email).getPassword())) {
             throw new CustomizeException("用户名密码错误");
         }
-        return new LoginResDTO(TokenUtils.createBearer(email), authorityService.findByAccount(email).getAuthority());
+        return new LoginResDTO(TokenUtils.createBearer(accountService.findByAccount(email).getAid(), email), authorityService.findByAccount(email).getAuthority());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -97,7 +98,7 @@ public class AccountFlow {
             System.out.println(e.getMessage());
             throw new CustomizeException("权限创建失败");
         }
-        return new LoginResDTO(TokenUtils.createBearer(email), "USER");
+        return new LoginResDTO(TokenUtils.createBearer(aid, email), "USER");
 
     }
 
@@ -154,7 +155,7 @@ public class AccountFlow {
                 return new LoginResDTO("账号或密码错误，请找回密码", "USER");
 //                return "账号或密码错误，请找回密码";
             } else {
-                return new LoginResDTO(TokenUtils.createBearer(email), authorityService.findByAccount(email).getAuthority());
+                return new LoginResDTO(TokenUtils.createBearer(account.getAid(), email), authorityService.findByAccount(email).getAuthority());
             }
         } else {
             Accounts saveAccount = new Accounts();
@@ -205,7 +206,7 @@ public class AccountFlow {
             } catch (Exception e) {
                 return new LoginResDTO("权限创建失败", "USER");
             }
-            return new LoginResDTO(TokenUtils.createBearer(email), "USER");
+            return new LoginResDTO(TokenUtils.createBearer(accountResult.getAid(), email), "USER");
         }
 //        return JwtUtils.createToken(email);
 
@@ -213,7 +214,13 @@ public class AccountFlow {
 
     }
 
-    public List<Map<String,Object>> findAllAccount(AccountDTO accountDTO) {
+    public ListResDTO<List<Map<String, Object>>> findAllAccount(AccountDTO accountDTO) {
+//        Integer
         return accountService.findList(accountDTO);
+    }
+
+    public Map<String, Object> findByAid(Integer aid) throws CustomizeException {
+//        Integer
+        return accountService.findUserInfoByUid(aid);
     }
 }

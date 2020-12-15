@@ -17,7 +17,7 @@ public class Accounts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int aid;
 
-    @Column(name = "create_time" )
+    @Column(name = "create_time")
     @CreatedDate
     private Date createTime;
 
@@ -25,7 +25,7 @@ public class Accounts {
     @LastModifiedDate
     private Date updateTime;
 
-    @Column(name="update_by")
+    @Column(name = "update_by")
     private String updateBy;
 
     @Column
@@ -35,20 +35,22 @@ public class Accounts {
     private String password;
 
     @Column
-    private Boolean enabled = true;
+    private Integer enabled = 1;
 
     @Column
-    private Boolean expired = false;
+    private Integer expired = 0;
 
     @Column
-    private Boolean locked = false;
+    private Integer locked = 0;
 
-    @Column(name="register_type")
+    @Column(name = "register_type")
     private Integer registerType;
 
-    @Column(name="delete_by")
+    @Column(name = "delete_by")
     private String deleteBy;
 
     @Column(name = "is_delete")
-    private Boolean isDelete = false;
+    private Integer isDelete = 0;
+
+    private Date deleteTime;
 }

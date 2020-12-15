@@ -31,27 +31,30 @@ import java.util.concurrent.TimeUnit;
 public class TextElasticService {
 
     @Value("${elastic.index}")
-    private static String index;
+    private String index;
 
     public String create(TextESCreateDTO textESCreateDTO) throws CustomizeException {
         RestHighLevelClient client = null;
         try {
             client = ElasticBuilder.createElasticClient();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CustomizeException("打开io流出了问题");
         }
+        System.out.println(index);
         IndexRequest indexRequest = new IndexRequest(index);
-        indexRequest.id(textESCreateDTO.getId().toString());
+        indexRequest.id(textESCreateDTO.getId());
         indexRequest.source(JSON.toJSONString(textESCreateDTO), XContentType.JSON);
         IndexResponse indexResponse;
         try {
             indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new CustomizeException("新增出了问题");
         }
         try {
             client.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new CustomizeException("关闭io流出了问题");
         }
         return indexResponse.getId();
@@ -61,7 +64,7 @@ public class TextElasticService {
         RestHighLevelClient client = null;
         try {
             client = ElasticBuilder.createElasticClient();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CustomizeException("打开io流出了问题");
         }
 //        DeleteRequest deleteRequest = new DeleteRequest(index, id);

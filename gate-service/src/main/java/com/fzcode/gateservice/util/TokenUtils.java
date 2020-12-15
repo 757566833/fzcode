@@ -1,5 +1,6 @@
 package com.fzcode.gateservice.util;
 
+import com.fzcode.gateservice.dto.common.TokenInfoDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -41,7 +42,7 @@ public class TokenUtils {
 
     }
 
-    public static String parseBearer(String token) {
+    public static TokenInfoDTO parseBearer(String token) {
         int preIndex = token.indexOf("bearer ");
         if(preIndex==-1){
             throw new JwtException("token格式不对");
@@ -52,9 +53,12 @@ public class TokenUtils {
                 .setSigningKey(TokenUtils.key)
                 .build()
                 .parseClaimsJws(jwsStr);
-        Object uid = jws.getHeader().get("email");
-
-        return uid.toString();
+        Object emailObj = jws.getHeader().get("email");
+        Object aidObj = jws.getHeader().get("aid");
+        TokenInfoDTO tokenInfoDTO = new TokenInfoDTO();
+        tokenInfoDTO.setAid(Integer.parseInt(aidObj.toString()));
+        tokenInfoDTO.setEmail(emailObj.toString());
+        return tokenInfoDTO;
     }
 
     public static String createBasic(String serviceName, String password) {

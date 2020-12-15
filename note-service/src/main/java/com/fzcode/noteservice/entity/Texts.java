@@ -14,7 +14,7 @@ import java.util.Date;
 public class Texts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int nid;
+    private int tid;
 
     @Column(name = "create_time")
     @CreatedDate
@@ -35,6 +35,12 @@ public class Texts {
     private String title;
 
     private String description;
+
+    private String text;
+
+    private Integer cid;
+
+    private String tags;
 
     @Column(name = "is_delete")
     private Boolean isDelete = false;

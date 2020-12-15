@@ -43,7 +43,7 @@ public class TypeFilter implements Ordered, GlobalFilter {
             DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token类型不对".getBytes());
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().writeWith(Mono.just(dataBuffer));
-        } else if (!auth.contains("basic ")) {
+        } else if (!auth.contains("bearer ")) {
             DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token类型不对".getBytes());
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().writeWith(Mono.just(dataBuffer));
@@ -54,6 +54,6 @@ public class TypeFilter implements Ordered, GlobalFilter {
 
     @Override
     public int getOrder() {
-        return 0;
+        return -100;
     }
 }
