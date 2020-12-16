@@ -3,6 +3,7 @@ package com.fzcode.noteservice.controller;
 import com.fzcode.noteservice.dto.request.Text.TextReqCreateDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqPatchDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqUpdateDTO;
+import com.fzcode.noteservice.dto.response.TextGetResDTO;
 import com.fzcode.noteservice.dto.response.TextResDTO;
 import com.fzcode.noteservice.dto.response.SuccessResDTO;
 import com.fzcode.noteservice.entity.Texts;
@@ -55,8 +56,11 @@ public class TextController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResDTO create(@RequestBody @Validated TextReqCreateDTO textReqCreateDTO) throws CustomizeException {
-        String tid = textFlow.create(textReqCreateDTO);
+    public SuccessResDTO create(@RequestBody @Validated TextReqCreateDTO textReqCreateDTO, @RequestHeader("aid") String aid) throws CustomizeException {
+        if (aid == null) {
+            throw new CustomizeException("用户未登录");
+        }
+        String tid = textFlow.create(textReqCreateDTO,Integer.valueOf(aid));
         Map map = new HashMap();
         map.put("tid", tid);
         return new SuccessResDTO("存储成功", map);
@@ -89,7 +93,7 @@ public class TextController {
 
     @GetMapping(value = "/get/{id}")
     public SuccessResDTO getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
-        TextResDTO textResDTO = textFlow.findById(id);
+        TextGetResDTO textResDTO = textFlow.findById(id);
         return new SuccessResDTO("查询", textResDTO);
     }
 }

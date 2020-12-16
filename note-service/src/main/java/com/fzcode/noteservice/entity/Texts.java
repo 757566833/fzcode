@@ -18,19 +18,19 @@ public class Texts {
 
     @Column(name = "create_time")
     @CreatedDate
-    private  Date createTime;
+    private Date createTime;
 
     @Column(name = "update_time")
     @LastModifiedDate
     private Date updateTime;
 
     @Column(name = "create_by")
-    @CreatedBy
-    private String createBy;
+//    @CreatedBy
+    private Integer createBy;
 
     @Column(name = "update_by")
-    @LastModifiedBy
-    private String updateBy;
+//    @LastModifiedBy
+    private Integer updateBy;
 
     private String title;
 
@@ -43,7 +43,7 @@ public class Texts {
     private String tags;
 
     @Column(name = "is_delete")
-    private Boolean isDelete = false;
+    private Integer isDelete = 0;
 
 
 }

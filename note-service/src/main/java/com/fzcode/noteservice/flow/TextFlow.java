@@ -1,6 +1,8 @@
 package com.fzcode.noteservice.flow;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.TypeReference;
 import com.fzcode.noteservice.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.noteservice.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.noteservice.dto.elastic.TextDTO.TextESPatchDTO;
@@ -8,6 +10,7 @@ import com.fzcode.noteservice.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqCreateDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqPatchDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqUpdateDTO;
+import com.fzcode.noteservice.dto.response.TextGetResDTO;
 import com.fzcode.noteservice.dto.response.TextResDTO;
 import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
@@ -20,7 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
+import java.util.*;
 
 @Component
 public class TextFlow {
@@ -39,10 +42,12 @@ public class TextFlow {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String create(TextReqCreateDTO textReqCreateDTO) throws CustomizeException {
+    public String create(TextReqCreateDTO textReqCreateDTO, Integer create_by) throws CustomizeException {
         Texts texts = new Texts();
         BeanUtils.copyProperties(textReqCreateDTO, texts);
-        texts.setTags(String.join(",", textReqCreateDTO.getTags()));
+        texts.setTags(JSON.toJSONString(textReqCreateDTO.getTags()));
+//        texts.setTags(String.join(",", textReqCreateDTO.getTags()));
+        texts.setCreateBy(create_by);
         Texts saveResult;
         try {
             saveResult = textDBService.save(texts);
@@ -116,18 +121,27 @@ public class TextFlow {
         return textElasticService.delete(nid.toString());
     }
 
-    public TextResDTO findById(Integer nid) throws CustomizeException {
-        Texts texts = textDBService.findById(nid);
+    public TextGetResDTO findById(Integer nid) throws CustomizeException {
+        TextGetResDTO texts = textDBService.findByIdWithUserInfo(nid);
+//        System.out.println(texts.get("tags").toString());
+//        List<String> list = JSON.parseArray(texts.get("tags").toString(), String.class);
+//
+//        Map<String,Object> map = new HashMap<>();
+//        BeanUtils.copyProperties(texts,map);
+//        map.put("tags",list);
+//        List<String> list = JSONArray.parseArray(texts.get("tags").toString(), String.class);
+
+
 //        String sourceString = textElasticService.getById(nid.toString());
 //        TextESDTO textESDTO = JSON.parseObject(sourceString, TextESDTO.class);
-        TextResDTO textResDTO = new TextResDTO(
-                nid,
-                texts.getTitle(),
-                texts.getDescription(),
-                texts.getText(),
-                Arrays.asList(texts.getTags().split(","))
-
-        );
-        return textResDTO;
+//        TextResDTO textResDTO = new TextResDTO(
+//                nid,
+//                texts.getTitle(),
+//                texts.getDescription(),
+//                texts.getText(),
+//                Arrays.asList(texts.getTags().split(","))
+//
+//        );
+        return texts;
     }
 }
