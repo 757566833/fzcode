@@ -1,9 +1,5 @@
 package com.fzcode.noteservice.DBInterface;
 
-import lombok.Data;
-
-import java.util.List;
-
 public interface TextDBGetDTO {
     String getAvatar();
 
@@ -13,7 +9,7 @@ public interface TextDBGetDTO {
 
     String getCreate_time();
 
-    String getCTitle();
+    String getCategory();
 
     String getDescription();
 

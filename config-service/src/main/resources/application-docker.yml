@@ -2,7 +2,11 @@
 spring:
   profiles:
     include: common
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://eureka:9999/eureka/
+
 eureka:
   client:
-    service-url:
-      defaultZone: http://eureka:9999/eureka/
+    enabled: false

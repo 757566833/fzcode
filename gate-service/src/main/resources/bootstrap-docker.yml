@@ -10,7 +10,7 @@ spring:
       #        service-id: config-service
       label: master
   redis:
-    host: redis
+    host: 192.168.31.150
     port: 9379
     password: 123456789
     timeout: 5000

@@ -6,14 +6,3 @@ spring:
 
   # 文档首页点击 spring 相关 进入 spring文档
   # https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-usagenotes-spring-config.html
-  datasource:
-    username: fzcode
-    password: Wuyaowang9876
-    url: jdbc:mysql://192.168.31.150:3306/fzcode
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    host: 192.168.31.150
-    port: 6379
-    password: 123456789
-    timeout: 5000
-    database: 15

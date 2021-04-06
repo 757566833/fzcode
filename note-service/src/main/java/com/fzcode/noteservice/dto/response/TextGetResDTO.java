@@ -10,7 +10,7 @@ public class TextGetResDTO {
     private Integer cid;
     private Integer create_by;
     private String create_time;
-    private String cTitle;
+    private String category;
     private String description;
     private List<String> tags;
     private String text;
