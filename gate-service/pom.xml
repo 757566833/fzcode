@@ -82,7 +82,7 @@
 
 
 	<build>
-		<finalName>gateway</finalName>
+		<finalName>gate</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
