@@ -28,7 +28,7 @@ java -jar ./target/file-service-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
 https://github.com/vishnubob/wait-for-it
 
 
-### spring cloud config 坑
+### spring cloud config 坑 如果用git而不是http
 
 这里面引入了com.jcraft.jsch 
 实际上这个包要读取~/.ssh/config文件
