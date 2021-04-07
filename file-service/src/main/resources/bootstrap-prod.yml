@@ -9,7 +9,10 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:9999/eureka/
 eureka:
   client:
-    service-url:
-      defaultZone: http://127.0.0.1:9999/eureka/
+    enabled: false
