@@ -23,7 +23,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:9999/eureka/
 eureka:
   client:
-    service-url:
-      defaultZone: http://127.0.0.1:9999/eureka/
+    enabled: false
