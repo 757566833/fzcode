@@ -13,11 +13,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:9999/eureka/
 eureka:
   client:
-    service-url:
-      defaultZone: http://127.0.0.1:9999/eureka/
-
+    enabled: false
 elastic:
   host: 192.168.31.150
   port: 9200
