@@ -15,8 +15,11 @@ spring:
     password: 123456789
     timeout: 5000
     database: 0
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:9999/eureka/
 eureka:
   client:
-    service-url:
-      defaultZone: http://127.0.0.1:9999/eureka/
+    enabled: false
 
