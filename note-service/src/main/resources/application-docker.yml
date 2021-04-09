@@ -3,8 +3,8 @@ spring:
     include: common
   datasource:
     username: fzcode
-    password: fzcode_123
-    url: jdbc:mysql://192.168.31.150:9306/fzcode
+    password: fzcode_9876
+    url: jdbc:mysql://192.168.31.152:30306/fzcode
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
@@ -18,7 +18,7 @@ eureka:
   client:
     enabled: false
 elastic:
-  host: elasticsearch
-  port: 9200
+  host: 192.168.31.151
+  port: 30200
   scheme : http
   index : note
