@@ -3,7 +3,7 @@ spring:
     include: common
   cloud:
     config:
-      uri: http://127.0.0.1:9899
+      uri: http://192.168.31.154:30201
       profile: dev
       #      discovery:
       #        enabled: true
@@ -15,8 +15,8 @@ spring:
     url: jdbc:mysql://192.168.31.152:30306/fzcode
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 192.168.31.150
-    port: 6379
+    host: 192.168.31.157
+    port: 30379
     password: 123456789
     timeout: 5000
     database: 15
