@@ -11,12 +11,12 @@ spring:
       label: master
   datasource:
     username: fzcode
-    password: fzcode_9876
-    url: jdbc:mysql://192.168.31.152:30306/fzcode
+    password: 123456
+    url: jdbc:mysql://192.168.31.150:3306/fzcode
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 192.168.31.157
-    port: 30379
+    host: 192.168.31.150
+    port: 6379
     password: 123456789
     timeout: 5000
     database: 15

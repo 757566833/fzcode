@@ -48,7 +48,8 @@ public class AccountFlow {
     public LoginResDTO login(String email, String password) throws CustomizeException {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        if (!bCryptPasswordEncoder.matches(password, accountService.findByAccount(email).getPassword())) {
+        Accounts userAccount = accountService.findByAccount(email);
+        if (userAccount==null||!bCryptPasswordEncoder.matches(password, userAccount.getPassword())) {
             throw new CustomizeException("用户名密码错误");
         }
         return new LoginResDTO(TokenUtils.createBearer(accountService.findByAccount(email).getAid(), email), authorityService.findByAccount(email).getAuthority());

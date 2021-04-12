@@ -33,7 +33,7 @@ public class GateServiceApplication {
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-        System.out.println();
+        System.out.println(services.getHost().get("auth"));
         return builder
                 .routes()
                 .route("auth-service", r -> r.path("/auth/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("auth")))
