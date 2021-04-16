@@ -8,6 +8,9 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class GateServiceApplication {
     Services services;
@@ -47,5 +50,9 @@ public class GateServiceApplication {
 //				.route("test2",r->r.path("/test2").filters(f->f.stripPrefix(1)).uri("lb://account-service"))
 //
                 .build();
+    }
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
     }
 }

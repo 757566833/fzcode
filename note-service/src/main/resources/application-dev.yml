@@ -6,7 +6,7 @@ spring:
   datasource:
     username: fzcode
     password: fzcode_9876
-    url: jdbc:mysql://192.168.31.150:3306/fzcode
+    url: jdbc:mysql://192.168.31.150:3306/fzcode?serverTimezone=GMT%2b8
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
