@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Categorys {
+public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cid;
@@ -36,10 +36,6 @@ public class Categorys {
     private String title;
 
     private String description;
-
-    private String img;
-
-    private String detail;
 
     @Column(name = "is_delete")
     private Integer isDelete = 0;

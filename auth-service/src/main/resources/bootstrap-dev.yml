@@ -12,7 +12,7 @@ spring:
   datasource:
     username: fzcode
     password: 123456
-    url: jdbc:mysql://192.168.31.150:3306/fzcode?serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.31.150:3306/fzcode?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: 192.168.31.150
@@ -24,6 +24,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: com.fzcode.authservice.config.Mysql
 eureka:
   client:
     enabled: false

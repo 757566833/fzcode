@@ -20,14 +20,14 @@ CREATE TABLE `groups` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
  CREATE TABLE `group_authorities` (
    `group_id` bigint(20) NOT NULL,
    `authority` varchar(50) NOT NULL,
    KEY `fk_group_authorities_group` (`group_id`),
    CONSTRAINT `fk_group_authorities_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `group_members` (
@@ -37,7 +37,7 @@ CREATE TABLE `group_members` (
   PRIMARY KEY (`id`),
   KEY `fk_group_members_group` (`group_id`),
   CONSTRAINT `fk_group_members_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `texts` (
@@ -50,4 +50,4 @@ CREATE TABLE `texts` (
   `update_by` varchar(255) DEFAULT NULL,
   `update_time` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`nid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
