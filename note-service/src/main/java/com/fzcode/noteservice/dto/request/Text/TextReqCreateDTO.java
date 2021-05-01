@@ -17,5 +17,5 @@ public class TextReqCreateDTO {
     private String text;
     @NotNull
     private Integer cid;
-    private List<String> tags;
+    private List<String> categories;
 }

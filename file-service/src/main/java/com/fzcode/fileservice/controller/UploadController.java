@@ -3,6 +3,7 @@ package com.fzcode.fileservice.controller;
 import com.fzcode.fileservice.config.Config;
 import com.fzcode.fileservice.dto.Base64DTO;
 import com.fzcode.fileservice.dto.SuccessResDTO;
+import com.fzcode.fileservice.exception.CustomizeException;
 import com.fzcode.fileservice.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -70,12 +71,15 @@ public class UploadController {
     }
 
     @PostMapping(value = "/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<SuccessResDTO> upload(ServerWebExchange serverWebExchange) {
+    public Mono<SuccessResDTO> upload(ServerWebExchange serverWebExchange){
         Mono<MultiValueMap<String, Part>> multipartData = serverWebExchange.getMultipartData();
         return multipartData.flatMap(multiValueMap -> {
             System.out.println(multiValueMap);
             Part part = multiValueMap.getFirst("file");
             String fileName = part.headers().getContentDisposition().getFilename();
+            if(fileName==null){
+                return Mono.error(new CustomizeException("header中未含有filename"));
+            }
             String preFix = FileUtil.getFilePrefix(fileName);
             String suffix = FileUtil.getFileSuffix(fileName);
             Path tempFile = null;

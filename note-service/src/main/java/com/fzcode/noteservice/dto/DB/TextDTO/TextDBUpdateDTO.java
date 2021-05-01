@@ -1,8 +1,11 @@
 package com.fzcode.noteservice.dto.DB.TextDTO;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+@Data
 public class TextDBUpdateDTO {
 
     @NotNull
@@ -12,27 +15,4 @@ public class TextDBUpdateDTO {
 
     private String description;
 
-    public Integer getNid() {
-        return nid;
-    }
-
-    public void setNid(Integer nid) {
-        this.nid = nid;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

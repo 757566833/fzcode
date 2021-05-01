@@ -189,9 +189,8 @@ public class AccountFlow {
 
             users.setAvatar(githubUserInfo.getAvatar_url());
             users.setBlog(githubUserInfo.getBlog());
-            users.setGithubUrl(githubUserInfo.getGists_url());
+            users.setGithubUrl("https://github.com/"+githubUserInfo.getLogin());
             users.setIdCard("");
-            users.setGithubUrl(githubUserInfo.getGists_url());
 //            users.set
             try {
                 userService.create(users);

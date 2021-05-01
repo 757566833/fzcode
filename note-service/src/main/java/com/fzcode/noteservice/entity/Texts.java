@@ -40,7 +40,7 @@ public class Texts {
 
     private Integer cid;
 
-    private String tags;
+    private String categories;
 
     @Column(name = "is_delete")
     private Integer isDelete = 0;

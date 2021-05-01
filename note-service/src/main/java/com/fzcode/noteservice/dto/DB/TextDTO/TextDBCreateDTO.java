@@ -1,7 +1,10 @@
 package com.fzcode.noteservice.dto.DB.TextDTO;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 
+@Data
 public class TextDBCreateDTO {
 
     @NotEmpty
@@ -9,19 +12,4 @@ public class TextDBCreateDTO {
 
     private String description;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

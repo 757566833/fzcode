@@ -1,7 +1,10 @@
 package com.fzcode.noteservice.dto.elastic.TextDTO;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 
+@Data
 public class TextESRetrieveDTO {
     @NotEmpty
     private String id;
@@ -10,11 +13,4 @@ public class TextESRetrieveDTO {
         this.id = id;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

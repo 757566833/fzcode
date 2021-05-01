@@ -45,8 +45,8 @@ public class TextFlow {
     public String create(TextReqCreateDTO textReqCreateDTO, Integer create_by) throws CustomizeException {
         Texts texts = new Texts();
         BeanUtils.copyProperties(textReqCreateDTO, texts);
-        texts.setTags(JSON.toJSONString(textReqCreateDTO.getTags()));
-//        texts.setTags(String.join(",", textReqCreateDTO.getTags()));
+        texts.setCategories(JSON.toJSONString(textReqCreateDTO.getCategories()));
+//        texts.setCategories(String.join(",", textReqCreateDTO.getCategories()));
         texts.setCreateBy(create_by);
         Texts saveResult;
         try {
@@ -62,8 +62,8 @@ public class TextFlow {
         if (textReqCreateDTO.getSubTitle() != null) {
             textESCreateDTO.setSubTitle(textReqCreateDTO.getSubTitle());
         }
-        if (textReqCreateDTO.getTags() != null) {
-            textESCreateDTO.setTags(textReqCreateDTO.getTags());
+        if (textReqCreateDTO.getCategories() != null) {
+            textESCreateDTO.setCategories(textReqCreateDTO.getCategories());
         }
         if (textReqCreateDTO.getText() != null) {
             textESCreateDTO.setText(MarkdownUtils.markdown2string(textReqCreateDTO.getText()));
@@ -88,7 +88,7 @@ public class TextFlow {
         }
         TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textReqUpdateDTO.getTitle());
         textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
-        textESUpdateDTO.setTags(textReqUpdateDTO.getTags());
+        textESUpdateDTO.setCategories(textReqUpdateDTO.getCategories());
         textESUpdateDTO.setText(MarkdownUtils.markdown2string(textReqUpdateDTO.getText()));
         return textElasticService.update(textESUpdateDTO);
     }
@@ -108,7 +108,7 @@ public class TextFlow {
         }
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
         textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());
-        textESPatchDTO.setTags(textReqPatchDTO.getTags());
+        textESPatchDTO.setCategories(textReqPatchDTO.getCategories());
         textESPatchDTO.setText(MarkdownUtils.markdown2string(textReqPatchDTO.getText()));
         textESPatchDTO.setTitle(textReqPatchDTO.getTitle());
         return textElasticService.patch(textESPatchDTO);
@@ -139,7 +139,7 @@ public class TextFlow {
 //                texts.getTitle(),
 //                texts.getDescription(),
 //                texts.getText(),
-//                Arrays.asList(texts.getTags().split(","))
+//                Arrays.asList(texts.getCategories().split(","))
 //
 //        );
         return texts;

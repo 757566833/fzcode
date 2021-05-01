@@ -16,7 +16,7 @@ public class TextESCreateDTO {
     //    @NotEmpty
     private String text;
     //    @NotEmpty
-    private List<String> tags;
+    private List<String> categories;
 
     private Boolean isDelete = false;
 
