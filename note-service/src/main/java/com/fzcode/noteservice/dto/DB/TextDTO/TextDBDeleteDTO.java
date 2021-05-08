@@ -9,5 +9,5 @@ import javax.validation.constraints.NotNull;
 public class TextDBDeleteDTO {
 
     @NotNull
-    private Integer nid;
+    private Integer tid;
 }

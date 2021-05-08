@@ -36,11 +36,11 @@ public class Texts {
 
     private String description;
 
-    private String text;
+    @Column(name = "raw", nullable = false,columnDefinition="varchar(2048) COMMENT 'raw'")
+    private String raw;
 
-    private Integer cid;
-
-    private String categories;
+    @Column(name = "html", nullable = false,columnDefinition="varchar(2048) COMMENT 'html'")
+    private String html;
 
     @Column(name = "is_delete")
     private Integer isDelete = 0;

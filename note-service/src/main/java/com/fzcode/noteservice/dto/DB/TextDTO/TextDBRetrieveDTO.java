@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class TextDBRetrieveDTO {
 
-    private Integer nid;
+    private Integer tid;
 
 }

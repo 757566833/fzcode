@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -46,16 +47,27 @@ public class AuthFilter implements Ordered, GlobalFilter {
         String auth = httpHeaders.getFirst(HttpHeaders.AUTHORIZATION);
         URI uri = request.getURI();
         System.out.println(uri.getPath());
+        // 不需要token的接口
         if (uri.getPath().indexOf("/auth/login") == 0
                 || uri.getPath().indexOf("/auth/register") == 0
                 || uri.getPath().indexOf("/auth/forget") == 0
+                || uri.getPath().indexOf("/auth/github") == 0
                 || uri.getPath().indexOf("/mail/register") == 0
                 || uri.getPath().indexOf("/mail/forget") == 0
                 || uri.getPath().indexOf("/current") == 0
         ) {
             return chain.filter(exchange);
-        } else if (request.getMethod() == HttpMethod.GET && uri.getPath().indexOf("admin") < 0) {
-
+        }
+        // 测试预留 以后删掉
+        else if(request.getMethod() == HttpMethod.GET &&uri.getPath().indexOf("/test") == 0){
+            return chain.filter(exchange);
+        }
+        // 所有的文章查询，都是不需要token的
+        else if(request.getMethod() == HttpMethod.GET &&uri.getPath().indexOf("/note") == 0){
+            return chain.filter(exchange);
+        }
+        // get 且不是admin 约定好服务器内部都不是get请求
+        else if (uri.getPath().indexOf("admin") < 0) {
             try {
                 TokenInfoDTO tokenInfoDTO = TokenUtils.parseBearer(auth);
                 String  email = tokenInfoDTO.getEmail();
@@ -71,7 +83,9 @@ public class AuthFilter implements Ordered, GlobalFilter {
                     return chain.filter(nextExchange);
                 });
             } catch (Exception e) {
-                return chain.filter(exchange);
+                ServerHttpResponse res = exchange.getResponse();
+                res.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
             }
 
         } else if (auth.indexOf("basic") == 0) {

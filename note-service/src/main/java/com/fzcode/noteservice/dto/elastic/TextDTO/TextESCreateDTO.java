@@ -12,13 +12,9 @@ public class TextESCreateDTO {
     @NotEmpty
     private String title;
     //    @NotEmpty
-    private String subTitle;
-    //    @NotEmpty
     private String text;
     //    @NotEmpty
-    private List<String> categories;
-
-    private Boolean isDelete = false;
+    private List<Integer> categories;
 
     public TextESCreateDTO(@NotEmpty String id, @NotEmpty String title) {
         this.id = id;

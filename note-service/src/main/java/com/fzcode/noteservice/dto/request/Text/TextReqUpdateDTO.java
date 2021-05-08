@@ -8,11 +8,13 @@ import java.util.ArrayList;
 public class TextReqUpdateDTO {
 
     @NotEmpty
+    private Integer tid;
+
     private String title;
     private String description;
-    private String subTitle;
-    private String text;
-    private ArrayList<String> categories;
+    private String html;
+    private String raw;
+    private ArrayList<Integer> categories;
 
 
 }

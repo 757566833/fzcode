@@ -9,10 +9,15 @@ import javax.validation.constraints.NotNull;
 public class TextDBUpdateDTO {
 
     @NotNull
-    private Integer nid;
+    private Integer tid;
+
 
     private String title;
 
     private String description;
+
+    private String raw;
+
+    private String html;
 
 }

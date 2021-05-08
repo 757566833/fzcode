@@ -11,9 +11,8 @@ public class TextESUpdateDTO {
     private String id;
     @NotEmpty
     private String title;
-    private String subTitle;
     private String text;
-    private ArrayList<String> categories;
+    private ArrayList<Integer> categories;
 
 
     public TextESUpdateDTO(@NotEmpty String id, @NotEmpty String title) {

@@ -15,15 +15,16 @@ public class TextESDTO {
     //    @NotEmpty
     private String text;
     //    @NotEmpty
-    private ArrayList<String> categories;
+    private ArrayList<Integer> categories;
     private Boolean isDelete ;
 
-    public TextESDTO(String id, String title, String subTitle, String text, ArrayList<String> categories) {
+    public TextESDTO(String id, String title, String subTitle, String text, ArrayList<Integer> categories) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
         this.text = text;
         this.categories = categories;
     }
-
+    public TextESDTO() {
+    }
 }

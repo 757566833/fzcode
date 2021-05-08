@@ -12,11 +12,16 @@ import com.fzcode.noteservice.dto.request.Text.TextReqPatchDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqUpdateDTO;
 import com.fzcode.noteservice.dto.response.TextGetResDTO;
 import com.fzcode.noteservice.dto.response.TextResDTO;
+import com.fzcode.noteservice.entity.CidTid;
 import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
+import com.fzcode.noteservice.service.DB.CidTidService;
 import com.fzcode.noteservice.service.DB.TextDBService;
 import com.fzcode.noteservice.service.elastic.TextElasticService;
+import com.fzcode.noteservice.utils.HtmlUtils;
 import com.fzcode.noteservice.utils.MarkdownUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,21 +42,42 @@ public class TextFlow {
     TextDBService textDBService;
 
     @Autowired
-    public void setNoteDBService(TextDBService textDBService) {
+    public void setTextDBService(TextDBService textDBService) {
         this.textDBService = textDBService;
+    }
+
+    CidTidService cidTidService;
+
+    @Autowired
+    public void setCidTidService(CidTidService cidTidService) {
+        this.cidTidService = cidTidService;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public String create(TextReqCreateDTO textReqCreateDTO, Integer create_by) throws CustomizeException {
         Texts texts = new Texts();
         BeanUtils.copyProperties(textReqCreateDTO, texts);
-        texts.setCategories(JSON.toJSONString(textReqCreateDTO.getCategories()));
-//        texts.setCategories(String.join(",", textReqCreateDTO.getCategories()));
         texts.setCreateBy(create_by);
+
+        // 存正文
         Texts saveResult;
         try {
             saveResult = textDBService.save(texts);
         } catch (Exception e) {
+            throw new CustomizeException("db存储失败");
+        }
+        List<CidTid> cidTidList = new ArrayList<CidTid>();
+        List<Integer> stringList = textReqCreateDTO.getCategories();
+        for (Integer cid:stringList) {
+            CidTid cidTid = new CidTid();
+            cidTid.setCid(cid);
+            cidTid.setTid(saveResult.getTid());
+            cidTidList.add(cidTid);
+        }
+        // 存分类
+        try {
+             cidTidService.saveAll(cidTidList);
+        }catch (Exception e) {
             throw new CustomizeException("db存储失败");
         }
         Integer tid = saveResult.getTid();
@@ -59,15 +85,9 @@ public class TextFlow {
                 tid.toString(),
                 textReqCreateDTO.getTitle()
         );
-        if (textReqCreateDTO.getSubTitle() != null) {
-            textESCreateDTO.setSubTitle(textReqCreateDTO.getSubTitle());
-        }
-        if (textReqCreateDTO.getCategories() != null) {
-            textESCreateDTO.setCategories(textReqCreateDTO.getCategories());
-        }
-        if (textReqCreateDTO.getText() != null) {
-            textESCreateDTO.setText(MarkdownUtils.markdown2string(textReqCreateDTO.getText()));
-        }
+
+        textESCreateDTO.setCategories(textReqCreateDTO.getCategories());
+        textESCreateDTO.setText(HtmlUtils.html2Text(textReqCreateDTO.getHtml()));
 
         return textElasticService.create(textESCreateDTO);
     }
@@ -83,13 +103,14 @@ public class TextFlow {
             texts.setTid(id);
             texts.setTitle(textReqUpdateDTO.getTitle());
             texts.setDescription(textReqUpdateDTO.getDescription());
-            texts.setText(textReqUpdateDTO.getText());
+//            texts.setText(textReqUpdateDTO.getText());
             textDBService.update(texts);
         }
         TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textReqUpdateDTO.getTitle());
-        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
+//        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
         textESUpdateDTO.setCategories(textReqUpdateDTO.getCategories());
-        textESUpdateDTO.setText(MarkdownUtils.markdown2string(textReqUpdateDTO.getText()));
+
+        textESUpdateDTO.setText(HtmlUtils.html2Text(textReqUpdateDTO.getHtml()));
         return textElasticService.update(textESUpdateDTO);
     }
 
@@ -107,9 +128,9 @@ public class TextFlow {
             textDBService.patch(texts);
         }
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
-        textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());
+//        textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());
         textESPatchDTO.setCategories(textReqPatchDTO.getCategories());
-        textESPatchDTO.setText(MarkdownUtils.markdown2string(textReqPatchDTO.getText()));
+        textESPatchDTO.setText(HtmlUtils.html2Text(textReqPatchDTO.getHtml()));
         textESPatchDTO.setTitle(textReqPatchDTO.getTitle());
         return textElasticService.patch(textESPatchDTO);
     }

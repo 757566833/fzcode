@@ -6,6 +6,6 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class TextReqDeleteDTO {
     @NotEmpty
-    private Integer nid;
+    private Integer tid;
 
 }

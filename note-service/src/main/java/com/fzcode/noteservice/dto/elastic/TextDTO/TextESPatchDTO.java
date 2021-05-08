@@ -10,10 +10,8 @@ public class TextESPatchDTO {
     @NotEmpty
     private String id;
     private String title;
-    private String subTitle;
     private String text;
-    private ArrayList<String> categories;
-
+    private ArrayList<Integer> categories;
 
     public TextESPatchDTO(@NotEmpty String id) {
         this.id = id;

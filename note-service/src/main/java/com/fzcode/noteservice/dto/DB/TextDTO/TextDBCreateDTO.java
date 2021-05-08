@@ -9,7 +9,10 @@ public class TextDBCreateDTO {
 
     @NotEmpty
     private String title;
-
+    @NotEmpty
     private String description;
-
+    @NotEmpty
+    private String raw;
+    @NotEmpty
+    private String html;
 }
