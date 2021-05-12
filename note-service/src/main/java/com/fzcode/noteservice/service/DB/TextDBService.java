@@ -49,8 +49,13 @@ public class TextDBService {
             tidString+=t.getTid();
             tidString+=",";
         }
-        tidString = tidString.substring(0,tidString.length()-2);
-        List<CidTidList> list2 = cidTidRepository.findList(tidString);
+        List<CidTidList> list2 = new ArrayList<>();
+        if(tidString.length()>=2){
+            tidString = tidString.substring(0,tidString.length()-2);
+            list2 = cidTidRepository.findList(tidString);
+        }
+
+
         HashMap<Integer,String> hashMap = new HashMap<>();
         for (CidTidList t:list2) {
             hashMap.put(t.getTid(),t.getCidList());
