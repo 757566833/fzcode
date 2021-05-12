@@ -18,7 +18,7 @@ eureka:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
 elastic:
-  host: 192.168.31.151
+  host: 192.168.31.153
   port: 30200
   scheme : http
   index : note

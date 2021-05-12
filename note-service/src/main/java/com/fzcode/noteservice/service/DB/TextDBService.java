@@ -1,20 +1,21 @@
 package com.fzcode.noteservice.service.DB;
 
 import com.alibaba.fastjson.JSON;
-import com.fzcode.noteservice.DBInterface.TextDBGetDTO;
-import com.fzcode.noteservice.dto.response.TextGetResDTO;
+import com.fzcode.noteservice.dto.response.IndexTextListResDTO;
+import com.fzcode.noteservice.dto.response.ListResDTO;
+import com.fzcode.noteservice.repositroy.CidTidRepository;
+import com.fzcode.noteservice.repositroy.dbInterface.cidTid.CidTidList;
+import com.fzcode.noteservice.repositroy.dbInterface.text.TextDBFindList;
+import com.fzcode.noteservice.repositroy.dbInterface.text.TextDBGetById;
 import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
 import com.fzcode.noteservice.repositroy.TextRepository;
+import com.fzcode.noteservice.utils.ListUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TextDBService {
@@ -27,16 +28,53 @@ public class TextDBService {
         this.textRepository = textRepository;
     }
 
+    CidTidRepository cidTidRepository;
+
+    @Autowired
+    public void setCidTidRepository(CidTidRepository cidTidRepository) {
+        this.cidTidRepository = cidTidRepository;
+    }
 
     public Texts save(Texts texts) {
         Texts textsResult = textRepository.save(texts);
         return textsResult;
     }
 
-    public Page<Texts> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Texts> list = textRepository.findAll(pageable);
-        return list;
+    public ListResDTO<IndexTextListResDTO> findAll(int page, int size) {
+        ListResDTO<IndexTextListResDTO> resDTO = new ListResDTO<IndexTextListResDTO>();
+
+        List<TextDBFindList> list = textRepository.findList(size,(page-1)*size);
+        String tidString ="";
+        for (TextDBFindList t:list) {
+            tidString+=t.getTid();
+            tidString+=",";
+        }
+        tidString = tidString.substring(0,tidString.length()-2);
+        List<CidTidList> list2 = cidTidRepository.findList(tidString);
+        HashMap<Integer,String> hashMap = new HashMap<>();
+        for (CidTidList t:list2) {
+            hashMap.put(t.getTid(),t.getCidList());
+        }
+        Integer count = textRepository.findListCount(size,(page-1)*size).get(0).getCount();
+        resDTO.setList(new ArrayList<>());
+        List<IndexTextListResDTO> resList = resDTO.getList();
+        ListUtils.copyList(list,resList,IndexTextListResDTO.class);
+        for (IndexTextListResDTO t:resList) {
+            String arrStr =hashMap.get(t.getTid());
+            if(arrStr!=null){
+                String[] arr =  arrStr.split(",");
+                List<Integer> numArr = new ArrayList<>();
+                for (String s: arr) {
+                    numArr.add(Integer.parseInt(s));
+                }
+                t.setCategories(numArr);
+            }
+
+        }
+        resDTO.setCount(count);
+        resDTO.setPage(page);
+        resDTO.setSize(size);
+        return resDTO;
     }
 
     public Texts findById(Integer id) {
@@ -44,19 +82,13 @@ public class TextDBService {
         return noteResult.get();
     }
 
-    public TextGetResDTO findByIdWithUserInfo(Integer id) throws CustomizeException {
-        List<TextDBGetDTO> noteDBList = textRepository.findByIdWithUserInfo(id);
+    public TextDBGetById findByIdWithUserInfo(Integer id) throws CustomizeException {
+        List<TextDBGetById> noteDBList = textRepository.findByIdWithUserInfo(id);
         if (noteDBList.size() == 0) {
             throw new CustomizeException("不存在");
         }
-        TextDBGetDTO noteDB = noteDBList.get(0);
-        System.out.println(JSON.toJSONString(noteDB));
-        TextGetResDTO noteResult = new TextGetResDTO();
-        BeanUtils.copyProperties(noteDB,noteResult);
-        noteResult.setTags(JSON.parseArray(noteDB.getTags(),String.class));
-
-
-        return noteResult;
+        System.out.println(JSON.toJSONString(noteDBList.get(0)));
+        return noteDBList.get(0);
     }
 
     public Texts update(Texts texts) {

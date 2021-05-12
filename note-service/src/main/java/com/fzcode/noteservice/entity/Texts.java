@@ -2,14 +2,14 @@ package com.fzcode.noteservice.entity;
 
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Texts {
     @Id
@@ -45,5 +45,7 @@ public class Texts {
     @Column(name = "is_delete")
     private Integer isDelete = 0;
 
+    @Column(name = "top")
+    private Integer top = 0;
 
 }

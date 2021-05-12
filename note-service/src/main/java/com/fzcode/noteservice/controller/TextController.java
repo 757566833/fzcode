@@ -3,15 +3,13 @@ package com.fzcode.noteservice.controller;
 import com.fzcode.noteservice.dto.request.Text.TextReqCreateDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqPatchDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqUpdateDTO;
-import com.fzcode.noteservice.dto.response.TextGetResDTO;
-import com.fzcode.noteservice.dto.response.TextResDTO;
+import com.fzcode.noteservice.dto.response.IndexTextListResDTO;
+import com.fzcode.noteservice.dto.response.ListResDTO;
 import com.fzcode.noteservice.dto.response.SuccessResDTO;
-import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
 import com.fzcode.noteservice.flow.TextFlow;
-import com.fzcode.noteservice.utils.ListUtils;
+import com.fzcode.noteservice.repositroy.dbInterface.text.TextDBGetById;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -37,21 +35,9 @@ public class TextController {
     }
 
     @GetMapping(value = "/list")
-    public SuccessResDTO getList(@RequestParam(value = "page") Integer page, @RequestParam(value = "size") Integer size) {
-        Integer currentPage;
-        if (page == null) {
-            currentPage = 1;
-        } else {
-            currentPage = page;
-        }
-        Integer currentSize;
-        if (page == null) {
-            currentSize = 10;
-        } else {
-            currentSize = size;
-        }
-        Page<Texts> pageList = textFlow.findAll(currentPage, currentSize);
-        return new SuccessResDTO("查询成功", ListUtils.pageList2ResList(pageList));
+    public SuccessResDTO getList(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        ListResDTO<IndexTextListResDTO> pageList = textFlow.findAll(page, size);
+        return new SuccessResDTO("查询成功", pageList);
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -93,7 +79,7 @@ public class TextController {
 
     @GetMapping(value = "/get/{id}")
     public SuccessResDTO getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
-        TextGetResDTO textResDTO = textFlow.findById(id);
+        TextDBGetById textResDTO = textFlow.findById(id);
         return new SuccessResDTO("查询", textResDTO);
     }
 }

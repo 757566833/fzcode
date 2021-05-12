@@ -1,12 +1,11 @@
 package com.fzcode.noteservice.utils;
 
 import com.fzcode.noteservice.dto.response.ListResDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.data.domain.Page;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ListUtils {
     public static <T> Map<String, ?> bean2Map(T bean) {
@@ -30,5 +29,24 @@ public class ListUtils {
         listResDTO.setPage(page);
         listResDTO.setSize(size);
         return listResDTO;
+    }
+    public static <T> List<T>  copyList(Object obj, List<T> list2, Class<T> classObj) {
+        if ((!Objects.isNull(obj)) && (!Objects.isNull(list2))) {
+            List list1 = (List) obj;
+            list1.forEach(item -> {
+                try {
+                    T data = classObj.newInstance();
+                    BeanUtils.copyProperties(item, data);
+                    list2.add(data);
+                } catch (InstantiationException e) {
+                } catch (IllegalAccessException e) {
+                }
+
+
+            });
+            return list2;
+        }else{
+            return new ArrayList<>();
+        }
     }
 }

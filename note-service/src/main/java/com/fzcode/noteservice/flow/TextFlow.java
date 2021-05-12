@@ -1,30 +1,23 @@
 package com.fzcode.noteservice.flow;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.TypeReference;
 import com.fzcode.noteservice.dto.elastic.TextDTO.TextESCreateDTO;
-import com.fzcode.noteservice.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.noteservice.dto.elastic.TextDTO.TextESPatchDTO;
 import com.fzcode.noteservice.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqCreateDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqPatchDTO;
 import com.fzcode.noteservice.dto.request.Text.TextReqUpdateDTO;
-import com.fzcode.noteservice.dto.response.TextGetResDTO;
-import com.fzcode.noteservice.dto.response.TextResDTO;
+import com.fzcode.noteservice.dto.response.IndexTextListResDTO;
+import com.fzcode.noteservice.dto.response.ListResDTO;
 import com.fzcode.noteservice.entity.CidTid;
 import com.fzcode.noteservice.entity.Texts;
 import com.fzcode.noteservice.exception.CustomizeException;
+import com.fzcode.noteservice.repositroy.dbInterface.text.TextDBGetById;
 import com.fzcode.noteservice.service.DB.CidTidService;
 import com.fzcode.noteservice.service.DB.TextDBService;
 import com.fzcode.noteservice.service.elastic.TextElasticService;
 import com.fzcode.noteservice.utils.HtmlUtils;
-import com.fzcode.noteservice.utils.MarkdownUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,7 +85,7 @@ public class TextFlow {
         return textElasticService.create(textESCreateDTO);
     }
 
-    public Page<Texts> findAll(Integer page, Integer size) {
+    public ListResDTO<IndexTextListResDTO> findAll(Integer page, Integer size) {
         return textDBService.findAll(page, size);
     }
 
@@ -142,8 +135,8 @@ public class TextFlow {
         return textElasticService.delete(nid.toString());
     }
 
-    public TextGetResDTO findById(Integer nid) throws CustomizeException {
-        TextGetResDTO texts = textDBService.findByIdWithUserInfo(nid);
+    public TextDBGetById findById(Integer nid) throws CustomizeException {
+        TextDBGetById texts = textDBService.findByIdWithUserInfo(nid);
 //        System.out.println(texts.get("tags").toString());
 //        List<String> list = JSON.parseArray(texts.get("tags").toString(), String.class);
 //

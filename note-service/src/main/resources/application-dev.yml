@@ -21,7 +21,7 @@ eureka:
     enabled: false
 
 elastic:
-  host: 192.168.31.151
+  host: 192.168.31.153
   port: 30200
   scheme : http
   index : testnote
