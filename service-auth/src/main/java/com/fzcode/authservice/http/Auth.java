@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+
 @Component
 public class Auth {
     private static Oauth oauth;
@@ -31,6 +33,7 @@ public class Auth {
                 .exchange()
                 .block()
                 .bodyToMono(GithubAccessToken.class)
+                .timeout(Duration.ofSeconds(60))
                 .block();
 
     }

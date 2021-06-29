@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
-	<artifactId>auth-service</artifactId>
+	<artifactId>service-auth</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>auth-service</name>
+	<name>service-auth</name>
 	<description>Demo project for Spring Boot</description>
 
 	<dependencies>

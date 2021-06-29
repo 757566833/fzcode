@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 <!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
-	<artifactId>eureka-service</artifactId>
+	<artifactId>cloud-eureka</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>eureka-service</name>
+	<name>cloud-eureka</name>
 	<description>Demo project for Spring Boot</description>
 
 <!--	<properties>-->

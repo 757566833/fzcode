@@ -9,13 +9,13 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<modules>
-		<module>config-service</module>
-		<module>auth-service</module>
-		<module>eureka-service</module>
-		<module>note-service</module>
-		<module>file-service</module>
-		<module>gate-service</module>
-		<module>mail-service</module>
+		<module>cloud-config</module>
+		<module>cloud-eureka</module>
+		<module>cloud-gate</module>
+		<module>service-auth</module>
+		<module>service-note</module>
+		<module>service-file</module>
+		<module>service-mail</module>
 	</modules>
 	<packaging>pom</packaging>
 	<groupId>com.fzcode</groupId>
