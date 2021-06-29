@@ -1,7 +1,5 @@
-
-
 server:
-  port: 9151
+  port: 30205
 spring:
   application:
     name: mail

@@ -16,7 +16,9 @@
 		<module>service-note</module>
 		<module>service-file</module>
 		<module>service-mail</module>
-	</modules>
+		<module>api-blog</module>
+        <module>internal-common</module>
+    </modules>
 	<packaging>pom</packaging>
 	<groupId>com.fzcode</groupId>
 	<artifactId>server</artifactId>

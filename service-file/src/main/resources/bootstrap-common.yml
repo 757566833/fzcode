@@ -1,8 +1,5 @@
-
-
-
 server:
-  port: 9141
+  port: 30204
 spring:
   application:
     name: file

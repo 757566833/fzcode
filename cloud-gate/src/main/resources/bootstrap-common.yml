@@ -1,5 +1,5 @@
 server:
-  port: 9100
+  port: 30202
 spring:
   application:
     name: gate

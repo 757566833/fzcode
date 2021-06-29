@@ -1,6 +1,6 @@
 
 server:
-  port: 9121
+  port: 30206
 spring:
   application:
     name: elastic
