@@ -1,7 +1,6 @@
 package com.fzcode.service.note.service.elastic;
 
 import com.alibaba.fastjson.JSON;
-import com.fzcode.noteservice.dto.elastic.TextDTO.*;
 import com.fzcode.service.note.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.service.note.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.service.note.dto.elastic.TextDTO.TextESUpdateDTO;
