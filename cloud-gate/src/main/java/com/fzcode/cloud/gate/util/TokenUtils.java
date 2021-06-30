@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,17 +16,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TokenUtils {
+public class  TokenUtils {
     private static SecretKey key;
     private Secret secret;
 
     @Autowired
     public void setSecret(Secret secret) {
-        System.out.println("secret" + secret.getSecret());
-        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
+        this.secret = secret;
     }
-
-
+    @PostConstruct
+    public void init(){
+        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secret.getSecret()));
+    }
     public static String createBearer(String username) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());

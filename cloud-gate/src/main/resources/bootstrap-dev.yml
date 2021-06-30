@@ -17,4 +17,5 @@ spring:
     database: 0
 eureka:
   client:
-    enabled: false
+    service-url:
+      defaultZone: http://127.0.0.1:30200/eureka/

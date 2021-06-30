@@ -29,7 +29,8 @@ spring:
         dialect: com.fzcode.authservice.config.Mysql
 eureka:
   client:
-    enabled: false
+    service-url:
+      defaultZone: http://127.0.0.1:30200/eureka/
 
 
 
