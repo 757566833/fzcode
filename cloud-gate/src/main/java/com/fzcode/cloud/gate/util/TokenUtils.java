@@ -1,10 +1,11 @@
 package com.fzcode.cloud.gate.util;
 
+import com.fzcode.cloud.gate.config.Secret;
 import com.fzcode.cloud.gate.dto.common.TokenInfoDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -16,12 +17,14 @@ import java.util.Map;
 @Component
 public class TokenUtils {
     private static SecretKey key;
+    private Secret secret;
 
-    @Value("${auth.secret}")
-    public void setKey(String secret) {
-        System.out.println("secret" + secret);
-        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    @Autowired
+    public void setSecret(Secret secret) {
+        System.out.println("secret" + secret.getSecret());
+        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
     }
+
 
     public static String createBearer(String username) {
         Calendar c = Calendar.getInstance();

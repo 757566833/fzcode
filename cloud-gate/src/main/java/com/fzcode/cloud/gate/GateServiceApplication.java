@@ -16,7 +16,7 @@ public class GateServiceApplication {
     Services services;
 
     @Autowired
-    public void setConfig(Services services) {
+    public void setServices(Services services) {
         this.services = services;
     }
 

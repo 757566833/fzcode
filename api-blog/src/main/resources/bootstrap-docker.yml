@@ -9,24 +9,6 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-  datasource:
-    username: fzcode
-    password: fzcode_9876
-    url: jdbc:mysql://192.168.31.152:30306/fzcode?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  redis:
-    host: 192.168.31.157
-    port: 30379
-    password: 123456789
-    timeout: 5000
-    database: 15
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: com.fzcode.authservice.config.Mysql
 eureka:
   client:
     service-url:

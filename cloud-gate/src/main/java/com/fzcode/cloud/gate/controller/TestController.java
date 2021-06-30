@@ -19,10 +19,10 @@ public class TestController {
         this.authorityFlow = authorityFlow;
     }
 
-    @Value("${auth.secret}")
-    public void setKey(String secret) {
-        this.key = secret;
-    }
+//    @Value("${auth.secret}")
+//    public void setKey(String secret) {
+//        this.key = secret;
+//    }
 
     @GetMapping("/current")
     public Mono<String> test(Mono<Principal> principalMono) {

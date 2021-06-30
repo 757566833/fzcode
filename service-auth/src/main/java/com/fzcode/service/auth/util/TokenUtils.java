@@ -16,7 +16,6 @@ import java.util.Map;
 public class TokenUtils {
     private static SecretKey key;
 
-    @Value("${auth.secret}")
     public void setKey(String secret) {
         System.out.println("secret" + secret);
         TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));

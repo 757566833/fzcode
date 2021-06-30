@@ -2,10 +2,13 @@ package com.fzcode.service.auth.http;
 
 import com.fzcode.service.auth.config.Services;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.function.Consumer;
 
 @Component
 public class Websocket {
@@ -20,8 +23,6 @@ public class Websocket {
     public static void sendUserCode(String socketId, String token, String role) {
 //        EmailReqDTO emailReqDTO = new EmailReqDTO();
 //        emailReqDTO.setEmail(email);
-
-
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("socketId", socketId);
         map.add("token", token);
@@ -29,6 +30,9 @@ public class Websocket {
         Websocket.webClient
                 .post()
                 .uri("/login")
+                .headers(httpHeaders -> {
+                    httpHeaders.set("a","b");
+                })
                 .bodyValue(map)
                 .exchange()
                 .block()

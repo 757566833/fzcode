@@ -15,18 +15,15 @@ import java.util.Map;
 
 @Component
 public class Auth {
-    private Services services;
-    private static WebClient webClient;
+    private  Services services;
     @Autowired
     public void setServices(Services services) {
         this.services = services;
-        Auth.webClient = WebClient.create(services.getHost().get("auth"));
     }
 
-
-
-    public static Mono<AuthorityDTO> getAuthority(String email) {
+    public Mono<AuthorityDTO> getAuthority(String email) {
         System.out.println(JSON.toJSONString("getAuthority"));
+        WebClient webClient = WebClient.create(services.getHost().get("auth"));
         Map<String, String> map = new HashMap<>();
         map.put("account", email);
         return webClient.post().uri("/pri/authority/get")

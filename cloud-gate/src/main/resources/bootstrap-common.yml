@@ -2,7 +2,7 @@ server:
   port: 30202
 spring:
   application:
-    name: gate
+    name: cloudGate
   cloud:
 #    config:
 #      uri: http://config:9899
