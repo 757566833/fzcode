@@ -2,4 +2,4 @@ server:
   port: 30200
 spring:
   application:
-    name: cloudEureka
+    name: CLOUD-EUREKA
