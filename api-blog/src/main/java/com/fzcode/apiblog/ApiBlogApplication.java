@@ -7,9 +7,9 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
-public class ApiServiceApplication {
+public class ApiBlogApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ApiServiceApplication.class, args);
+        SpringApplication.run(ApiBlogApplication.class, args);
     }
     @PostConstruct
     void started() {

@@ -1,4 +1,4 @@
-package com.fzcode.cloud.gate.util;
+package com.fzcode.cloudgate.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveHashOperations;

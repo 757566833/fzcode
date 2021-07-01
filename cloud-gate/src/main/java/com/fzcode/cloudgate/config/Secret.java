@@ -1,4 +1,4 @@
-package com.fzcode.cloud.gate.config;
+package com.fzcode.cloudgate.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

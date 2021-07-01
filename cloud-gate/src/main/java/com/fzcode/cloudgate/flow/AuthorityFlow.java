@@ -1,7 +1,7 @@
-package com.fzcode.cloud.gate.flow;
+package com.fzcode.cloudgate.flow;
 
-import com.fzcode.cloud.gate.util.RedisUtils;
-import com.fzcode.cloud.gate.service.AuthorityService;
+import com.fzcode.cloudgate.util.RedisUtils;
+import com.fzcode.cloudgate.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;

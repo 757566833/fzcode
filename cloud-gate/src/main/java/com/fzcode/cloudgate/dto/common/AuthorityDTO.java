@@ -1,4 +1,4 @@
-package com.fzcode.cloud.gate.dto.common;
+package com.fzcode.cloudgate.dto.common;
 
 
 import lombok.Data;

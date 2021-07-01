@@ -1,4 +1,4 @@
-package com.fzcode.cloud.gate;
+package com.fzcode.cloudgate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

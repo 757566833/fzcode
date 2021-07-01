@@ -1,4 +1,4 @@
-package com.fzcode.cloud.gate.filter;
+package com.fzcode.cloudgate.filter;
 
 import lombok.SneakyThrows;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

@@ -1,9 +1,9 @@
-package com.fzcode.cloud.gate.filter;
+package com.fzcode.cloudgate.filter;
 
-import com.fzcode.cloud.gate.config.Services;
-import com.fzcode.cloud.gate.dto.common.TokenInfoDTO;
-import com.fzcode.cloud.gate.flow.AuthorityFlow;
-import com.fzcode.cloud.gate.util.TokenUtils;
+import com.fzcode.cloudgate.config.Services;
+import com.fzcode.cloudgate.dto.common.TokenInfoDTO;
+import com.fzcode.cloudgate.flow.AuthorityFlow;
+import com.fzcode.cloudgate.util.TokenUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -59,7 +59,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
             return chain.filter(exchange);
         }
         // 测试预留 以后删掉
-        else if(request.getMethod() == HttpMethod.GET &&uri.getPath().indexOf("/test") == 0){
+        else if(request.getMethod() == HttpMethod.GET &&uri.getPath().indexOf("test") > 0){
             return chain.filter(exchange);
         }
         // 所有的文章查询，都是不需要token的

@@ -1,14 +1,14 @@
-package com.fzcode.internal.common.constant;
+package com.fzcode.internalcommon.constant;
 
 public class ServiceName {
-    public static final String API_BLOG = "apiBlog";
-    public static final String CLOUD_CONFIG="cloudConfig";
-    public static final String CLOUD_EUREKA="cloudEureka";
-    public static final String CLOUD_GATE="cloudGate";
-    public static final String SERVICE_AUTH="serviceAuth";
-    public static final String SERVICE_FILE="serviceFile";
-    public static final String SERVICE_MAIL="serviceMail";
-    public static final String SERVICE_NOTE="serviceNote";
+    public static final String API_BLOG = "API-BLOG";
+    public static final String CLOUD_CONFIG="CLOUD-CONFIG";
+    public static final String CLOUD_EUREKA="CLOUD-EUREKA";
+    public static final String CLOUD_GATE="CLOUD-GATE";
+    public static final String SERVICE_AUTH="SERVICE-AUTH";
+    public static final String SERVICE_FILE="SERVICE-FILE";
+    public static final String SERVICE_MAIL="SERVICE-MAIL";
+    public static final String SERVICE_NOTE="SERVICE-NOTE";
 
     public static final String LB_API_BLOG = "lb://"+ServiceName.API_BLOG;
     public static final String LB_CLOUD_CONFIG="lb://"+ServiceName.CLOUD_CONFIG;

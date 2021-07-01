@@ -1,4 +1,4 @@
-package com.fzcode.cloud.gate.security;
+package com.fzcode.cloudgate.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
-public class GateServiceApplication {
+public class CloudGateApplication {
     Services services;
 
     @Autowired
@@ -36,7 +36,7 @@ public class GateServiceApplication {
 //    }
 
     public static void main(String[] args) {
-        SpringApplication.run(GateServiceApplication.class, args);
+        SpringApplication.run(CloudGateApplication.class, args);
 
     }
 

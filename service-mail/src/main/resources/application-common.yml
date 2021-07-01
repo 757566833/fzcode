@@ -2,5 +2,5 @@ server:
   port: 30205
 spring:
   application:
-    name: serviceMail
+    name: SERVICE-MAIL
 

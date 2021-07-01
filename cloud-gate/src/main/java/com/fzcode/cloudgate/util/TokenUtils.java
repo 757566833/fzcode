@@ -1,7 +1,7 @@
-package com.fzcode.cloud.gate.util;
+package com.fzcode.cloudgate.util;
 
-import com.fzcode.cloud.gate.config.Secret;
-import com.fzcode.cloud.gate.dto.common.TokenInfoDTO;
+import com.fzcode.cloudgate.config.Secret;
+import com.fzcode.cloudgate.dto.common.TokenInfoDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

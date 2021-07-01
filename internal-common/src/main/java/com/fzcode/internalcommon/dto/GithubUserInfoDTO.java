@@ -1,4 +1,4 @@
-package com.fzcode.internalCommon.common;
+package com.fzcode.internalcommon.dto;
 
 import lombok.Data;
 

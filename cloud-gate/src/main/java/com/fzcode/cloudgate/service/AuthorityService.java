@@ -1,8 +1,8 @@
-package com.fzcode.cloud.gate.service;
+package com.fzcode.cloudgate.service;
 
-import com.fzcode.cloud.gate.dto.common.AuthorityDTO;
-import com.fzcode.cloud.gate.http.Auth;
-import com.fzcode.cloud.gate.util.RedisUtils;
+import com.fzcode.cloudgate.dto.common.AuthorityDTO;
+import com.fzcode.cloudgate.http.Auth;
+import com.fzcode.cloudgate.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

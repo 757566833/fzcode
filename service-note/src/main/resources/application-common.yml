@@ -3,5 +3,5 @@ server:
   port: 30206
 spring:
   application:
-    name: serviceNote
+    name: SERVICE-NOTE
 

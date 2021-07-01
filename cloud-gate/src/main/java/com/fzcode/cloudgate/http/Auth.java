@@ -1,8 +1,8 @@
-package com.fzcode.cloud.gate.http;
+package com.fzcode.cloudgate.http;
 
 import com.alibaba.fastjson.JSON;
-import com.fzcode.cloud.gate.config.Services;
-import com.fzcode.cloud.gate.dto.common.AuthorityDTO;
+import com.fzcode.cloudgate.config.Services;
+import com.fzcode.cloudgate.dto.common.AuthorityDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

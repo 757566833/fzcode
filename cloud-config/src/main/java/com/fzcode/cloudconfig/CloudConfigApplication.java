@@ -9,10 +9,10 @@ import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableConfigServer
-public class ConfigServiceApplication {
+public class CloudConfigApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConfigServiceApplication.class, args);
+		SpringApplication.run(CloudConfigApplication.class, args);
 	}
 	@PostConstruct
 	void started() {

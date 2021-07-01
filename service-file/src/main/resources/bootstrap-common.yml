@@ -2,6 +2,6 @@ server:
   port: 30204
 spring:
   application:
-    name: serviceFile
+    name: SERVICE-FILE
 
 

@@ -1,7 +1,7 @@
-package com.fzcode.cloud.gate.controller;
+package com.fzcode.cloudgate.controller;
 
-import com.fzcode.cloud.gate.dto.common.AuthorityDTO;
-import com.fzcode.cloud.gate.util.RedisUtils;
+import com.fzcode.cloudgate.dto.common.AuthorityDTO;
+import com.fzcode.cloudgate.util.RedisUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package com.fzcode.api.blog.response;
+package com.fzcode.apiblog.response;
 
 import lombok.Data;
 

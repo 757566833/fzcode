@@ -3,7 +3,7 @@ server:
   port: 30201
 spring:
   application:
-    name: cloudConfig
+    name: CLOUD-CONFIG
   cloud:
     config:
       server:

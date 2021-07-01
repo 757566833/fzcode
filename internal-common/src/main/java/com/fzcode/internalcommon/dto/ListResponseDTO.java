@@ -1,4 +1,4 @@
-package com.fzcode.internalCommon.common;
+package com.fzcode.internalcommon.dto;
 
 public class ListResponseDTO<R> {
     private Object count;

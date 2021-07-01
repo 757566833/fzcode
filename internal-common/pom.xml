@@ -11,6 +11,7 @@
 
     <artifactId>internal-common</artifactId>
     <name>internal-common</name>
+    <version>0.0.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -18,8 +19,25 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <finalName>internal-common</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+<!--                <configuration>-->
+<!--                    <classifier>exec</classifier>-->
+<!--                </configuration>-->
+
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

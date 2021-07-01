@@ -1,4 +1,4 @@
-package com.fzcode.internal;
+package com.fzcode.internalcommon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
