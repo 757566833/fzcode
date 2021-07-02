@@ -20,10 +20,6 @@ public class Mail {
 
     public String getRegisterCode(String email) {
         ServiceInstance instance = this.loadBalancerClient.choose(ServiceName.SERVICE_MAIL);
-        String host = instance.getHost();
-        Integer port = instance.getPort();
-        System.out.println(host);
-        System.out.println(port);
         String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
         WebClient client = WebClient.create(url);
         EmailReqDTO emailReqDTO = new EmailReqDTO();
@@ -36,6 +32,5 @@ public class Mail {
                 .block()
                 .bodyToMono(String.class)
                 .block();
-//        return webClient.exchange().block().bodyToMono(String.class).block();
     }
 }
