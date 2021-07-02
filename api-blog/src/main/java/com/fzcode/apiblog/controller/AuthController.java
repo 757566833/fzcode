@@ -40,7 +40,7 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ipHostAddress;
+        return "api-blog:"+ipHostAddress;
 
     }
     @GetMapping(value = "/test2")

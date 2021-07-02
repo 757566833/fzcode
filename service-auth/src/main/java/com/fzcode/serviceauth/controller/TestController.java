@@ -1,32 +1,37 @@
 package com.fzcode.serviceauth.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.fzcode.serviceauth.dto.pri.gate.GateReqDTO;
-import com.fzcode.serviceauth.entity.Authorities;
-import com.fzcode.serviceauth.dao.AuthorityDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 
-@RestController()
-@RequestMapping(value = "/pri/authority",consumes = MediaType.APPLICATION_JSON_VALUE)
-public class AuthorityController {
-    private AuthorityDao authorityDao;
+@RestController
+public class TestController {
+    @GetMapping(value = "/test")
+    public String test (){
+        String ipHostAddress = "";
+        try {
+            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (allNetInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress ip = (InetAddress) addresses.nextElement();
+                    if (ip instanceof Inet4Address
+                            && !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
+                            && !ip.getHostAddress().contains(":")) {
+                        System.out.println("本机的IP = " + ip.getHostAddress());
+                        ipHostAddress = ip.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "service-auth:"+ipHostAddress;
 
-    @Autowired
-    public void setAuthorityService(AuthorityDao authorityDao) {
-        this.authorityDao = authorityDao;
-    }
-
-    @PostMapping(value = "/get")
-    public Authorities getAuth(@RequestBody GateReqDTO gateReqDTO) {
-        System.out.println("被请求了一次:" + gateReqDTO.getAccount());
-        Authorities authorities = authorityDao.findByAccount(gateReqDTO.getAccount());
-        System.out.println(JSON.toJSONString(authorities));
-        return authorities;
     }
 }
