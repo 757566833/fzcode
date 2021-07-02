@@ -56,4 +56,16 @@ public class AuthController {
                 .bodyToMono(String.class)
                 .block();
     }
+    @GetMapping(value = "/test3")
+    public String test3 (){
+        String url ="http://192.168.31.154:30203";
+        WebClient client = WebClient.create(url);
+        return client
+                .post()
+                .uri("/test")
+                .exchange()
+                .block()
+                .bodyToMono(String.class)
+                .block();
+    }
 }
