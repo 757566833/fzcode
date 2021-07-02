@@ -45,6 +45,11 @@ public class AccountService {
         this.authorityDao = authorityDao;
     }
 
+    private Mail mail;
+    @Autowired
+    public void setMail(Mail mail){
+        this.mail = mail;
+    }
     public LoginResDTO login(String email, String password) throws CustomizeException {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -66,7 +71,7 @@ public class AccountService {
         if (b) {
             throw new CustomizeException("邮箱已存在");
         }
-        String redisCode = Mail.getRegisterCode(email);
+        String redisCode = mail.getRegisterCode(email);
         System.out.println("redisCode:" + redisCode);
         if (!redisCode.equals(code)) {
             throw new CustomizeException("验证码错误");

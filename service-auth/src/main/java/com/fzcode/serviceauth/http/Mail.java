@@ -8,22 +8,27 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.annotation.PostConstruct;
+
 @Component
 public class Mail {
     private LoadBalancerClient loadBalancerClient;
-    private static WebClient webClient;
     @Autowired
     public void setLoadBalancerClient(LoadBalancerClient loadBalancerClient) {
-        ServiceInstance instance = loadBalancerClient.choose(ServiceName.SERVICE_MAIL);
-        String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
-        Mail.webClient = WebClient.create(url);
+     this.loadBalancerClient = loadBalancerClient;
     }
 
-
-    public static String getRegisterCode(String email) {
+    public String getRegisterCode(String email) {
+        ServiceInstance instance = this.loadBalancerClient.choose(ServiceName.SERVICE_MAIL);
+        String host = instance.getHost();
+        Integer port = instance.getPort();
+        System.out.println(host);
+        System.out.println(port);
+        String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
+        WebClient client = WebClient.create(url);
         EmailReqDTO emailReqDTO = new EmailReqDTO();
         emailReqDTO.setEmail(email);
-        return Mail.webClient
+        return client
                 .post()
                 .uri("/pri/email/register/code")
                 .bodyValue(emailReqDTO)
