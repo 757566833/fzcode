@@ -11,7 +11,7 @@ import com.fzcode.serviceauth.dto.response.SuccessResDTO;
 import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.service.AccountService;
 import com.fzcode.serviceauth.http.Auth;
-import com.fzcode.serviceauth.http.Websocket;
+//import com.fzcode.serviceauth.http.Websocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -63,30 +63,30 @@ public class AccountController {
         } else {
             // 这里偷懒了 直接用长度判断 token一定长
             LoginResDTO loginResDTO = accountService.githubRegister(githubUserInfo);
-            if (loginResDTO.getToken().length() > 15) {
-                Websocket.sendUserCode(socketId, loginResDTO.getToken(), loginResDTO.getRole());
-                return "<!DOCTYPE html>\n" +
-                        "<html lang=\"en\">\n" +
-                        "<head>\n" +
-                        "  <meta charset=\"UTF-8\">\n" +
-                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                        "  <title>Document</title>\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "  <div>登陆成功,<span id ='second'>5</span>秒后关闭页面，原页面未刷新请手动刷新</div>\n" +
-                        "</body>\n" +
-                        "<script>\n" +
-                        "  var secondDom =  document.getElementById(\"second\");\n" +
-                        "  var second = 5\n" +
-                        "  setInterval(()=>{\n" +
-                        "    secondDom.innerText=--second;\n" +
-                        "    if(second==0){\n" +
-                        "      window.close();\n" +
-                        "    }\n" +
-                        "  },1000);\n" +
-                        "</script>\n" +
-                        "</html>\n";
-            }
+//            if (loginResDTO.getToken().length() > 15) {
+//                Websocket.sendUserCode(socketId, loginResDTO.getToken(), loginResDTO.getRole());
+//                return "<!DOCTYPE html>\n" +
+//                        "<html lang=\"en\">\n" +
+//                        "<head>\n" +
+//                        "  <meta charset=\"UTF-8\">\n" +
+//                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+//                        "  <title>Document</title>\n" +
+//                        "</head>\n" +
+//                        "<body>\n" +
+//                        "  <div>登陆成功,<span id ='second'>5</span>秒后关闭页面，原页面未刷新请手动刷新</div>\n" +
+//                        "</body>\n" +
+//                        "<script>\n" +
+//                        "  var secondDom =  document.getElementById(\"second\");\n" +
+//                        "  var second = 5\n" +
+//                        "  setInterval(()=>{\n" +
+//                        "    secondDom.innerText=--second;\n" +
+//                        "    if(second==0){\n" +
+//                        "      window.close();\n" +
+//                        "    }\n" +
+//                        "  },1000);\n" +
+//                        "</script>\n" +
+//                        "</html>\n";
+//            }
             return loginResDTO.getToken();
         }
 //        return "dsadsa";
