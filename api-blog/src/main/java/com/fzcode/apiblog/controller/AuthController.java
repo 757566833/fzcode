@@ -47,15 +47,13 @@ public class AuthController {
     public String test2 (){
         ServiceInstance instance = this.loadBalancerClient.choose(ServiceName.SERVICE_AUTH);
         String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
-//        WebClient client = WebClient.create(url);
-//        return client
-//                .post()
-//                .uri("/pri/email/register/code")
-//                .bodyValue(emailReqDTO)
-//                .exchange()
-//                .block()
-//                .bodyToMono(String.class)
-//                .block();
-        return url;
+        WebClient client = WebClient.create(url);
+        return client
+                .post()
+                .uri("/test")
+                .exchange()
+                .block()
+                .bodyToMono(String.class)
+                .block();
     }
 }
