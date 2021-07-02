@@ -3,12 +3,13 @@ package com.fzcode.serviceauth.dao;
 import com.fzcode.serviceauth.entity.Authorities;
 import com.fzcode.serviceauth.repositroy.AuthorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
-@Service
+@Repository
 public class AuthorityDao {
 
     private AuthorityRepository authorityRepository;

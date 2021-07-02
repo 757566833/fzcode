@@ -9,6 +9,7 @@ import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.repositroy.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service
+@Repository
 public class AccountDao {
 
     private AccountRepository accountRepository;
