@@ -49,7 +49,7 @@ public class AuthController {
         String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
         WebClient client = WebClient.create(url);
         return client
-                .post()
+                .get()
                 .uri("/test")
                 .exchange()
                 .block()
@@ -61,7 +61,7 @@ public class AuthController {
         String url ="http://192.168.31.154:30203";
         WebClient client = WebClient.create(url);
         return client
-                .post()
+                .get()
                 .uri("/test")
                 .exchange()
                 .block()
