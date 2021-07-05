@@ -1,6 +1,6 @@
 package com.fzcode.service.mail.controller;
 
-import com.fzcode.service.mail.dto.MailDTO;
+import com.fzcode.internalcommon.dto.servicemail.common.MailDTO;
 import com.fzcode.service.mail.flow.EmailFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

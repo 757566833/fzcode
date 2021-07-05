@@ -1,8 +1,8 @@
 package com.fzcode.serviceauth.http;
 
 import com.fzcode.serviceauth.config.Oauth;
-import com.fzcode.serviceauth.dto.response.GithubAccessToken;
-import com.fzcode.serviceauth.dto.response.GithubUserInfo;
+import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
+import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

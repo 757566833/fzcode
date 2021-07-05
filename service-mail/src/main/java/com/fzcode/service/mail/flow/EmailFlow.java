@@ -1,7 +1,7 @@
 package com.fzcode.service.mail.flow;
 
+import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.service.mail.exception.CustomizeException;
-import com.fzcode.service.mail.http.ResponseDTO;
 import com.fzcode.service.mail.service.EmailService;
 import com.fzcode.service.mail.util.CharUtil;
 import com.fzcode.service.mail.util.RedisUtil;
@@ -20,7 +20,7 @@ public class EmailFlow {
         this.emailService = emailService;
     }
 
-    public Mono<ResponseDTO> sendEmail(String email, String type) {
+    public Mono<SuccessResponse> sendEmail(String email, String type) {
         String checkCode = CharUtil.getCharAndNumber(6).toUpperCase();
         System.out.println(checkCode);
         return Mono.create(sink -> {
@@ -37,7 +37,7 @@ public class EmailFlow {
         });
     }
 
-    public Mono<Boolean> sendEmailMono(Boolean bool, String email, String checkCode, MonoSink<ResponseDTO> sink) throws CustomizeException {
+    public Mono<Boolean> sendEmailMono(Boolean bool, String email, String checkCode, MonoSink<SuccessResponse> sink) throws CustomizeException {
         if (!bool) {
             throw new CustomizeException("redis不可用");
         }
@@ -53,11 +53,11 @@ public class EmailFlow {
 
     }
 
-    public void result(Boolean bool, MonoSink<ResponseDTO> sink) throws CustomizeException {
+    public void result(Boolean bool, MonoSink<SuccessResponse> sink) throws CustomizeException {
         if (!bool) {
             throw new CustomizeException("email发送失败");
         }
-        sink.success(new ResponseDTO("200", "", "success"));
+        sink.success(new SuccessResponse("success", ""));
     }
 
     public Mono<String> getStringFromRedis(String email, String type) {

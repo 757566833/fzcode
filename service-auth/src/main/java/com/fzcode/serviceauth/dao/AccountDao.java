@@ -1,8 +1,8 @@
 package com.fzcode.serviceauth.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.fzcode.serviceauth.dto.common.ListResDTO;
-import com.fzcode.serviceauth.dto.request.list.AccountDTO;
+import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.exception.CustomizeException;
@@ -10,7 +10,6 @@ import com.fzcode.serviceauth.repositroy.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -38,7 +37,7 @@ public class AccountDao {
         return accounts;
     }
 
-    public ListResDTO<List<Map<String, Object>>> findList(AccountDTO accountDTO) {
+    public ListResponseDTO<List<Map<String, Object>>> findList(AccountListRequest accountDTO) {
         Integer offset = (accountDTO.getPage() - 1) * accountDTO.getPageSize();
         Integer length = accountDTO.getPageSize();
         String desc = null;
@@ -89,7 +88,7 @@ public class AccountDao {
         List<Map<String, Object>> countList = accountRepository.findListCount(accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl());
         System.out.println(JSON.toJSONString(countList.get(0)));
         Object count = countList.get(0).get("COUNT(1)").toString();
-        ListResDTO<List<Map<String, Object>>> listListResDTO = new ListResDTO<>();
+        ListResponseDTO<List<Map<String, Object>>> listListResDTO = new ListResponseDTO<>();
         listListResDTO.setCount(count);
         listListResDTO.setList(accounts);
         listListResDTO.setPage(accountDTO.getPage());

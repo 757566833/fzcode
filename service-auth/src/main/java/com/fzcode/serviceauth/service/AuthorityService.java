@@ -1,6 +1,6 @@
 package com.fzcode.serviceauth.service;
 
-import com.fzcode.serviceauth.dto.request.AuthorityDTO;
+import com.fzcode.internalcommon.dto.serviceauth.request.UpdateAuthorityRequest;
 import com.fzcode.serviceauth.entity.Authorities;
 import com.fzcode.serviceauth.http.Gate;
 import com.fzcode.serviceauth.dao.AuthorityDao;
@@ -18,8 +18,8 @@ public class AuthorityService {
     }
 
 
-    public Authorities updateByAccount(AuthorityDTO authorityDTO) {
-        Gate.updateAuthority(authorityDTO.getAccount(), authorityDTO.getAuthority());
-        return authorityDao.update(authorityDTO.getAccount(), authorityDTO.getAuthority());
+    public Authorities updateByAccount(UpdateAuthorityRequest updateAuthorityRequest) {
+        Gate.updateAuthority(updateAuthorityRequest.getAccount(), updateAuthorityRequest.getAuthority());
+        return authorityDao.update(updateAuthorityRequest.getAccount(), updateAuthorityRequest.getAuthority());
     }
 }

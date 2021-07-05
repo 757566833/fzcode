@@ -1,24 +1,27 @@
 package com.fzcode.apiblog.controller;
 
-import com.fzcode.internalcommon.constant.ServiceName;
+import com.fzcode.apiblog.config.Services;
+import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
+import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.*;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
+@RequestMapping(value = "/auth",consumes = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
-    private LoadBalancerClient loadBalancerClient;
+    Services services;
     @Autowired
-    public void setLoadBalancerClient(LoadBalancerClient loadBalancerClient) {
-        this.loadBalancerClient = loadBalancerClient;
+    public void setServices(Services services){
+        this.services = services;
     }
-
     @GetMapping(value = "/test")
     public String test (){
         String ipHostAddress = "";
@@ -43,26 +46,40 @@ public class AuthController {
         return "api-blog:"+ipHostAddress;
 
     }
-    @GetMapping(value = "/test2")
-    public String test2 (){
-        ServiceInstance instance = this.loadBalancerClient.choose(ServiceName.SERVICE_AUTH);
-        String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
-        WebClient client = WebClient.create(url);
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest){
+        WebClient client = WebClient.create(services.getService().getAuth().getHost());
         return client
-                .get()
-                .uri("/test")
+                .post()
+                .uri("/login")
+                .bodyValue(loginRequest)
                 .exchange()
                 .block()
-                .bodyToMono(String.class)
+                .bodyToMono(LoginResponse.class)
                 .block();
     }
-    @GetMapping(value = "/test3")
-    public String test3 (){
-        String url ="http://192.168.31.154:30203";
-        WebClient client = WebClient.create(url);
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public LoginResponse register (@RequestBody @Validated LoginRequest loginRequest){
+        WebClient client = WebClient.create(services.getService().getAuth().getHost());
         return client
-                .get()
-                .uri("/test")
+                .post()
+                .uri("/register")
+                .bodyValue(loginRequest)
+                .exchange()
+                .block()
+                .bodyToMono(LoginResponse.class)
+                .block();
+    }
+    @GetMapping(value = "/login/github", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String githubLogin (@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId){
+        Map map = new HashMap();
+        map.put("code",code);
+        map.put("socketId",socketId);
+        WebClient client = WebClient.create(services.getService().getAuth().getHost());
+        return client
+                .post()
+                .uri("/login/github")
+                .bodyValue(map)
                 .exchange()
                 .block()
                 .bodyToMono(String.class)

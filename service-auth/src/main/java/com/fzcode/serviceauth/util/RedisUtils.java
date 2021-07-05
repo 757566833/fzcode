@@ -1,5 +1,6 @@
 package com.fzcode.serviceauth.util;
 
+import com.fzcode.internalcommon.constant.RedisConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -26,5 +27,9 @@ public class RedisUtils {
 
     public static String getString(String key) {
         return redisTemplate.opsForValue().get(key);
+    }
+
+    public static void publishing(String msg){
+        redisTemplate.convertAndSend(RedisConstant.channel,msg);
     }
 }

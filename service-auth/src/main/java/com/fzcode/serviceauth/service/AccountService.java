@@ -1,9 +1,11 @@
 package com.fzcode.serviceauth.service;
 
-import com.fzcode.serviceauth.dto.common.ListResDTO;
-import com.fzcode.serviceauth.dto.request.list.AccountDTO;
-import com.fzcode.serviceauth.dto.response.GithubUserInfo;
-import com.fzcode.serviceauth.dto.response.LoginResDTO;
+import com.fzcode.internalcommon.constant.RegisterTypeEnum;
+import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
+import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
+import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
+import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Authorities;
 import com.fzcode.serviceauth.entity.Users;
@@ -15,14 +17,14 @@ import com.fzcode.serviceauth.dao.UserDao;
 import com.fzcode.serviceauth.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 
-@Component
+@Service
 public class AccountService {
     private AccountDao accountDao;
 
@@ -50,23 +52,26 @@ public class AccountService {
     public void setMail(Mail mail){
         this.mail = mail;
     }
-    public LoginResDTO login(String email, String password) throws CustomizeException {
+    public LoginResponse login(String email, String password) throws CustomizeException {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         Accounts userAccount = accountDao.findByAccount(email);
         if (userAccount==null||!bCryptPasswordEncoder.matches(password, userAccount.getPassword())) {
             throw new CustomizeException("用户名密码错误");
         }
-        return new LoginResDTO(TokenUtils.createBearer(accountDao.findByAccount(email).getAid(), email), authorityDao.findByAccount(email).getAuthority());
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(TokenUtils.createBearer(accountDao.findByAccount(email).getAid(), email));
+        loginResponse.setRole(authorityDao.findByAccount(email).getAuthority());
+        return  loginResponse;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public LoginResDTO register(String email, String password, String code, Integer registerType) throws CustomizeException {
+    public RegisterResponse register(String email, String password, String code, RegisterTypeEnum registerType) throws CustomizeException {
 
         Accounts accounts = new Accounts();
         accounts.setAccount(email);
         accounts.setPassword(new BCryptPasswordEncoder().encode(password));
-        accounts.setRegisterType(registerType);
+        accounts.setRegisterType(registerType.getCode());
         boolean b = accountDao.isHas(email);
         if (b) {
             throw new CustomizeException("邮箱已存在");
@@ -104,7 +109,10 @@ public class AccountService {
             System.out.println(e.getMessage());
             throw new CustomizeException("权限创建失败");
         }
-        return new LoginResDTO(TokenUtils.createBearer(aid, email), "USER");
+        RegisterResponse registerResponse = new RegisterResponse();
+        registerResponse.setToken(TokenUtils.createBearer(aid, email));
+        registerResponse.setRole("USER");
+        return registerResponse;
 
     }
 
@@ -149,8 +157,7 @@ public class AccountService {
 //
 //    }
     @Transactional(rollbackFor = Exception.class)
-    public LoginResDTO githubRegister(GithubUserInfo githubUserInfo) throws CustomizeException {
-        System.out.println("node_id:" + githubUserInfo.getNode_id());
+    public RegisterResponse githubRegister(GithubUserInfo githubUserInfo) throws CustomizeException {
         String email = githubUserInfo.getEmail();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String password = bCryptPasswordEncoder.encode(githubUserInfo.getNode_id());
@@ -158,10 +165,12 @@ public class AccountService {
         Accounts account = accountDao.findByAccount(email);
         if (account != null) {
             if (!bCryptPasswordEncoder.matches(githubUserInfo.getNode_id(), account.getPassword())) {
-                return new LoginResDTO("账号或密码错误，请找回密码", "USER");
-//                return "账号或密码错误，请找回密码";
+                throw new CustomizeException("账号或密码错误，请找回密码");
             } else {
-                return new LoginResDTO(TokenUtils.createBearer(account.getAid(), email), authorityDao.findByAccount(email).getAuthority());
+                RegisterResponse registerResponse = new RegisterResponse();
+                registerResponse.setToken(TokenUtils.createBearer(account.getAid(), email));
+                registerResponse.setRole(authorityDao.findByAccount(email).getAuthority());
+                return registerResponse;
             }
         } else {
             Accounts saveAccount = new Accounts();
@@ -178,11 +187,10 @@ public class AccountService {
 //                    .roles("USER")
 //                    .build();
             try {
-//                System.out.println(JSON.toJSONString(saveAccount));
                 accountResult = accountDao.create(saveAccount);
             } catch (Exception e) {
-                return new LoginResDTO("账号创建失败", "USER");
-//                return "账号创建失败";
+                throw new CustomizeException("账号创建失败，请重试");
+
             }
             Users users = new Users();
             users.setUid(accountResult.getAid());
@@ -196,12 +204,10 @@ public class AccountService {
             users.setBlog(githubUserInfo.getBlog());
             users.setGithubUrl("https://github.com/"+githubUserInfo.getLogin());
             users.setIdCard("");
-//            users.set
             try {
                 userDao.create(users);
             } catch (Exception e) {
-                return new LoginResDTO("账号资料创建失败", "USER");
-//                return "账号创建失败";
+                throw new CustomizeException("账号资料创建失败，请重试");
             }
             Authorities authorities = new Authorities();
             authorities.setAccount(email);
@@ -209,9 +215,12 @@ public class AccountService {
             try {
                 authorityDao.create(authorities);
             } catch (Exception e) {
-                return new LoginResDTO("权限创建失败", "USER");
+                throw new CustomizeException("权限创建失败，请重试");
             }
-            return new LoginResDTO(TokenUtils.createBearer(accountResult.getAid(), email), "USER");
+            RegisterResponse registerResponse = new RegisterResponse();
+            registerResponse.setToken(TokenUtils.createBearer(accountResult.getAid(), email));
+            registerResponse.setRole("USER");
+            return registerResponse;
         }
 //        return JwtUtils.createToken(email);
 
@@ -219,13 +228,11 @@ public class AccountService {
 
     }
 
-    public ListResDTO<List<Map<String, Object>>> findAllAccount(AccountDTO accountDTO) {
-//        Integer
-        return accountDao.findList(accountDTO);
+    public ListResponseDTO<List<Map<String, Object>>> findAllAccount(AccountListRequest accountListRequest) {
+        return accountDao.findList(accountListRequest);
     }
 
     public Map<String, Object> findByAid(Integer aid) throws CustomizeException {
-//        Integer
         return accountDao.findUserInfoByUid(aid);
     }
 }

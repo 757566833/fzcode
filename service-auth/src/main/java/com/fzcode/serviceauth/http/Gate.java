@@ -1,7 +1,7 @@
 package com.fzcode.serviceauth.http;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import com.fzcode.internalcommon.constant.ServiceName;
+import com.fzcode.internalcommon.constant.ServiceNameConstant;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class Gate {
     private static WebClient webClient;
     @Autowired
     public void setLoadBalancerClient(LoadBalancerClient loadBalancerClient) {
-        ServiceInstance instance = loadBalancerClient.choose(ServiceName.CLOUD_GATE);
+        ServiceInstance instance = loadBalancerClient.choose(ServiceNameConstant.CLOUD_GATE);
         String url ="http://" + instance.getHost() +":"+ instance.getPort() ;
         Gate.webClient = WebClient.create(url);
     }

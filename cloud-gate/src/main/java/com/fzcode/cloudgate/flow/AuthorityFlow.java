@@ -1,7 +1,7 @@
 package com.fzcode.cloudgate.flow;
 
 import com.fzcode.cloudgate.util.RedisUtils;
-import com.fzcode.cloudgate.service.AuthorityService;
+import com.fzcode.cloudgate.dao.AuthorityDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -9,11 +9,11 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class AuthorityFlow {
-    AuthorityService authorityService;
+    AuthorityDao authorityDao;
 
     @Autowired
-    public void setAuthorityService(AuthorityService authorityService) {
-        this.authorityService = authorityService;
+    public void setAuthorityService(AuthorityDao authorityDao) {
+        this.authorityDao = authorityDao;
     }
 
     public Mono<String> getAuthority(String email) {
@@ -24,7 +24,7 @@ public class AuthorityFlow {
                 return Mono.just(authority);
             } else {
                 System.out.println("没获取到:");
-                return authorityService.saveAuthFromSqlToRedis(email);
+                return authorityDao.saveAuthFromSqlToRedis(email);
             }
 //            return null;
         });

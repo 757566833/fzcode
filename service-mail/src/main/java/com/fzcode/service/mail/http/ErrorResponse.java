@@ -1,9 +1,11 @@
 package com.fzcode.service.mail.http;
 
+import lombok.Data;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
 
+@Data
 public class ErrorResponse<T> implements Serializable {
     public static Integer CODE_SUCCESS = 0;
     private Integer code;
@@ -18,34 +20,6 @@ public class ErrorResponse<T> implements Serializable {
         ErrorResponse<T> response = new ErrorResponse<>();
         response.code= code;
         response.message=message;
-//        response
         return response;
     }
-
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-
 }

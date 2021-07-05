@@ -1,6 +1,6 @@
 package com.fzcode.serviceauth.handler;
 
-import com.fzcode.serviceauth.dto.response.ErrorResDTO;
+import com.fzcode.internalcommon.dto.http.ErrorResponse;
 import com.fzcode.serviceauth.exception.CustomizeException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -19,20 +19,20 @@ public class CustomGlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResDTO requestParamsNotEmpty(MethodArgumentNotValidException methodArgumentNotValidException) {
+    public ErrorResponse requestParamsNotEmpty(MethodArgumentNotValidException methodArgumentNotValidException) {
         String errMessage = "";
         List<ObjectError> objectErrors = methodArgumentNotValidException.getBindingResult().getAllErrors();
         for (ObjectError o : objectErrors) {
             errMessage += o.getDefaultMessage()+";";
         }
-        return new ErrorResDTO(400, errMessage);
+        return new ErrorResponse(400, errMessage);
     }
 
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
     @ResponseBody
     @ExceptionHandler(CustomizeException.class)
-    public ErrorResDTO customize(CustomizeException customizeException) {
-        return new ErrorResDTO(400, customizeException.getMessage());
+    public ErrorResponse customize(CustomizeException customizeException) {
+        return new ErrorResponse(400, customizeException.getMessage());
     }
 
 
@@ -40,8 +40,8 @@ public class CustomGlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(DataAccessException.class)
-    public ErrorResDTO dataAccess(DataAccessException dataAccessException) {
-        return new ErrorResDTO(400, dataAccessException.getMessage());
+    public ErrorResponse dataAccess(DataAccessException dataAccessException) {
+        return new ErrorResponse(400, dataAccessException.getMessage());
     }
 
 }

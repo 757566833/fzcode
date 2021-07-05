@@ -1,8 +1,8 @@
 package com.fzcode.service.mail.controller;
 
-import com.fzcode.service.mail.dto.MailDTO;
+import com.fzcode.internalcommon.dto.http.SuccessResponse;
+import com.fzcode.internalcommon.dto.servicemail.common.MailDTO;
 import com.fzcode.service.mail.flow.EmailFlow;
-import com.fzcode.service.mail.http.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,7 @@ public class PubEmailController {
     }
 
     @PostMapping(value = "/register")
-    public Mono<ResponseDTO> register(@RequestBody @Validated MailDTO mailDTO) {
+    public Mono<SuccessResponse> register(@RequestBody @Validated MailDTO mailDTO) {
 //        return emailService.sendEmail(mailDTO.getEmail(), "register");
         return emailFlow.sendEmail(mailDTO.getEmail(), "register");
     }

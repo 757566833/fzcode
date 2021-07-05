@@ -22,8 +22,7 @@ public class Auth {
     }
 
     public Mono<AuthorityDTO> getAuthority(String email) {
-        System.out.println(JSON.toJSONString("getAuthority"));
-        WebClient webClient = WebClient.create(services.getHost().get("auth"));
+        WebClient webClient = WebClient.create(services.getService().getAuth().getHost());
         Map<String, String> map = new HashMap<>();
         map.put("account", email);
         return webClient.post().uri("/pri/authority/get")

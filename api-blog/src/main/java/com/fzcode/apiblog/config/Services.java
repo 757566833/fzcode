@@ -1,4 +1,4 @@
-package com.fzcode.cloudgate.config;
+package com.fzcode.apiblog.config;
 
 import com.fzcode.internalcommon.config.ApiMap;
 import com.fzcode.internalcommon.config.CloudMap;
