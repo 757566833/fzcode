@@ -22,12 +22,6 @@ public class CloudGateApplication {
         this.services = services;
     }
 
-
-    LoadBalancerClient lb;
-
-    @Autowired
-    public void setLb( LoadBalancerClient lb){ this.lb = lb;}
-
 //    static AuthorityFlow authorityFlow;
 //
 //    @Autowired
@@ -50,7 +44,7 @@ public class CloudGateApplication {
 //                .route("service-note", r -> r.path("/note/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("note")))
 //                .route("service-file", r -> r.path("/file/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("file")))
 //                .route("service-mail", r -> r.path("/mail/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("mail")))
-                .route("api-blog", r -> r.path("/api/blog/**").filters(f -> f.stripPrefix(2)).uri(ServiceNameConstant.LB_API_BLOG))
+                .route("api-blog", r -> r.path("/api/blog/**").filters(f -> f.stripPrefix(2)).uri(services.getApi().getBlog().getHost()))
 
                 // 这里面如果指向 http://www.baidu.com 之类的 他会直接转发到https上
                 .route("test", r -> r.path("/test").filters(f -> f.stripPrefix(1)).uri("http://www.china.com.cn"))

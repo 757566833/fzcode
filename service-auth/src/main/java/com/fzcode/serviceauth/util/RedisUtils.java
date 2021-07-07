@@ -30,6 +30,7 @@ public class RedisUtils {
     }
 
     public static void publishing(String msg){
+        System.out.println("发送消息:"+msg);
         redisTemplate.convertAndSend(RedisConstant.channel,msg);
     }
 }

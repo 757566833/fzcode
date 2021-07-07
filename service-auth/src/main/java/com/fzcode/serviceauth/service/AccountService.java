@@ -228,7 +228,7 @@ public class AccountService {
 
     }
 
-    public ListResponseDTO<List<Map<String, Object>>> findAllAccount(AccountListRequest accountListRequest) {
+    public ListResponseDTO<Map<String, Object>> findAllAccount(AccountListRequest accountListRequest) {
         return accountDao.findList(accountListRequest);
     }
 

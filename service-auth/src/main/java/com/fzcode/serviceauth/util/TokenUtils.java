@@ -1,10 +1,13 @@
 package com.fzcode.serviceauth.util;
 
+import com.fzcode.serviceauth.config.Secret;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,10 +17,14 @@ import java.util.Map;
 @Component
 public class TokenUtils {
     private static SecretKey key;
-
-    public void setKey(String secret) {
-        System.out.println("secret" + secret);
-        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    private Secret secret;
+    @Autowired
+    public void setSecret(Secret secret) {
+        this.secret = secret;
+    }
+    @PostConstruct
+    public void init(){
+        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
     }
 
     public static String createBearer(Integer aid,String username) {

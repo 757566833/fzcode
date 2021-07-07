@@ -37,7 +37,7 @@ public class AccountDao {
         return accounts;
     }
 
-    public ListResponseDTO<List<Map<String, Object>>> findList(AccountListRequest accountDTO) {
+    public ListResponseDTO<Map<String, Object>> findList(AccountListRequest accountDTO) {
         Integer offset = (accountDTO.getPage() - 1) * accountDTO.getPageSize();
         Integer length = accountDTO.getPageSize();
         String desc = null;
@@ -84,13 +84,13 @@ public class AccountDao {
                 asc = "users." + accountDTO.getAsc();
             }
         }
-        List<Map<String, Object>> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), desc, asc);
+//        List<Map<String, Object>> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), desc, asc);
         List<Map<String, Object>> countList = accountRepository.findListCount(accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl());
         System.out.println(JSON.toJSONString(countList.get(0)));
-        Object count = countList.get(0).get("COUNT(1)").toString();
-        ListResponseDTO<List<Map<String, Object>>> listListResDTO = new ListResponseDTO<>();
-        listListResDTO.setCount(count);
-        listListResDTO.setList(accounts);
+        String count = countList.get(0).get("COUNT(1)").toString();
+        ListResponseDTO<Map<String, Object>> listListResDTO = new ListResponseDTO<>();
+        listListResDTO.setCount(Integer.valueOf(count));
+//        listListResDTO.setList(accounts);
         listListResDTO.setPage(accountDTO.getPage());
         listListResDTO.setPageSize(accountDTO.getPageSize());
         return listListResDTO;

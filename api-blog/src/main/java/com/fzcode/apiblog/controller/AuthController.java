@@ -1,5 +1,6 @@
 package com.fzcode.apiblog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fzcode.apiblog.config.Services;
 import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
@@ -15,13 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/auth",consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/auth")
 public class AuthController {
     Services services;
     @Autowired
     public void setServices(Services services){
         this.services = services;
     }
+
     @GetMapping(value = "/test")
     public String test (){
         String ipHostAddress = "";
@@ -70,11 +72,12 @@ public class AuthController {
                 .bodyToMono(LoginResponse.class)
                 .block();
     }
-    @GetMapping(value = "/login/github", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/login/github")
     public String githubLogin (@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId){
         Map map = new HashMap();
         map.put("code",code);
         map.put("socketId",socketId);
+        System.out.println(JSON.toJSONString(map));
         WebClient client = WebClient.create(services.getService().getAuth().getHost());
         return client
                 .post()
@@ -85,4 +88,5 @@ public class AuthController {
                 .bodyToMono(String.class)
                 .block();
     }
+
 }

@@ -1,7 +1,0 @@
-
-server:
-  port: 30206
-spring:
-  application:
-    name: SERVICE-NOTE
-

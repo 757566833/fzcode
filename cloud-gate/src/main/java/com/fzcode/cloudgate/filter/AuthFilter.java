@@ -1,9 +1,9 @@
 package com.fzcode.cloudgate.filter;
 
 import com.fzcode.cloudgate.config.Services;
-import com.fzcode.cloudgate.dto.common.TokenInfoDTO;
 import com.fzcode.cloudgate.flow.AuthorityFlow;
 import com.fzcode.cloudgate.util.TokenUtils;
+import com.fzcode.internalcommon.dto.common.TokenInfoDTO;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -46,7 +46,6 @@ public class AuthFilter implements Ordered, GlobalFilter {
         HttpHeaders httpHeaders = request.getHeaders();
         String auth = httpHeaders.getFirst(HttpHeaders.AUTHORIZATION);
         URI uri = request.getURI();
-        System.out.println(uri.getPath());
         // 不需要token的接口
         if (uri.getPath().indexOf("/auth/login") >= 0
                 || uri.getPath().indexOf("/auth/register") >= 0
