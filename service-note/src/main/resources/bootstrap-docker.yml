@@ -12,7 +12,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: com.fzcode.noteservice.config.Mysql
+        dialect: com.fzcode.servicenote.config.Mysql
 eureka:
   client:
     service-url:
