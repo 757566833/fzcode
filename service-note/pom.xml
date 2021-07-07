@@ -91,7 +91,7 @@
     </dependencies>
 
     <build>
-        <finalName>note</finalName>
+        <finalName>service-note</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
