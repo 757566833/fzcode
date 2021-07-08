@@ -97,7 +97,7 @@ public class AuthController {
     public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
         WebClient client = WebClient.create(services.getService().getAuth().getHost());
         Map<String, Object> info =  client
-                .post()
+                .get()
                 .uri("/self")
                 .header("email",email)
                 .header("aid",aid)
