@@ -21,6 +21,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @RestController
 public class AccountController {
@@ -99,9 +101,9 @@ public class AccountController {
     }
 
     @GetMapping("/self")
-    public SuccessResponse getSelf(@RequestHeader("aid") String aid) throws CustomizeException {
+    public Map<String, Object> getSelf(@RequestHeader("aid") String aid) throws CustomizeException {
 
-        return new SuccessResponse("查询成功", accountService.findByAid(Integer.parseInt(aid)));
+        return accountService.findByAid(Integer.parseInt(aid));
     }
 
     @GetMapping(value = "/admin/account")

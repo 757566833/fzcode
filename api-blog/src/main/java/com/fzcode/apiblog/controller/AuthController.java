@@ -2,6 +2,7 @@ package com.fzcode.apiblog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.fzcode.apiblog.config.Services;
+import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,25 @@ public class AuthController {
                 .block()
                 .bodyToMono(String.class)
                 .block();
+    }
+
+//      .header("email", finalEmail)
+//                            .header("aid", finalAid.toString())
+//            .header("userAuthority", authority)
+    @GetMapping(value = "/self")
+    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
+        WebClient client = WebClient.create(services.getService().getAuth().getHost());
+        Map<String, Object> info =  client
+                .post()
+                .uri("/self")
+                .header("email",email)
+                .header("aid",aid)
+                .header("authority",authority)
+                .exchange()
+                .block()
+                .bodyToMono(Map.class)
+                .block();
+        return  new SuccessResponse("查询成功",info);
     }
 
 }
