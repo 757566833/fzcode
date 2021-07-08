@@ -39,6 +39,9 @@ public class Texts {
     @Column(name = "raw", nullable = false,columnDefinition="varchar(2048) COMMENT 'raw'")
     private String raw;
 
+    @Column(name = "text", nullable = false,columnDefinition="varchar(2048) COMMENT 'raw'")
+    private String text;
+
     @Column(name = "html", nullable = false,columnDefinition="varchar(2048) COMMENT 'html'")
     private String html;
 
@@ -47,5 +50,8 @@ public class Texts {
 
     @Column(name = "top")
     private Integer top = 0;
+
+    @Column(name = "type")
+    private Integer type;
 
 }

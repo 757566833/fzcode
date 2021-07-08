@@ -101,7 +101,7 @@ public class AuthController {
                 .uri("/self")
                 .header("email",email)
                 .header("aid",aid)
-                .header("authority",userAuthority)
+                .header("userAuthority",userAuthority)
                 .exchange()
                 .block()
                 .bodyToMono(Map.class)
