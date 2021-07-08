@@ -2,17 +2,26 @@ package com.fzcode.serviceauth.util;
 
 import com.fzcode.internalcommon.constant.RedisConstant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class RedisUtils {
+public class AuthRedisUtils {
 
     private static RedisTemplate<String, String> redisTemplate;
+
+    @PostConstruct
+    public void  init(){
+        LettuceConnectionFactory connectionFactory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
+        connectionFactory.setDatabase(0);
+        AuthRedisUtils.redisTemplate.setConnectionFactory(connectionFactory);
+        connectionFactory.resetConnection();
+    }
 
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
@@ -30,9 +39,7 @@ public class RedisUtils {
     public static String getString(String key) {
         return redisTemplate.opsForValue().get(key);
     }
-
-    public static void publishing(String msg){
-        System.out.println("发送消息:"+msg);
-        redisTemplate.convertAndSend(RedisConstant.channel,msg);
+    public static void setHash(String hashName, String key, String value) {
+         redisTemplate.opsForHash().put(hashName, key, value);
     }
 }

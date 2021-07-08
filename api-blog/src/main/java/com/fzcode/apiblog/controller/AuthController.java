@@ -94,14 +94,14 @@ public class AuthController {
 //                            .header("aid", finalAid.toString())
 //            .header("userAuthority", authority)
     @GetMapping(value = "/self")
-    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
+    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("userAuthority") String userAuthority){
         WebClient client = WebClient.create(services.getService().getAuth().getHost());
         Map<String, Object> info =  client
                 .get()
                 .uri("/self")
                 .header("email",email)
                 .header("aid",aid)
-                .header("authority",authority)
+                .header("authority",userAuthority)
                 .exchange()
                 .block()
                 .bodyToMono(Map.class)

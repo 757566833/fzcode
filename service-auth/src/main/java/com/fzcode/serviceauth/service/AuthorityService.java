@@ -2,8 +2,8 @@ package com.fzcode.serviceauth.service;
 
 import com.fzcode.internalcommon.dto.serviceauth.request.UpdateAuthorityRequest;
 import com.fzcode.serviceauth.entity.Authorities;
-import com.fzcode.serviceauth.http.Gate;
 import com.fzcode.serviceauth.dao.AuthorityDao;
+import com.fzcode.serviceauth.util.AuthRedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class AuthorityService {
 
 
     public Authorities updateByAccount(UpdateAuthorityRequest updateAuthorityRequest) {
-        Gate.updateAuthority(updateAuthorityRequest.getAccount(), updateAuthorityRequest.getAuthority());
+        AuthRedisUtils.setHash("authority", updateAuthorityRequest.getAccount(), updateAuthorityRequest.getAuthority());
         return authorityDao.update(updateAuthorityRequest.getAccount(), updateAuthorityRequest.getAuthority());
     }
 }
