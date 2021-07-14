@@ -1,6 +1,23 @@
-package com.fzcode.service.file.util;
+package com.fzcode.internalcommon.utils;
 
-public class FileUtil {
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+public class FileUtils {
+    public static boolean isImage(File file){
+        try {
+            BufferedImage bi = ImageIO.read(file);
+            if (bi == null) {
+                return false;
+            }
+        }catch (Exception e){
+            return false;
+        }
+
+
+        return true;
+    }
     /**
      * 获取文件前缀
      *

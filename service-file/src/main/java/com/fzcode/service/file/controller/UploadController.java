@@ -1,146 +1,113 @@
 package com.fzcode.service.file.controller;
 
-import com.fzcode.service.file.config.Config;
-import com.fzcode.service.file.dto.Base64DTO;
-import com.fzcode.service.file.dto.SuccessResDTO;
+import com.alibaba.fastjson.JSON;
+import com.fzcode.internalcommon.dto.servicefile.request.Base64Upload;
+import com.fzcode.internalcommon.utils.FileUtils;
+import com.fzcode.service.file.config.QiNiuAuth;
 import com.fzcode.service.file.exception.CustomizeException;
-import com.fzcode.service.file.util.FileUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.http.HttpHeaders;
+import com.google.gson.Gson;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
 import org.springframework.http.MediaType;
-import org.springframework.http.ZeroCopyHttpOutputMessage;
-import org.springframework.http.codec.multipart.Part;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.channels.AsynchronousFileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 
 @RestController
 @RequestMapping(value = "/upload")
 public class UploadController {
 
-    private Config config;
+    @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String upload(@RequestParam("file") MultipartFile file) throws CustomizeException {
+        UploadManager uploadManager = new UploadManager(QiNiuAuth.configuration);
+        InputStream inputStream;
+        try {
+             inputStream =  file.getInputStream();
+        }catch (IOException ioException){
+            throw new CustomizeException("IO错误");
+        }
 
-    @Autowired
-    public void setConfig(Config config) {
-        this.config = config;
-    }
-
-    @GetMapping(value = "/getFile")
-    public Mono<String> getFile() {
-
-        return Mono.just(config.getFilePath());
-    }
-
-    @PostMapping(value = "/postForm", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Mono<String> postForm(ServerWebExchange serverWebExchange) {
-        Mono<MultiValueMap<String, String>> multipartData = serverWebExchange.getFormData();
-
-        return multipartData.map(formData -> {
-            String parameterValue = formData.getFirst("ttt");
-            System.out.println(formData.toString());
-            System.out.println(formData.toSingleValueMap());
-            System.out.println(parameterValue);
-            return parameterValue;
-        });
-    }
-
-    @GetMapping(value = "/test")
-    public Mono<Void> downloadByWriteWith(ServerHttpResponse response) throws IOException {
-        ZeroCopyHttpOutputMessage zeroCopyResponse = (ZeroCopyHttpOutputMessage) response;
-        response.getHeaders().set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=parallel.png");
-        response.getHeaders().setContentType(MediaType.IMAGE_PNG);
-
-        Resource resource = new ClassPathResource("parallel.png");
-        File file = resource.getFile();
-        return zeroCopyResponse.writeWith(file, 0, file.length());
-    }
-
-    @PostMapping(value = "/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<SuccessResDTO> upload(ServerWebExchange serverWebExchange){
-        Mono<MultiValueMap<String, Part>> multipartData = serverWebExchange.getMultipartData();
-        return multipartData.flatMap(multiValueMap -> {
-            System.out.println(multiValueMap);
-            Part part = multiValueMap.getFirst("file");
-            String fileName = part.headers().getContentDisposition().getFilename();
-            if(fileName==null){
-                return Mono.error(new CustomizeException("header中未含有filename"));
-            }
-            String preFix = FileUtil.getFilePrefix(fileName);
-            String suffix = FileUtil.getFileSuffix(fileName);
-            Path tempFile = null;
-            String timeStr = String.valueOf(new Date().getTime());
+        Response response = null;
+        String filename = file.getOriginalFilename();
+        String filePrefix = FileUtils.getFilePrefix(filename);
+        String fileSuffix = FileUtils.getFileSuffix(filename);
+        String time = String.valueOf(new Date().getTime());
+        Double d = Math.random();
+        String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
+        String serverFilename = filePrefix+random+time+"."+fileSuffix;
+        try {
+            response = uploadManager.put(inputStream,serverFilename.replaceAll("\"",""),QiNiuAuth.uploadToken,null, null);
+        }catch (QiniuException ex){
+            Response r = ex.response;
+            System.err.println(r.toString());
             try {
-                tempFile = Files.createTempFile(Paths.get(config.getFilePath()), preFix + timeStr, "." + suffix);
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(r.bodyString());
+            } catch (QiniuException ex2) {
+                //ignore
             }
-            AsynchronousFileChannel channel = null;
+        }
+        String str = null;
+        try {
+             str =  response.bodyString();
+        }catch (QiniuException ex){
+            Response r = ex.response;
+            System.err.println(r.toString());
             try {
-                channel = AsynchronousFileChannel.open(tempFile, StandardOpenOption.WRITE);
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(r.bodyString());
+            } catch (QiniuException ex2) {
+                //ignore
             }
-            final AsynchronousFileChannel currentChannel = channel;
-            final Path currentTempFile = tempFile;
-            String filePath = currentTempFile.toString();
-            String[] nameArray = filePath.split("/");
-            String fileResName = nameArray[nameArray.length - 1];
-            String fileResPath = config.getNetworkFilePath() + "/" + fileResName;
-            return DataBufferUtils.write(part.content(), currentChannel, 0).doOnComplete(() -> {
-                System.out.println("结束");
-            }).then(Mono.just(new SuccessResDTO("上传成功", fileResPath)));
+        }
 
-        });
+        DefaultPutRet putRet = new Gson().fromJson(str, DefaultPutRet.class);
+        return "https://blogoss.fzcode.com/"+putRet.key;
     }
-
     @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<String> base64Upload(@RequestBody Base64DTO base64DTO) throws IOException {
-        return Mono.create(stringMonoSink -> {
-            byte[] bytes = Base64.getDecoder().decode(base64DTO.getBase64());
-//        bytes.
-            File file = new File(config.getFilePath() + File.separator + base64DTO.getFileName());
-            FileOutputStream fileOutputStream = null;
+    public String base64Upload(@RequestBody Base64Upload base64Upload){
+        UploadManager uploadManager = new UploadManager(QiNiuAuth.configuration);
+        byte[] bytes = Base64.getDecoder().decode(base64Upload.getBase64());
+        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+        Response response = null;
+        String filename = base64Upload.getFileName();
+        String filePrefix = FileUtils.getFilePrefix(filename);
+        String fileSuffix = FileUtils.getFileSuffix(filename);
+        String time = String.valueOf(new Date().getTime());
+        Double d = Math.random();
+        String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
+        String serverFilename = filePrefix+random+time+"."+fileSuffix;
+        try {
+            response = uploadManager.put(stream,serverFilename.replaceAll("\"",""),QiNiuAuth.uploadToken,null, null);
+        }catch (QiniuException ex){
+            Response r = ex.response;
+            System.err.println(r.toString());
             try {
-                fileOutputStream = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.err.println(r.bodyString());
+            } catch (QiniuException ex2) {
+                //ignore
             }
+        }
 
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+        String str = null;
+        try {
+            str =  response.bodyString();
+        }catch (QiniuException ex){
+            Response r = ex.response;
+            System.err.println(r.toString());
             try {
-                bufferedOutputStream.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(r.bodyString());
+            } catch (QiniuException ex2) {
+                //ignore
             }
-            try {
-                bufferedOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            stringMonoSink.success("321");
-        });
+        }
 
+        DefaultPutRet putRet = new Gson().fromJson(str, DefaultPutRet.class);
+        return "https://blogoss.fzcode.com/"+putRet.key;
     }
-
-
 }

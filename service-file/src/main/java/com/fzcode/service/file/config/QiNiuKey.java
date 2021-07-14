@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "qiniu")
 @Data
-public class QiNiu {
+public class QiNiuKey {
     private String accessKey;
     private String secretKey;
+    private String bucketName;
 }

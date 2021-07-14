@@ -57,7 +57,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
             return chain.filter(exchange);
         }
         // 测试接口
-        else if(request.getMethod() == HttpMethod.GET &&uri.getPath().indexOf("test") > 0){
+        else if(uri.getPath().indexOf("test") > 0){
             return chain.filter(exchange);
         }
         // 所有的文章查询，都是不需要token的
