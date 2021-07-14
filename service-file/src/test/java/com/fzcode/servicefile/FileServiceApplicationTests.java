@@ -1,4 +1,4 @@
-package com.fzcode.service.file;
+package com.fzcode.servicefile;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

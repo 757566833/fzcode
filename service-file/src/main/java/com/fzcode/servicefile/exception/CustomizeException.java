@@ -1,4 +1,4 @@
-package com.fzcode.service.file.exception;
+package com.fzcode.servicefile.exception;
 
 public class CustomizeException extends Exception {
     private static final long serialVersionUID = 1l;

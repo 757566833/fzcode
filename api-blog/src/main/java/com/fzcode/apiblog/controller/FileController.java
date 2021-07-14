@@ -8,7 +8,6 @@ import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicefile.request.Base64Upload;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +23,6 @@ import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.List;
 
 
 @RestController
@@ -48,14 +45,14 @@ public class FileController {
         if(contentType.indexOf("image")<0){
             throw new CustomizeException("不是图片");
         }
-        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        InputStream inputStream;
-        try {
-             inputStream =  file.getInputStream();
-        }catch (Exception e){
-            throw new CustomizeException("io出错");
-        }
-        map.add("file",new MultipartInputStreamFileResource(inputStream,filename));
+        LinkedMultiValueMap<String, MultipartFile> map = new LinkedMultiValueMap<>();
+//        InputStream inputStream;
+//        try {
+//             inputStream =  file.getInputStream();
+//        }catch (Exception e){
+//            throw new CustomizeException("io出错");
+//        }
+        map.add("file",file);
         WebClient client = WebClient.create(services.getService().getFile().getHost());
         String filePath =  client.post()
                 .uri("/upload/file")

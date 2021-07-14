@@ -1,10 +1,10 @@
-package com.fzcode.service.file.controller;
+package com.fzcode.servicefile.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.fzcode.internalcommon.dto.servicefile.request.Base64Upload;
 import com.fzcode.internalcommon.utils.FileUtils;
-import com.fzcode.service.file.config.QiNiuAuth;
-import com.fzcode.service.file.exception.CustomizeException;
+import com.fzcode.servicefile.config.QiNiuAuth;
+import com.fzcode.servicefile.exception.CustomizeException;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 
 @RestController
@@ -42,6 +41,7 @@ public class UploadController {
         Double d = Math.random();
         String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
         String serverFilename = filePrefix+random+time+"."+fileSuffix;
+        System.out.println("serverFilename:"+serverFilename);
         try {
             response = uploadManager.put(inputStream,serverFilename.replaceAll("\"",""),QiNiuAuth.uploadToken,null, null);
         }catch (QiniuException ex){
@@ -72,7 +72,7 @@ public class UploadController {
     @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String base64Upload(@RequestBody Base64Upload base64Upload){
         UploadManager uploadManager = new UploadManager(QiNiuAuth.configuration);
-        byte[] bytes = Base64.getDecoder().decode(base64Upload.getBase64());
+        byte[] bytes = Base64.getMimeDecoder().decode(base64Upload.getBase64());
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
         Response response = null;
         String filename = base64Upload.getFileName();

@@ -1,4 +1,4 @@
-package com.fzcode.service.file.config;
+package com.fzcode.servicefile.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

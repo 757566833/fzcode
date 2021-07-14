@@ -1,4 +1,4 @@
-package com.fzcode.service.file.config;
+package com.fzcode.servicefile.config;
 
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;

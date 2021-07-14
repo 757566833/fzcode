@@ -1,6 +1,6 @@
-package com.fzcode.service.file.controller;
+package com.fzcode.servicefile.controller;
 
-import com.fzcode.service.file.exception.CustomizeException;
+import com.fzcode.servicefile.exception.CustomizeException;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.DownloadUrl;
 import org.springframework.web.bind.annotation.*;
