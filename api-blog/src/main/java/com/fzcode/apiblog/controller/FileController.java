@@ -38,7 +38,7 @@ public class FileController {
     public void setCache(Cache cache){
         this.cache = cache;
     }
-    @PostMapping(value = "/upload/img/form")
+    @PostMapping(value = "/test/upload/img/form")
     public SuccessResponse singleUpload(@RequestParam("file") MultipartFile file) throws CustomizeException {
         String filename = file.getOriginalFilename();
         String contentType = file.getContentType();
@@ -65,7 +65,7 @@ public class FileController {
                 .block();
         return new SuccessResponse("查询成功", filePath);
     }
-    @PostMapping(value = "/upload/img/base64")
+    @PostMapping(value = "/test/upload/img/base64")
     public SuccessResponse base64Upload(@RequestBody Base64Upload base64Upload) throws CustomizeException {
         WebClient client = WebClient.create(services.getService().getFile().getHost());
         String filePath =  client.post()

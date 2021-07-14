@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class Base64Upload {
     private String base64;
-    private String fileName;
+    private String filename;
 
 }

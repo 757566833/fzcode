@@ -17,15 +17,15 @@ class NoteServiceApplicationTests {
     @Autowired
     TextElasticDao textElasticDao;
 
-    @Test
-    void contextLoads() throws CustomizeException, IOException {
-        List<String> lisar = new ArrayList<>();
-        lisar.add("123");
-        lisar.add("4312");
-        System.out.println(JSON.toJSONString(lisar));
-        String str = "123,4312";
-        List<String> list = JSON.parseArray(str, String.class);
-        System.out.println(list);
-    }
+//    @Test
+//    void contextLoads() throws CustomizeException, IOException {
+//        List<String> lisar = new ArrayList<>();
+//        lisar.add("123");
+//        lisar.add("4312");
+//        System.out.println(JSON.toJSONString(lisar));
+//        String str = "123,4312";
+//        List<String> list = JSON.parseArray(str, String.class);
+//        System.out.println(list);
+//    }
 
 }

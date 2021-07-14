@@ -70,20 +70,24 @@ public class UploadController {
         return "https://blogoss.fzcode.com/"+putRet.key;
     }
     @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String base64Upload(@RequestBody Base64Upload base64Upload){
+    public String base64Upload(@RequestBody Base64Upload base64Upload) throws CustomizeException {
         UploadManager uploadManager = new UploadManager(QiNiuAuth.configuration);
-        byte[] bytes = Base64.getMimeDecoder().decode(base64Upload.getBase64());
-        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+        byte[] bytes;
+        try {
+            bytes = Base64.getMimeDecoder().decode(base64Upload.getBase64().getBytes("UTF-8"));
+        }catch (UnsupportedEncodingException e){
+            throw new CustomizeException("转换bytes出错");
+        }
         Response response = null;
-        String filename = base64Upload.getFileName();
-        String filePrefix = FileUtils.getFilePrefix(filename);
+        String filename = base64Upload.getFilename();
+        String filePrefix = FileUtils.getFilePrefix(filename).replace(".","");
         String fileSuffix = FileUtils.getFileSuffix(filename);
         String time = String.valueOf(new Date().getTime());
         Double d = Math.random();
         String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
         String serverFilename = filePrefix+random+time+"."+fileSuffix;
         try {
-            response = uploadManager.put(stream,serverFilename.replaceAll("\"",""),QiNiuAuth.uploadToken,null, null);
+            response = uploadManager.put(bytes,serverFilename.replaceAll("\"",""),QiNiuAuth.uploadToken);
         }catch (QiniuException ex){
             Response r = ex.response;
             System.err.println(r.toString());
