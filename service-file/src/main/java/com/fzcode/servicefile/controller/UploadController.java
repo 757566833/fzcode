@@ -70,14 +70,9 @@ public class UploadController {
         return "https://blogoss.fzcode.com/"+putRet.key;
     }
     @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String base64Upload(@RequestBody Base64Upload base64Upload) throws CustomizeException {
+    public String base64Upload(@RequestBody Base64Upload base64Upload) {
         UploadManager uploadManager = new UploadManager(QiNiuAuth.configuration);
-        byte[] bytes;
-        try {
-            bytes = Base64.getMimeDecoder().decode(base64Upload.getBase64().getBytes("UTF-8"));
-        }catch (UnsupportedEncodingException e){
-            throw new CustomizeException("转换bytes出错");
-        }
+        byte[] bytes = Base64.getDecoder().decode(base64Upload.getBase64().split(",")[1]);
         Response response = null;
         String filename = base64Upload.getFilename();
         String filePrefix = FileUtils.getFilePrefix(filename).replace(".","");
