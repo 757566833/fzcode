@@ -56,7 +56,7 @@ https://github.com/spring-cloud/spring-cloud-config/issues/1251#issuecomment-548
 # sql
 ## 创建用户
 ```sql
-CREATE USER `fzcode`@`%` IDENTIFIED BY 'fzcode_123';
+CREATE USER `fzcode`@`%` IDENTIFIED BY '123456';
 ```
 ## 建表
 ```sql

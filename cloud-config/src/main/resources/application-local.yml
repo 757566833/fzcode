@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    include: common
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:30200/eureka/
