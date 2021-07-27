@@ -36,9 +36,9 @@ public class CategoryController {
     }
 
     @PostMapping(value = "/add")
-    public SuccessResponse add(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") Integer aid) throws CustomizeException {
-        Integer cid = categoryService.create(cateGoryCreateRequest, aid);
-        return new SuccessResponse("创建成功", cid);
+    public Integer add(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") Integer aid) throws CustomizeException {
+        System.out.println("add");
+        return categoryService.create(cateGoryCreateRequest, aid);
     }
 
     @PutMapping(value = "/update")

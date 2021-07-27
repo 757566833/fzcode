@@ -1,6 +1,7 @@
 package com.fzcode.serviceauth.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.GithubLoginRequest;
@@ -107,8 +108,8 @@ public class AccountController {
     }
 
     @GetMapping(value = "/admin/account")
-    public SuccessResponse getAccountList(@Validated AccountListRequest accountListRequest) {
-        return new SuccessResponse("查询成功", accountService.findAllAccount(accountListRequest));
+    public ListResponseDTO<Map<String, Object>> getAccountList(@Validated AccountListRequest accountListRequest) {
+        return accountService.findAllAccount(accountListRequest);
     }
 
 

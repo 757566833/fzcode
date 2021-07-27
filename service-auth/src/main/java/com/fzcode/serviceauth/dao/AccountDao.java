@@ -84,13 +84,13 @@ public class AccountDao {
                 asc = "users." + accountDTO.getAsc();
             }
         }
-//        List<Map<String, Object>> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), desc, asc);
+        List<Map<String, Object>> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), desc, asc);
         List<Map<String, Object>> countList = accountRepository.findListCount(accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl());
         System.out.println(JSON.toJSONString(countList.get(0)));
         String count = countList.get(0).get("COUNT(1)").toString();
         ListResponseDTO<Map<String, Object>> listListResDTO = new ListResponseDTO<>();
         listListResDTO.setCount(Integer.valueOf(count));
-//        listListResDTO.setList(accounts);
+        listListResDTO.setList(accounts);
         listListResDTO.setPage(accountDTO.getPage());
         listListResDTO.setPageSize(accountDTO.getPageSize());
         return listListResDTO;

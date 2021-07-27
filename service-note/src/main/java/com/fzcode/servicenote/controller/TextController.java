@@ -40,14 +40,14 @@ public class TextController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponse create(@RequestBody @Validated TextCreateRequest textCreateRequest, @RequestHeader("aid") String aid) throws CustomizeException {
+    public Map create(@RequestBody @Validated TextCreateRequest textCreateRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         if (aid == null) {
             throw new CustomizeException("用户未登录");
         }
         String tid = textService.create(textCreateRequest,Integer.valueOf(aid));
         Map map = new HashMap();
         map.put("tid", tid);
-        return new SuccessResponse("存储成功", map);
+        return  map;
     }
 
 
@@ -76,8 +76,7 @@ public class TextController {
     }
 
     @GetMapping(value = "/get/{id}")
-    public SuccessResponse getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
-        TextDBGetByIdMapper textResDTO = textService.findById(id);
-        return new SuccessResponse("查询", textResDTO);
+    public TextDBGetByIdMapper getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
+        return textService.findById(id);
     }
 }

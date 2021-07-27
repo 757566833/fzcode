@@ -27,6 +27,7 @@ public class CategoryService {
         BeanUtils.copyProperties(cateGoryReqCreateDTO, categories);
         categories.setCreateBy(aid);
         Categories saveResult;
+        System.out.println("create");
         try {
             saveResult = categoryDBDao.save(categories);
         } catch (Exception e) {
