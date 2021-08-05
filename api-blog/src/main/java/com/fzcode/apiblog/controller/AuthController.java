@@ -2,11 +2,16 @@ package com.fzcode.apiblog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.fzcode.apiblog.config.Services;
+import com.fzcode.apiblog.exception.CustomizeException;
+import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
+import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
+import com.fzcode.internalcommon.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -92,21 +97,39 @@ public class AuthController {
 
 //      .header("email", finalEmail)
 //                            .header("aid", finalAid.toString())
-//            .header("userAuthority", authority)
+//            .header("authority", authority)
     @GetMapping(value = "/self")
-    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("userAuthority") String userAuthority){
+    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
         WebClient client = WebClient.create(services.getService().getAuth().getHost());
         Map<String, Object> info =  client
                 .get()
                 .uri("/self")
                 .header("email",email)
                 .header("aid",aid)
-                .header("userAuthority",userAuthority)
+                .header("authority",authority)
                 .exchange()
                 .block()
                 .bodyToMono(Map.class)
                 .block();
         return  new SuccessResponse("查询成功",info);
     }
-
+    @GetMapping(value = "/admin/account")
+    public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
+        System.out.println("email:"+email+",aid:"+aid);
+        WebClient client = WebClient.create(services.getService().getAuth().getHost());
+        MultiValueMap<String, String> params = BeanUtils.bean2MultiValueMap(accountListRequest);
+        ListResponseDTO<Map<String, Object>> info =  client
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/account")
+                        .queryParams(params)
+                        .build())
+                .header("email",email)
+                .header("aid",aid)
+                .exchange()
+                .block()
+                .bodyToMono(ListResponseDTO.class)
+                .block();
+        return  new SuccessResponse("查询成功",info);
+    }
 }

@@ -36,10 +36,10 @@ public class Texts {
 
     private String description;
 
-    @Column(name = "raw", nullable = false,columnDefinition="varchar(2048) COMMENT 'raw'")
+    @Column(name = "raw",  columnDefinition="varchar(2048) COMMENT 'raw'")
     private String raw;
 
-    @Column(name = "text", nullable = false,columnDefinition="varchar(2048) COMMENT 'raw'")
+    @Column(name = "text", columnDefinition="varchar(2048) COMMENT 'text'")
     private String text;
 
     @Column(name = "html", nullable = false,columnDefinition="varchar(2048) COMMENT 'html'")

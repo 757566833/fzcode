@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: CLOUD-GATE
+  codec:
+    max-in-memory-size: 10MB
   cloud:
 #    config:
 #      uri: http://config:9899

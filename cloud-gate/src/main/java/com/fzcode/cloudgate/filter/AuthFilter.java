@@ -87,6 +87,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 String finalEmail = email;
                 Integer finalAid = aid;
                 return authorityFlow.getAuthority(email).flatMap(authority -> {
+                    System.out.println("authority:"+authority);
                     if (uri.getPath().indexOf("admin") > 0 && !authority.equals("ADMIN")) {
                         DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("没权限".getBytes());
                         exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
@@ -96,7 +97,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                             .mutate()
                             .header("email", finalEmail)
                             .header("aid", finalAid.toString())
-                            .header("userAuthority", authority)
+                            .header("authority", authority)
                             .build();
                     ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
                     return chain.filter(nextExchange);
@@ -112,7 +113,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                             .mutate()
                             .header("email", email)
                             .header("aid", aid.toString())
-                            .header("userAuthority", authority)
+                            .header("authority", authority)
                             .build();
                     ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
                     return chain.filter(nextExchange);

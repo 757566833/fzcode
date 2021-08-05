@@ -3,4 +3,5 @@ server:
 spring:
   application:
     name: SERVICE-NOTE
-
+  codec:
+    max-in-memory-size: 10MB

@@ -24,7 +24,7 @@ public class Auth {
         WebClient webClient = WebClient.create(services.getService().getAuth().getHost());
         Map<String, String> map = new HashMap<>();
         map.put("account", email);
-        return webClient.post().uri("/pri/authority/get")
+        return webClient.post().uri("/authority/get")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue(map).retrieve().bodyToMono(AuthorityDTO.class);
 

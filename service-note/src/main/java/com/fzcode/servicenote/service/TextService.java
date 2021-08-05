@@ -57,7 +57,8 @@ public class TextService {
         try {
             saveResult = textDBDao.save(texts);
         } catch (Exception e) {
-            throw new CustomizeException("db存储失败");
+            System.out.println(e.getMessage());
+            throw new CustomizeException("正文db存储失败");
         }
         List<CidTid> cidTidList = new ArrayList<CidTid>();
         List<Integer> stringList = textCreateRequest.getCategories();
@@ -71,7 +72,7 @@ public class TextService {
         try {
              cidTidDao.saveAll(cidTidList);
         }catch (Exception e) {
-            throw new CustomizeException("db存储失败");
+            throw new CustomizeException("分类db存储失败");
         }
         Integer tid = saveResult.getTid();
         TextESCreateDTO textESCreateDTO = new TextESCreateDTO(

@@ -3,5 +3,6 @@ server:
 spring:
   application:
     name: SERVICE-FILE
-
+  codec:
+    max-in-memory-size: 10MB
 

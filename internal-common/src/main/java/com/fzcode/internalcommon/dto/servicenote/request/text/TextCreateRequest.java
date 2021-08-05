@@ -17,7 +17,7 @@ public class TextCreateRequest {
     private String html;
     @NotNull(message = "分类不能为空")
     private List<Integer> categories;
-    @NotEmpty(message = "类型不能为空")
+    @NotNull(message = "类型不能为空")
     private TextTypeEnum type;
     private String raw;
     private String text;
