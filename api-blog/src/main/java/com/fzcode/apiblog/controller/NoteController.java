@@ -97,4 +97,20 @@ public class NoteController {
                 .block();
         return new SuccessResponse("查询成功", map);
     }
+
+    @PostMapping(value = "/category/create")
+    public SuccessResponse createCategory(@RequestBody @Validated CategoryCreateRequest categoryCreateRequest, @RequestHeader("aid") String aid,@RequestHeader("authority") String authority) {
+        WebClient client = WebClient.create(services.getService().getNote().getHost());
+        String listResponseDTO =  client.post()
+                .uri("category/create")
+                .bodyValue(categoryCreateRequest)
+                .header("aid",aid)
+                .header("authority",authority)
+                .exchange()
+                .block()
+                .bodyToMono(String.class)
+//                .bodyToMono(new TypeReference<ListResponseDTO<TextResponse>>(){}.getType())
+                .block();
+        return new SuccessResponse("查询成功", listResponseDTO);
+    }
 }

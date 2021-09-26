@@ -1,5 +1,6 @@
 package com.fzcode.servicenote.service;
 
+import com.fzcode.internalcommon.constant.AuthorityConstant;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreateRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryDeleteRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryPatchRequest;
@@ -22,7 +23,10 @@ public class CategoryService {
         this.categoryDBDao = categoryDBDao;
     }
 
-    public Integer create(CategoryCreateRequest cateGoryReqCreateDTO, Integer aid) throws CustomizeException {
+    public Integer create(CategoryCreateRequest cateGoryReqCreateDTO, Integer aid,String authority) throws CustomizeException {
+        if(authority!= AuthorityConstant.admin){
+            throw new CustomizeException("权限不足");
+        }
         Categories categories = new Categories();
         BeanUtils.copyProperties(cateGoryReqCreateDTO, categories);
         categories.setCreateBy(aid);

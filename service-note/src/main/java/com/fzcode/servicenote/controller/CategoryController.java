@@ -36,9 +36,9 @@ public class CategoryController {
     }
 
     @PostMapping(value = "/add")
-    public Integer add(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") Integer aid) throws CustomizeException {
+    public Integer add(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") Integer aid,@RequestHeader("authority") String authority) throws CustomizeException {
         System.out.println("add");
-        return categoryService.create(cateGoryCreateRequest, aid);
+        return categoryService.create(cateGoryCreateRequest, aid,authority);
     }
 
     @PutMapping(value = "/update")

@@ -1,5 +1,6 @@
 package com.fzcode.internalcommon.constant;
 
-public class RedisConstant {
-    public static String channel = "BLOG_CHANNEL";
+public class AuthorityConstant {
+    public static String admin = "ADMIN";
+    public static String user = "USER";
 }
