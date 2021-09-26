@@ -23,8 +23,9 @@ import java.util.Date;
 @RequestMapping(value = "/upload")
 public class UploadController {
 
-    @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/test/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String upload(@RequestParam("file") MultipartFile file) throws CustomizeException {
+        System.out.println("进入旧版方法");
         UploadManager uploadManager = new UploadManager(QiNiuAuth.configuration);
         InputStream inputStream;
         try {

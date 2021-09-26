@@ -4,10 +4,8 @@ import com.fzcode.servicefile.exception.CustomizeException;
 import io.minio.*;
 import io.minio.errors.*;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -25,7 +23,7 @@ public class MinIOController {
               .build();;
     @PostMapping(value = "/test/upload")
     public String upload(@RequestParam("file") MultipartFile file) throws  IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, ErrorResponseException {
-        System.out.println("进入方法");
+        System.out.println(file.getName());
         String filename = file.getOriginalFilename();
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("blog").build());
         if (!found) {
@@ -40,7 +38,6 @@ public class MinIOController {
                         .stream(new ByteArrayInputStream(file.getBytes()), -1, 10485760)
                         .contentType(file.getContentType())
                         .build());
-        System.out.println(objectWriteResponse.toString());
         return "http://192.168.31.158:30901/api/v1/buckets/blog/objects/download?preview=true&prefix=_images_logo.png&version_id=null";
     }
     @PostMapping(value = "/test")
