@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping(value = "/minio")
 public class MinIOController {
     MinioClient minioClient =  MinioClient.builder()
-            .endpoint("http://192.168.31.158:30900")
+            .endpoint("http://127.0.0.1:9000")
               .credentials("blog", "blog_0811")
               .build();;
     @PostMapping(value = "/test/upload")
