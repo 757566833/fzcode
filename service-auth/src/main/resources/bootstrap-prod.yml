@@ -30,6 +30,12 @@ eureka:
   client:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
-#eureka:
-#  client:
-#    enabled: false
+redis:
+  host: 192.168.31.157
+  port: 30379
+  password: 123456789
+  timeout: 100000
+  maxIdle: 200
+  minIdle: 0
+  maxActive: 50
+  maxWait: 10000

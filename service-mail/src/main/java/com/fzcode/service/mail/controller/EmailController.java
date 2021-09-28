@@ -2,7 +2,7 @@ package com.fzcode.service.mail.controller;
 
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicemail.common.MailDTO;
-import com.fzcode.service.mail.service.EmailFlow;
+import com.fzcode.service.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -14,21 +14,21 @@ import reactor.core.publisher.Mono;
 public class EmailController {
 
 
-    private EmailFlow emailFlow;
+    private EmailService emailService;
 
     @Autowired
-    public void setEmailFlow(EmailFlow emailFlow) {
-        this.emailFlow = emailFlow;
+    public void setEmailFlow(EmailService emailService) {
+        this.emailService = emailService;
     }
 
     @PostMapping(value = "/register")
     public Mono<SuccessResponse> register(@RequestBody @Validated MailDTO mailDTO) {
 //        return emailService.sendEmail(mailDTO.getEmail(), "register");
-        return emailFlow.sendEmail(mailDTO.getEmail(), "register");
+        return emailService.sendEmail(mailDTO.getEmail(), "register");
     }
 
     @PostMapping(value = "/forget")
-    public void forget(@RequestBody @Validated MailDTO mailDTO) {
-//        return emailService.sendEmail(mailDTO.getEmail(), "forget");
+    public Mono<SuccessResponse> forget(@RequestBody @Validated MailDTO mailDTO) {
+        return emailService.sendEmail(mailDTO.getEmail(), "forget");
     }
 }

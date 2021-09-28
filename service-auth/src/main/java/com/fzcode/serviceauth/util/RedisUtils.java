@@ -2,9 +2,9 @@ package com.fzcode.serviceauth.util;
 
 import com.fzcode.internalcommon.constant.RedisConstant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -13,10 +13,15 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
 
     private static RedisTemplate<String, String> redisTemplate;
+    private static  StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
+    }
+    @Autowired
+    private void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate){
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     public static void setString(String key, String value, long time) {

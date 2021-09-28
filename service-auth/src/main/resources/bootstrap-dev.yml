@@ -14,12 +14,6 @@ spring:
     password: 123456
     url: jdbc:mysql://192.168.31.150:3306/fzcode?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
     driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    host: 192.168.31.150
-    port: 6379
-    password: 123456789
-    timeout: 5000
-    database: 15
   jpa:
     show-sql: true
     hibernate:
@@ -32,5 +26,13 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:30200/eureka/
 
-
+redis:
+  host: 192.168.31.150
+  port: 6379
+  password: 123456789
+  timeout: 100000
+  maxIdle: 200
+  minIdle: 0
+  maxActive: 50
+  maxWait: 10000
 

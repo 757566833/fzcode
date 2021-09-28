@@ -32,5 +32,12 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:30200/eureka/
 
-
-
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: 123456789
+  timeout: 100000
+  maxIdle: 200
+  minIdle: 0
+  maxActive: 50
+  maxWait: 10000
