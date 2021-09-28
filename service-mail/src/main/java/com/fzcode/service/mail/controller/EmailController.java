@@ -1,7 +1,8 @@
 package com.fzcode.service.mail.controller;
 
+import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicemail.common.MailDTO;
-import com.fzcode.service.mail.flow.EmailFlow;
+import com.fzcode.service.mail.service.EmailFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(value = "/pri/email", consumes = MediaType.APPLICATION_JSON_VALUE)
-public class PriEmailController {
+@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+public class EmailController {
 
 
     private EmailFlow emailFlow;
@@ -20,9 +21,10 @@ public class PriEmailController {
         this.emailFlow = emailFlow;
     }
 
-    @PostMapping(value = "/register/code")
-    public Mono<String> register(@RequestBody @Validated MailDTO mailDTO) {
-        return emailFlow.getStringFromRedis(mailDTO.getEmail(), "register");
+    @PostMapping(value = "/register")
+    public Mono<SuccessResponse> register(@RequestBody @Validated MailDTO mailDTO) {
+//        return emailService.sendEmail(mailDTO.getEmail(), "register");
+        return emailFlow.sendEmail(mailDTO.getEmail(), "register");
     }
 
     @PostMapping(value = "/forget")

@@ -1,11 +1,10 @@
-package com.fzcode.service.mail.flow;
+package com.fzcode.service.mail.service;
 
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.service.mail.exception.CustomizeException;
-import com.fzcode.service.mail.service.EmailService;
 import com.fzcode.service.mail.util.CharUtil;
+import com.fzcode.service.mail.util.MailUtil;
 import com.fzcode.service.mail.util.RedisUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.MonoSink;
@@ -13,12 +12,6 @@ import reactor.core.publisher.MonoSink;
 
 @Component
 public class EmailFlow {
-    private EmailService emailService;
-
-    @Autowired
-    public void setUserDao(EmailService emailService) {
-        this.emailService = emailService;
-    }
 
     public Mono<SuccessResponse> sendEmail(String email, String type) {
         String checkCode = CharUtil.getCharAndNumber(6).toUpperCase();
@@ -41,7 +34,7 @@ public class EmailFlow {
         if (!bool) {
             throw new CustomizeException("redis不可用");
         }
-        Mono<Boolean> emailMono = emailService.sendEmail(email, checkCode);
+        Mono<Boolean> emailMono = MailUtil.sendMail(email, checkCode);
         emailMono.subscribe(l -> {
             try {
                 this.result(l, sink);
