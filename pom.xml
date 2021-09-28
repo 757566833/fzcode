@@ -14,9 +14,9 @@
 		<module>cloud-gate</module>
 		<module>service-auth</module>
 		<module>service-note</module>
-		<module>service-file</module>
 		<module>service-mail</module>
 		<module>api-blog</module>
+		<module>file-blog</module>
         <module>internal-common</module>
     </modules>
 	<packaging>pom</packaging>

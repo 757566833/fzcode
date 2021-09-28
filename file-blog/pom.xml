@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 <!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
-	<artifactId>service-file</artifactId>
+	<artifactId>file-blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>service-file</name>
+	<name>file-blog</name>
 	<description>Demo project for Spring Boot</description>
 
 <!--	<properties>-->
@@ -80,7 +80,7 @@
     </dependencies>
 
 	<build>
-		<finalName>service-file</finalName>
+		<finalName>file-blog</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

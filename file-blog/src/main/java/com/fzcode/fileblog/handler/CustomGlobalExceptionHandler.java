@@ -1,8 +1,8 @@
-package com.fzcode.servicefile.handler;
+package com.fzcode.fileblog.handler;
 
 
 import com.fzcode.internalcommon.dto.http.ErrorResponse;
-import com.fzcode.servicefile.exception.CustomizeException;
+import com.fzcode.fileblog.exception.CustomizeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;

@@ -44,7 +44,7 @@ public class CloudGateApplication {
 //                .route("service-note", r -> r.path("/note/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("note")))
 //                .route("service-file", r -> r.path("/file/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("file")))
 //                .route("service-mail", r -> r.path("/mail/**").filters(f -> f.stripPrefix(1)).uri(services.getHost().get("mail")))
-                .route("service-file", r -> r.path("/file/**").filters(f -> f.stripPrefix(1)).uri(services.getService().getFile().getHost()))
+                .route("file-blog", r -> r.path("/file/blog/**").filters(f -> f.stripPrefix(2)).uri(services.getFile().getBlog().getHost()))
                 .route("api-blog", r -> r.path("/api/blog/**").filters(f -> f.stripPrefix(2)).uri(services.getApi().getBlog().getHost()))
 
                 // 这里面如果指向 http://www.baidu.com 之类的 他会直接转发到https上

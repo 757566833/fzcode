@@ -1,10 +1,10 @@
-package com.fzcode.servicefile.controller;
+package com.fzcode.fileblog.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.fzcode.internalcommon.dto.servicefile.request.Base64Upload;
 import com.fzcode.internalcommon.utils.FileUtils;
-import com.fzcode.servicefile.config.QiNiuAuth;
-import com.fzcode.servicefile.exception.CustomizeException;
+import com.fzcode.fileblog.config.QiNiuAuth;
+import com.fzcode.fileblog.exception.CustomizeException;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;

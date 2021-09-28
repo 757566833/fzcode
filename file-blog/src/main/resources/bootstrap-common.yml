@@ -1,0 +1,12 @@
+server:
+  port: 30501
+spring:
+  application:
+    name: FILE-BLOG
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 500MB
+#  codec:
+#    max-in-memory-size: 10MB
+
