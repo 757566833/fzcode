@@ -1,6 +1,5 @@
 package com.fzcode.internalcommon.dto.serviceauth.request;
 
-import com.fzcode.internalcommon.constant.RegisterTypeEnum;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -18,6 +17,6 @@ public class RegisterRequest {
     private String code;
 
     @NotNull(message = "注册方式未明")
-    private RegisterTypeEnum registerType;
+    private int registerType;
 
 }

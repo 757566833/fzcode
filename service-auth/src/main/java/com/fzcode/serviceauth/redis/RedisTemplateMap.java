@@ -47,12 +47,12 @@ public class RedisTemplateMap {
     public void initRedisTemp() throws Exception{
        System.out.println("###### START 初始化 Redis 连接池 START ######");
         redisTemplateMap.put(RedisDBEnum.AUTH.getValue(), redisTemplateObject(RedisDBEnum.AUTH.getCode()));
-        redisTemplateMap.put(RedisDBEnum.Mail.getValue(),redisTemplateObject(RedisDBEnum.AUTH.getCode()));
+        redisTemplateMap.put(RedisDBEnum.Mail.getValue(),redisTemplateObject(RedisDBEnum.Mail.getCode()));
 
         System.out.println("###### END 初始化 Redis 连接池 END ######");
     }
 
-    public RedisTemplate<Serializable, Object> redisTemplateObject(Integer dbIndex) throws Exception {
+    public RedisTemplate<Serializable, Object> redisTemplateObject(int dbIndex) throws Exception {
         RedisTemplate<Serializable, Object> redisTemplateObject = new RedisTemplate<Serializable, Object>();
         redisTemplateObject.setConnectionFactory(redisConnectionFactory(jedisPoolConfig(),dbIndex));
         setSerializer(redisTemplateObject);

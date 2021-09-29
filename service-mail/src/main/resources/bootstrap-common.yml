@@ -1,6 +1,0 @@
-server:
-  port: 30205
-spring:
-  application:
-    name: SERVICE-MAIL
-

@@ -12,9 +12,9 @@
 		<module>cloud-config</module>
 		<module>cloud-eureka</module>
 		<module>cloud-gate</module>
+		<module>cloud-mail</module>
 		<module>service-auth</module>
 		<module>service-note</module>
-		<module>service-mail</module>
 		<module>api-blog</module>
 		<module>file-blog</module>
         <module>internal-common</module>
@@ -151,7 +151,7 @@
 			<dependency>
 				<groupId>redis.clients</groupId>
 				<artifactId>jedis</artifactId>
-				<version>2.9.3</version>
+				<version>3.1.0</version>
 			</dependency>
 			<!--			<dependency>-->
 <!--				<groupId>org.elasticsearch.client</groupId>-->

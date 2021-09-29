@@ -11,7 +11,6 @@ import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Authorities;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.exception.CustomizeException;
-import com.fzcode.serviceauth.http.Mail;
 import com.fzcode.serviceauth.dao.AccountDao;
 import com.fzcode.serviceauth.dao.AuthorityDao;
 import com.fzcode.serviceauth.dao.UserDao;
@@ -22,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -49,12 +47,6 @@ public class AccountService {
         this.authorityDao = authorityDao;
     }
 
-    private Mail mail;
-    @Autowired
-    public void setMail(Mail mail){
-        this.mail = mail;
-    }
-
     RedisTemplateMap redisTemplateMap;
     @Autowired
     public void setRedisTemplateMap(RedisTemplateMap redisTemplateMap){
@@ -75,19 +67,21 @@ public class AccountService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public RegisterResponse register(String email, String password, String code, RegisterTypeEnum registerType) throws CustomizeException {
+    public RegisterResponse register(String email, String password, String code, int registerType) throws CustomizeException {
 
         Accounts accounts = new Accounts();
         accounts.setAccount(email);
         accounts.setPassword(new BCryptPasswordEncoder().encode(password));
-        accounts.setRegisterType(registerType.getCode());
+        accounts.setRegisterType(registerType);
         boolean b = accountDao.isHas(email);
         if (b) {
             throw new CustomizeException("邮箱已存在");
         }
-//        String redisCode = mail.getRegisterCode(email);
-        String redisCode =redisTemplateMap.get(email, RedisDBEnum.Mail).toString();
-        System.out.println("redisCode:" + redisCode);
+        Object redisCodeObject =redisTemplateMap.get(email + ":register", RedisDBEnum.Mail);
+        if(redisCodeObject==null){
+            throw new CustomizeException("验证码过期");
+        }
+        String redisCode = redisCodeObject.toString();
         if (!redisCode.equals(code)) {
             throw new CustomizeException("验证码错误");
         }

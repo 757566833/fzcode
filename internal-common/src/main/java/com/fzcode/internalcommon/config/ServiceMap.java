@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class ServiceMap {
     private ServiceParams auth;
-    private ServiceParams mail;
     private ServiceParams note;
 }

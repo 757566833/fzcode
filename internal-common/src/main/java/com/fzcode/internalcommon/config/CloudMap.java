@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class CloudMap {
     private CloudParams gate;
+    private CloudParams mail;
 }

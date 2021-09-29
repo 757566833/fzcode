@@ -7,6 +7,7 @@ import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
+import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,12 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
+    WebClient client;
     Services services;
     @Autowired
     public void setServices(Services services){
         this.services = services;
+        client = WebClient.create(services.getService().getAuth().getHost());
     }
 
     @GetMapping(value = "/test")
@@ -56,7 +59,6 @@ public class AuthController {
     }
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest){
-        WebClient client = WebClient.create(services.getService().getAuth().getHost());
         return client
                 .post()
                 .uri("/login")
@@ -67,15 +69,16 @@ public class AuthController {
                 .block();
     }
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public LoginResponse register (@RequestBody @Validated LoginRequest loginRequest){
-        WebClient client = WebClient.create(services.getService().getAuth().getHost());
+    public String register (@RequestBody @Validated RegisterRequest registerRequest){
+        System.out.println("register");
+        System.out.println(services.getService().getAuth().getHost());
         return client
                 .post()
                 .uri("/register")
-                .bodyValue(loginRequest)
+                .bodyValue(registerRequest)
                 .exchange()
                 .block()
-                .bodyToMono(LoginResponse.class)
+                .bodyToMono(String.class)
                 .block();
     }
     @GetMapping(value = "/login/github")
@@ -84,7 +87,6 @@ public class AuthController {
         map.put("code",code);
         map.put("socketId",socketId);
         System.out.println(JSON.toJSONString(map));
-        WebClient client = WebClient.create(services.getService().getAuth().getHost());
         return client
                 .post()
                 .uri("/login/github")
@@ -100,7 +102,6 @@ public class AuthController {
 //            .header("authority", authority)
     @GetMapping(value = "/self")
     public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
-        WebClient client = WebClient.create(services.getService().getAuth().getHost());
         Map<String, Object> info =  client
                 .get()
                 .uri("/self")
@@ -116,7 +117,6 @@ public class AuthController {
     @GetMapping(value = "/admin/account")
     public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
         System.out.println("email:"+email+",aid:"+aid);
-        WebClient client = WebClient.create(services.getService().getAuth().getHost());
         MultiValueMap<String, String> params = BeanUtils.bean2MultiValueMap(accountListRequest);
         ListResponseDTO<Map<String, Object>> info =  client
                 .get()

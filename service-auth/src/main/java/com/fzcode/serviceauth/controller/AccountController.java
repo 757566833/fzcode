@@ -31,7 +31,7 @@ public class AccountController {
     private AccountService accountService;
 
     @Autowired
-    public void setAccountFlow(AccountService accountService) {
+    public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -42,8 +42,9 @@ public class AccountController {
         return new SuccessResponse("登陆成功", loginResponse);
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/register")
     public SuccessResponse register(@RequestBody @Validated RegisterRequest registerRequest) throws CustomizeException {
+        System.out.println("register");
         RegisterResponse registerResponse = accountService.register(registerRequest.getEmail(), registerRequest.getPassword(), registerRequest.getCode(), registerRequest.getRegisterType());
         return new SuccessResponse("创建成功", registerResponse);
     }
