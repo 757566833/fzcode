@@ -9,6 +9,8 @@ import com.fzcode.internalcommon.dto.servicenote.request.text.TextGetListRequest
 import com.fzcode.internalcommon.dto.servicenote.response.category.CategoryResponse;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.utils.BeanUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.Map;
 
+@Api(tags = "文章模块")
 @RestController
 @RequestMapping(value = "/note")
 public class NoteController {
@@ -27,6 +30,7 @@ public class NoteController {
         this.services = services;
     }
 
+    @ApiOperation(value = "获取文章分类列表")
     @GetMapping(value = "/category/list")
     public SuccessResponse getCategoryList() {
         WebClient client = WebClient.create(services.getService().getNote().getHost());
@@ -39,6 +43,8 @@ public class NoteController {
                 .block();
         return new SuccessResponse("查询成功", listResponseDTO);
     }
+
+    @ApiOperation(value = "添加文章分类")
     @PostMapping(value = "/category/add")
     public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest,@RequestHeader("aid") String aid) {
         System.out.println("asd");
@@ -54,6 +60,7 @@ public class NoteController {
                 .block();
         return new SuccessResponse("创建成功", id);
     }
+    @ApiOperation(value = "添加文章")
     @PostMapping(value = "/text/create")
     public SuccessResponse createText(@RequestBody @Validated TextCreateRequest textCreateRequest,@RequestHeader("aid") String aid) {
         WebClient client = WebClient.create(services.getService().getNote().getHost());
@@ -68,6 +75,7 @@ public class NoteController {
                 .block();
         return new SuccessResponse("添加成功", listResponseDTO);
     }
+    @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/text/list")
     public SuccessResponse getTextList(TextGetListRequest textGetListRequest) {
         MultiValueMap<String, String>  params = BeanUtils.bean2MultiValueMap(textGetListRequest);
@@ -85,6 +93,7 @@ public class NoteController {
                 .block();
         return new SuccessResponse("查询成功", listResponseDTO);
     }
+    @ApiOperation(value = "获取指定文章")
     @GetMapping(value = "/text/{id}")
     public SuccessResponse getTextList(@PathVariable(name = "id") String id) {
         WebClient client = WebClient.create(services.getService().getNote().getHost());
@@ -97,7 +106,7 @@ public class NoteController {
                 .block();
         return new SuccessResponse("查询成功", map);
     }
-
+    @ApiOperation(value = "创建文章分类")
     @PostMapping(value = "/category/create")
     public SuccessResponse createCategory(@RequestBody @Validated CategoryCreateRequest categoryCreateRequest, @RequestHeader("aid") String aid,@RequestHeader("authority") String authority) {
         WebClient client = WebClient.create(services.getService().getNote().getHost());

@@ -10,6 +10,8 @@ import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.utils.BeanUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
@@ -22,6 +24,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api(tags = "账权模块")
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
@@ -33,6 +36,7 @@ public class AuthController {
         client = WebClient.create(services.getService().getAuth().getHost());
     }
 
+    @ApiOperation(value = "测试接口")
     @GetMapping(value = "/test")
     public String test (){
         String ipHostAddress = "";
@@ -57,6 +61,8 @@ public class AuthController {
         return "api-blog:"+ipHostAddress;
 
     }
+
+    @ApiOperation(value = "账号密码登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest){
         return client
@@ -68,6 +74,8 @@ public class AuthController {
                 .bodyToMono(LoginResponse.class)
                 .block();
     }
+
+    @ApiOperation(value = "账号密码注册")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String register (@RequestBody @Validated RegisterRequest registerRequest){
         System.out.println("register");
@@ -81,6 +89,8 @@ public class AuthController {
                 .bodyToMono(String.class)
                 .block();
     }
+
+    @ApiOperation(value = "github方式登陆")
     @GetMapping(value = "/login/github")
     public String githubLogin (@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId){
         Map map = new HashMap();
@@ -100,6 +110,8 @@ public class AuthController {
 //      .header("email", finalEmail)
 //                            .header("aid", finalAid.toString())
 //            .header("authority", authority)
+
+    @ApiOperation(value = "获取当前用户信息")
     @GetMapping(value = "/self")
     public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
         Map<String, Object> info =  client
@@ -114,6 +126,8 @@ public class AuthController {
                 .block();
         return  new SuccessResponse("查询成功",info);
     }
+
+    @ApiOperation(value = "管理员获取所有用户列表")
     @GetMapping(value = "/admin/account")
     public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
         System.out.println("email:"+email+",aid:"+aid);
