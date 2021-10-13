@@ -30,6 +30,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
+  instance:
+    prefer-ip-address: true
 redis:
   host: 192.168.31.157
   port: 30379

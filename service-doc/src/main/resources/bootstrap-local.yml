@@ -3,8 +3,8 @@ spring:
     include: common
   cloud:
     config:
-      uri: http://192.168.31.154:30201
-      profile: docker
+      uri: http://127.0.0.1:30201
+      profile: dev
       #      discovery:
       #        enabled: true
       #        service-id: config-service
@@ -12,6 +12,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://192.168.31.154:30200/eureka/
-  instance:
-    prefer-ip-address: true
+      defaultZone: http://127.0.0.1:30200/eureka/
+
+
+

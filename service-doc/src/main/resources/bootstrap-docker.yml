@@ -9,15 +9,11 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-  redis:
-    host: 192.168.31.157
-    port: 30379
-    password: 123456789
-    timeout: 5000
-    database: 0
 eureka:
   client:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
-  instance:
-    prefer-ip-address: true
+
+#eureka:
+#  client:
+#    enabled: false
