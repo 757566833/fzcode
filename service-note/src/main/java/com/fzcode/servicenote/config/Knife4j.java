@@ -1,4 +1,4 @@
-package com.fzcode.apiblog.config;
+package com.fzcode.servicenote.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EnableSwagger2WebMvc
 @Import(BeanValidatorPluginsConfiguration.class)
 public class Knife4j {
-    @Bean(value = "apiBlog")
+    @Bean(value = "serviceNote")
     public Docket defaultApi2() {
         Docket docket=new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(groupApiInfo())
@@ -25,16 +25,16 @@ public class Knife4j {
                 .groupName("v0")
                 .select()
                 //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("com.fzcode.apiblog.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.fzcode.servicenote.controller"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
     }
     private ApiInfo groupApiInfo(){
         return new ApiInfoBuilder()
-                .title("api-blog")
-                .description("#   api服务的文档，对外暴露的服务之一")
-                .termsOfServiceUrl("/api/blog")
+                .title("service-note")
+                .description("#   文章服务的文档，不对外暴露")
+                .termsOfServiceUrl("/auth")
                 .contact(new Contact("fzcode","www.fzcode.com","757566833@qq.com"))
                 .version("0.0.1")
                 .build();

@@ -15,6 +15,8 @@ import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.service.AccountService;
 import com.fzcode.serviceauth.http.Auth;
 import com.fzcode.serviceauth.util.RedisUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-
+@Api(tags = "账号模块")
 @RestController
 public class AccountController {
 
@@ -35,13 +37,14 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-
+    @ApiOperation(value = "登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResponse login(@RequestBody @Validated LoginRequest loginRequest) throws CustomizeException {
         LoginResponse loginResponse = accountService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return new SuccessResponse("登陆成功", loginResponse);
     }
 
+    @ApiOperation(value = "注册")
     @PostMapping(value = "/register")
     public SuccessResponse register(@RequestBody @Validated RegisterRequest registerRequest) throws CustomizeException {
         System.out.println("register");
@@ -61,6 +64,7 @@ public class AccountController {
 //        return new SuccessResDTO("修改成功", email);
 //    }
 
+    @ApiOperation(value = "github登陆")
     @PostMapping(value = "/login/github")
     public String oauth2(@RequestBody @Validated GithubLoginRequest githubLoginRequest) throws CustomizeException {
         GithubAccessToken githubAccessToken = Auth.getGithubAccessToken(githubLoginRequest.getCode());
@@ -102,12 +106,14 @@ public class AccountController {
         }
     }
 
+    @ApiOperation(value = "获取个人信息")
     @GetMapping("/self")
     public Map<String, Object> getSelf(@RequestHeader("aid") String aid) throws CustomizeException {
 
         return accountService.findByAid(Integer.parseInt(aid));
     }
 
+    @ApiOperation(value = "获取账号列表（必须是管理员）")
     @GetMapping(value = "/admin/account")
     public ListResponseDTO<Map<String, Object>> getAccountList(@Validated AccountListRequest accountListRequest) {
         return accountService.findAllAccount(accountListRequest);

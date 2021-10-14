@@ -1,5 +1,7 @@
 package com.fzcode.serviceauth.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.Inet4Address;
@@ -7,9 +9,11 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
-
+@Api(tags = "测试模块")
 @RestController
 public class TestController {
+
+    @ApiOperation(value = "获取IP")
     @GetMapping(value = "/test")
     public String test (){
         String ipHostAddress = "";

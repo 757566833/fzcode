@@ -5,6 +5,8 @@ import com.fzcode.fileblog.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.FileUtils;
 import io.minio.*;
 import io.minio.messages.Tags;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +26,7 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api(tags = "文件模块")
 @RestController
 @RequestMapping(value = "/io")
 public class MinIOController {
@@ -41,6 +44,7 @@ public class MinIOController {
                 .build();
     }
 
+    @ApiOperation(value = "上传接口")
     @PostMapping(value = "/test/upload")
     public String upload(@RequestParam("file") MultipartFile file) throws CustomizeException {
         String name = file.getOriginalFilename();
@@ -103,6 +107,8 @@ public class MinIOController {
         }
         return "/file/blog/io/test/"+filename;
     }
+
+    @ApiOperation(value = "获取接口")
     @GetMapping(value = "/test/{filename}")
     public ResponseEntity preview(@PathVariable String filename,@RequestParam(name = "action", defaultValue = "preview") String action) throws CustomizeException {
         InputStream stream;
