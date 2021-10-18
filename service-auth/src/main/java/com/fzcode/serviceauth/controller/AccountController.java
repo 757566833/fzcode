@@ -1,6 +1,5 @@
 package com.fzcode.serviceauth.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
@@ -11,6 +10,7 @@ import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.service.AccountService;
 import com.fzcode.serviceauth.http.Auth;
@@ -79,7 +79,8 @@ public class AccountController {
                 map.add("socketId", githubLoginRequest.getSocketId());
                 map.add("token", registerResponse.getToken());
                 map.add("role", registerResponse.getRole());
-                RedisUtils.publishing(JSON.toJSONString(map));
+//                RedisUtils.publishing(JSON.toJSONString(map));
+                RedisUtils.publishing(JSONUtils.stringify(map));
                 return "<!DOCTYPE html>\n" +
                         "<html lang=\"en\">\n" +
                         "<head>\n" +

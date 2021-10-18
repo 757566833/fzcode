@@ -1,6 +1,6 @@
 package com.fzcode.servicenote.dao.elastic;
 
-import com.alibaba.fastjson.JSON;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
@@ -46,7 +46,8 @@ public class TextElasticDao {
         System.out.println(index);
         IndexRequest indexRequest = new IndexRequest(index);
         indexRequest.id(textESCreateDTO.getId());
-        indexRequest.source(JSON.toJSONString(textESCreateDTO), XContentType.JSON);
+//        indexRequest.source(JSON.toJSONString(textESCreateDTO), XContentType.JSON);
+        indexRequest.source(JSONUtils.stringify(textESCreateDTO), XContentType.JSON);
         IndexResponse indexResponse;
         try {
             indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
@@ -86,7 +87,7 @@ public class TextElasticDao {
         TextESDTO textESDTO = new TextESDTO();
         textESDTO.setId(id);
         textESDTO.setIsDelete(true);
-        UpdateRequest updateRequest = new UpdateRequest(index, id).doc(JSON.toJSONString(textESDTO), XContentType.JSON);
+        UpdateRequest updateRequest = new UpdateRequest(index, id).doc(JSONUtils.stringify(textESDTO), XContentType.JSON);
         UpdateResponse updateResponse;
         try {
             updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
@@ -109,7 +110,7 @@ public class TextElasticDao {
             throw new CustomizeException("打开io流出了问题");
         }
         // 如果没有就插入 在后面加  upsert
-        UpdateRequest updateRequest = new UpdateRequest(index, textESUpdateDTO.getId().toString()).doc(JSON.toJSONString(textESUpdateDTO), XContentType.JSON);
+        UpdateRequest updateRequest = new UpdateRequest(index, textESUpdateDTO.getId().toString()).doc(JSONUtils.stringify(textESUpdateDTO), XContentType.JSON);
 
         UpdateResponse updateResponse;
         try {
@@ -133,7 +134,7 @@ public class TextElasticDao {
         }
 
         // 如果没有就插入 在后面加  upsert
-        UpdateRequest updateRequest = new UpdateRequest(index, textESPatchDTO.getId().toString()).doc(JSON.toJSONString(textESPatchDTO), XContentType.JSON);
+        UpdateRequest updateRequest = new UpdateRequest(index, textESPatchDTO.getId().toString()).doc(JSONUtils.stringify(textESPatchDTO), XContentType.JSON);
 
         UpdateResponse updateResponse;
         try {
@@ -211,7 +212,7 @@ public class TextElasticDao {
 
         for (SearchHit searchHit : searchHits) {
             System.out.println(searchHit.getSourceAsString());
-            arrayList.add(JSON.parseObject(searchHit.getSourceAsString(), TextESDTO.class));
+            arrayList.add(JSONUtils.parse(searchHit.getSourceAsString(), TextESDTO.class));
         }
 
         return arrayList;

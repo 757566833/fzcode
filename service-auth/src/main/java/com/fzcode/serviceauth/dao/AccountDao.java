@@ -1,8 +1,8 @@
 package com.fzcode.serviceauth.dao;
 
-import com.alibaba.fastjson.JSON;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.exception.CustomizeException;
@@ -86,7 +86,7 @@ public class AccountDao {
         }
         List<Map<String, Object>> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), desc, asc);
         List<Map<String, Object>> countList = accountRepository.findListCount(accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl());
-        System.out.println(JSON.toJSONString(countList.get(0)));
+        System.out.println(JSONUtils.stringify(countList.get(0)));
         String count = countList.get(0).get("COUNT(1)").toString();
         ListResponseDTO<Map<String, Object>> listListResDTO = new ListResponseDTO<>();
         listListResDTO.setCount(Integer.valueOf(count));

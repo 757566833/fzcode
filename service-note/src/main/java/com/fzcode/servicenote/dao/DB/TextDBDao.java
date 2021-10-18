@@ -1,8 +1,8 @@
 package com.fzcode.servicenote.dao.DB;
 
-import com.alibaba.fastjson.JSON;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.servicenote.repositroy.CidTidRepository;
 import com.fzcode.servicenote.repositroy.mapper.CidTidMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBFindListMapper;
@@ -92,7 +92,8 @@ public class TextDBDao {
         if (noteDBList.size() == 0) {
             throw new CustomizeException("不存在");
         }
-        System.out.println(JSON.toJSONString(noteDBList.get(0)));
+//        System.out.println(JSON.toJSONString(noteDBList.get(0)));
+        System.out.println(JSONUtils.stringify(noteDBList.get(0)));
         return noteDBList.get(0);
     }
 

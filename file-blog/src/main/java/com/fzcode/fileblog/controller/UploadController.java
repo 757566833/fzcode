@@ -1,11 +1,10 @@
 package com.fzcode.fileblog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.fzcode.internalcommon.dto.servicefile.request.Base64Upload;
 import com.fzcode.internalcommon.utils.FileUtils;
 import com.fzcode.fileblog.config.QiNiuAuth;
 import com.fzcode.fileblog.exception.CustomizeException;
-import com.google.gson.Gson;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
@@ -40,7 +39,8 @@ public class UploadController {
         String fileSuffix = FileUtils.getFileSuffix(filename);
         String time = String.valueOf(new Date().getTime());
         Double d = Math.random();
-        String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
+//        String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
+        String random = JSONUtils.stringify(String.valueOf(d).replace(".",""));
         String serverFilename = filePrefix+random+time+"."+fileSuffix;
         System.out.println("serverFilename:"+serverFilename);
         try {
@@ -67,7 +67,7 @@ public class UploadController {
             }
         }
 
-        DefaultPutRet putRet = new Gson().fromJson(str, DefaultPutRet.class);
+        DefaultPutRet putRet = JSONUtils.parse(str,DefaultPutRet.class);
         return "https://blogoss.fzcode.com/"+putRet.key;
     }
     @PostMapping(value = "/base64", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +80,7 @@ public class UploadController {
         String fileSuffix = FileUtils.getFileSuffix(filename);
         String time = String.valueOf(new Date().getTime());
         Double d = Math.random();
-        String random = JSON.toJSONString(String.valueOf(d).replace(".",""));
+        String random = JSONUtils.stringify(String.valueOf(d).replace(".",""));
         String serverFilename = filePrefix+random+time+"."+fileSuffix;
         try {
             response = uploadManager.put(bytes,serverFilename.replaceAll("\"",""),QiNiuAuth.uploadToken);
@@ -107,7 +107,7 @@ public class UploadController {
             }
         }
 
-        DefaultPutRet putRet = new Gson().fromJson(str, DefaultPutRet.class);
+        DefaultPutRet putRet = JSONUtils.parse(str,DefaultPutRet.class);
         return "https://blogoss.fzcode.com/"+putRet.key;
     }
 }

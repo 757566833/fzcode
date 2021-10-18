@@ -1,6 +1,5 @@
 package com.fzcode.apiblog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.fzcode.apiblog.config.Services;
 import com.fzcode.apiblog.exception.CustomizeException;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
@@ -10,6 +9,7 @@ import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.utils.BeanUtils;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +96,8 @@ public class AuthController {
         Map map = new HashMap();
         map.put("code",code);
         map.put("socketId",socketId);
-        System.out.println(JSON.toJSONString(map));
+//        System.out.println(JSON.toJSONString(map));
+        System.out.println(JSONUtils.stringify(map));
         return client
                 .post()
                 .uri("/login/github")

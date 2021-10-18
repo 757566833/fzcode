@@ -1,6 +1,5 @@
 package com.fzcode.servicenote;
 
-import com.alibaba.fastjson.JSON;
 import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.dao.elastic.TextElasticDao;
 import org.junit.jupiter.api.Test;
