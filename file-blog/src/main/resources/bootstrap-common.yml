@@ -10,3 +10,11 @@ spring:
 #  codec:
 #    max-in-memory-size: 10MB
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
