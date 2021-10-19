@@ -20,6 +20,8 @@ spring:
     properties:
       hibernate:
         dialect: com.fzcode.serviceauth.config.Mysql
+  zipkin:
+    base-url: http://192.168.31.158:30411
 eureka:
   client:
     service-url:
