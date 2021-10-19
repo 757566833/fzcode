@@ -1,5 +1,6 @@
 package com.fzcode.serviceauth.controller;
 
+import com.fzcode.internalcommon.constant.RedisDBEnum;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
@@ -14,7 +15,6 @@ import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.service.AccountService;
 import com.fzcode.serviceauth.http.Auth;
-import com.fzcode.serviceauth.util.RedisUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +83,8 @@ public class AccountController {
                 map.add("socketId", githubLoginRequest.getSocketId());
                 map.add("token", registerResponse.getToken());
                 map.add("role", registerResponse.getRole());
-//                RedisUtils.publishing(JSON.toJSONString(map));
-                RedisUtils.publishing(JSONUtils.stringify(map));
+                // TODO: 2021/10/19  发布订阅还没写完 
+//                RedisUtils.publishing(JSONUtils.stringify(map));
                 return "<!DOCTYPE html>\n" +
                         "<html lang=\"en\">\n" +
                         "<head>\n" +
