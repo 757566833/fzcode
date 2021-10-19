@@ -1,20 +1,32 @@
 spring:
   profiles:
     include: common
+  boot:
+    admin:
+      client:
+        url: http://192.168.31.155:30650
   cloud:
     config:
       uri: http://192.168.31.154:30201
-      profile: prod
+      profile: docker
       #      discovery:
       #        enabled: true
       #        service-id: config-service
       label: master
+  zipkin:
+    base-url: http://192.168.31.158:30411
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 eureka:
   client:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
   instance:
     prefer-ip-address: true
-#eureka:
-#  client:
-#    enabled: false

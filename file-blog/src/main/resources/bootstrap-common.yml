@@ -1,5 +1,5 @@
 server:
-  port: 30501
+  port: 30502
 spring:
   application:
     name: FILE-BLOG
