@@ -6,7 +6,10 @@ spring:
     port: 6379
     password: 123456789
     database: 15
-
+  boot:
+    admin:
+      client:
+        url: http://192.168.31.155:30650
 eureka:
   client:
     service-url:

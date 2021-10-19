@@ -22,6 +22,10 @@ spring:
         dialect: com.fzcode.serviceauth.config.Mysql
   zipkin:
     base-url: http://192.168.31.158:30411
+  boot:
+    admin:
+      client:
+        url: http://192.168.31.155:30650
 eureka:
   client:
     service-url:
@@ -37,3 +41,4 @@ redis:
   minIdle: 0
   maxActive: 50
   maxWait: 10000
+

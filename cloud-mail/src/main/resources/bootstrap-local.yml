@@ -7,6 +7,10 @@ spring:
     password: 123456789
     timeout: 5000
     database: 15
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:30650
 eureka:
   client:
     service-url:

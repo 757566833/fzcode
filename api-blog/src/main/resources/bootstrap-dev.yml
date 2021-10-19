@@ -13,14 +13,6 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
 eureka:
   client:
     service-url:

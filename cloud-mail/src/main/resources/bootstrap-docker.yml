@@ -7,10 +7,14 @@ spring:
     password: 123456789
     timeout: 5000
     database: 0
-
+  boot:
+    admin:
+      client:
+        url: http://192.168.31.155:30650
 eureka:
   client:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
   instance:
     prefer-ip-address: true
+

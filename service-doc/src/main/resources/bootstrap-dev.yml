@@ -1,6 +1,10 @@
 spring:
   profiles:
     include: common
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:30650
   cloud:
     config:
       uri: http://127.0.0.1:30201
@@ -9,6 +13,7 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
+
 eureka:
   client:
     service-url:

@@ -9,6 +9,10 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
+  boot:
+    admin:
+      client:
+        url: http://192.168.31.155:30650
 eureka:
   client:
     service-url:
