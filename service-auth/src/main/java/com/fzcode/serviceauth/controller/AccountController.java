@@ -41,31 +41,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @ApiOperation(value = "测试接口")
-    @GetMapping(value = "/test")
-    public String test (){
-        String ipHostAddress = "";
-        try {
-            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
-            while (allNetInterfaces.hasMoreElements()) {
-                NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
-                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress ip = (InetAddress) addresses.nextElement();
-                    if (ip instanceof Inet4Address
-                            && !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
-                            && !ip.getHostAddress().contains(":")) {
-                        System.out.println("本机的IP = " + ip.getHostAddress());
-                        ipHostAddress = ip.getHostAddress();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "service-auth:"+ipHostAddress;
 
-    }
     @ApiOperation(value = "登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResponse login(@RequestBody @Validated LoginRequest loginRequest) throws CustomizeException {
