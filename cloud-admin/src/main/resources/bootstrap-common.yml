@@ -1,0 +1,5 @@
+server:
+  port: 30650
+spring:
+  application:
+    name: CLOUD-ADMIN

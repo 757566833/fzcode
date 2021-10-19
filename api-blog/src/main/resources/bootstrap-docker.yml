@@ -1,6 +1,10 @@
 spring:
   profiles:
     include: common
+  boot:
+    admin:
+      client:
+        url: http://192.168.31.155:30650
   cloud:
     config:
       uri: http://192.168.31.154:30201
@@ -11,6 +15,15 @@ spring:
       label: master
   zipkin:
     base-url: http://192.168.31.158:30411
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
+  endpoint:
+    health:
+      show-details: always
 eureka:
   client:
     service-url:
