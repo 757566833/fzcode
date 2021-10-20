@@ -3,8 +3,8 @@ server:
 spring:
   application:
     name: SERVICE-NOTE
-  config:
-    import: "optional:configserver:"
+#  config:
+#    import: "optional:configserver:"
 management:
   endpoints:
     web:
