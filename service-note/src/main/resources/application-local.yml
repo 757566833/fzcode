@@ -15,7 +15,7 @@ spring:
     enabled: false
   elasticsearch:
     rest:
-      uris: http://127.0.0.1:30200
+      uris: http://127.0.0.1:9200
 eureka:
   client:
     service-url:

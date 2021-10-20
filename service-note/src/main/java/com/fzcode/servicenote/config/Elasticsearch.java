@@ -13,23 +13,5 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import java.time.Duration;
 @Configuration
 @EnableElasticsearchRepositories
-public class Elasticsearch extends AbstractElasticsearchConfiguration {
-    @Value("${spring.elasticsearch.rest.uris}")
-    private String uris;
-    @Override
-    @Bean
-    public RestHighLevelClient elasticsearchClient() {
-        final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo(uris.split(","))
-                .withConnectTimeout(Duration.ofSeconds(5))
-                .withSocketTimeout(Duration.ofSeconds(30))
-                .build();
-
-        return RestClients.create(clientConfiguration).rest();
-    }
-    @Bean("esRestTemplate")
-    public ElasticsearchRestTemplate esRestTemplate() {
-
-        return new ElasticsearchRestTemplate(elasticsearchClient());
-    }
+public class Elasticsearch{
 }
