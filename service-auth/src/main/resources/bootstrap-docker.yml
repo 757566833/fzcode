@@ -20,6 +20,18 @@ spring:
     properties:
       hibernate:
         dialect: com.fzcode.serviceauth.config.Mysql
+  redis:
+    host: 192.168.31.157
+    port: 30379
+    password: 123456789
+    timeout: 5000
+    database: 0
+    jedis:
+      pool:
+        max-idle: 200
+        min-idle: 0
+        max-active: 50
+        max-wait: 10000
   zipkin:
     base-url: http://192.168.31.158:30411
   boot:
@@ -32,13 +44,4 @@ eureka:
       defaultZone: http://192.168.31.154:30200/eureka/
   instance:
     prefer-ip-address: true
-redis:
-  host: 192.168.31.157
-  port: 30379
-  password: 123456789
-  timeout: 100000
-  maxIdle: 200
-  minIdle: 0
-  maxActive: 50
-  maxWait: 10000
 

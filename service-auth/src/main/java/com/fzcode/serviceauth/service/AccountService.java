@@ -1,7 +1,6 @@
 package com.fzcode.serviceauth.service;
 
 import com.fzcode.internalcommon.constant.RedisDBEnum;
-import com.fzcode.internalcommon.constant.RegisterTypeEnum;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
@@ -14,7 +13,7 @@ import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.dao.AccountDao;
 import com.fzcode.serviceauth.dao.AuthorityDao;
 import com.fzcode.serviceauth.dao.UserDao;
-import com.fzcode.serviceauth.redis.RedisTemplateMap;
+import com.fzcode.serviceauth.util.RedisUtils;
 import com.fzcode.serviceauth.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,12 +46,6 @@ public class AccountService {
         this.authorityDao = authorityDao;
     }
 
-    RedisTemplateMap redisTemplateMap;
-    @Autowired
-    public void setRedisTemplateMap(RedisTemplateMap redisTemplateMap){
-        this.redisTemplateMap = redisTemplateMap;
-    }
-
     public LoginResponse login(String email, String password) throws CustomizeException {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -77,11 +70,7 @@ public class AccountService {
         if (b) {
             throw new CustomizeException("邮箱已存在");
         }
-        Object redisCodeObject =redisTemplateMap.get(email + ":register", RedisDBEnum.Mail);
-        if(redisCodeObject==null){
-            throw new CustomizeException("验证码过期");
-        }
-        String redisCode = redisCodeObject.toString();
+        String redisCode = RedisUtils.getString(email + ":register");
         if (!redisCode.equals(code)) {
             throw new CustomizeException("验证码错误");
         }
