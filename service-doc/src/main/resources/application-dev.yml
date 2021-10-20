@@ -1,0 +1,37 @@
+spring:
+  cloud:
+    config:
+      uri: http://127.0.0.1:30201
+      profile: dev
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:30200/eureka/
+
+knife4j:
+  enableAggregation: true
+  eureka:
+    enable: true
+    serviceUrl: http://127.0.0.1:30200/eureka/
+    routes:
+      - name: api服务
+        serviceName: API-BLOG
+        location: /v2/api-docs?group=v0
+        servicePath: /api/blog
+      - name: file服务
+        serviceName: FILE-BLOG
+        location: /v2/api-docs?group=v0
+        servicePath: /file/blog
+      - name: auth服务
+        serviceName: SERVICE-AUTH
+        location: /v2/api-docs?group=v0
+        servicePath: /auth
+      - name: note服务
+        serviceName: SERVICE-NOTE
+        location: /v2/api-docs?group=v0
+        servicePath: /note

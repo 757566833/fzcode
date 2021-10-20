@@ -1,0 +1,15 @@
+server:
+  port: 30500
+spring:
+  application:
+    name: API-BLOG
+  config:
+    import: "optional:configserver:"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

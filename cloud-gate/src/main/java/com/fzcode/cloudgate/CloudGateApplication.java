@@ -36,6 +36,9 @@ public class CloudGateApplication {
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+//        System.out.println("--------------");
+//        System.out.println(services.getFile().getBlog().getHost());
+//        System.out.println("--------------");
         return builder
                 .routes()
 //                .route("service-auth", r -> r.path("/auth/**").filters(f -> f.stripPrefix(1)).uri(ServiceName.LB_API_BLOG))

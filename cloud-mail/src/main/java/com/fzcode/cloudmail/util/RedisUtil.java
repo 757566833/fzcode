@@ -1,39 +1,39 @@
 package com.fzcode.cloudmail.util;
 
+import com.fzcode.internalcommon.constant.RedisConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtil {
-    private static ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
+
+    private static RedisTemplate<String, String> redisTemplate;
 
     @Autowired
-    public void setReactiveRedisTemplate(ReactiveRedisTemplate<String, String> reactiveRedisTemplate) {
-        RedisUtil.reactiveRedisTemplate = reactiveRedisTemplate;
+    public void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 
-    /**
-     * @param key
-     * @param value
-     * @param timeout 秒
-     * @return
-     */
-    public static Mono<Boolean> setString(String key, String value, long timeout) {
-        Duration duration = Duration.ofSeconds(timeout);
-        System.out.println("key:" + key + ",value:" + value + ",timeout:" + duration.toString());
-        return reactiveRedisTemplate.opsForValue().set(key, value, duration);
+    public static void setString(String key, String value, long time) {
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
     }
 
-    public static Mono<Boolean> setString(String key, String value) {
-        return reactiveRedisTemplate.opsForValue().set(key, value);
-
+    public static void setString(String key, String value) {
+        redisTemplate.opsForValue().set(key, value);
     }
 
-    public static Mono<String> getString(String key) {
-        return reactiveRedisTemplate.opsForValue().get(key);
+    public static String getString(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    public static void publishing(String msg){
+        System.out.println("发送消息:"+msg);
+        redisTemplate.convertAndSend(RedisConstant.channel,msg);
     }
 }

@@ -1,5 +1,6 @@
 package com.fzcode.cloudmail.controller;
 
+import com.fzcode.cloudmail.exception.CustomizeException;
 import com.fzcode.internalcommon.dto.cloudmail.request.RegisterCodeRequest;
 import com.fzcode.internalcommon.dto.cloudmail.common.MailDTO;
 import com.fzcode.cloudmail.service.EmailService;
@@ -22,13 +23,13 @@ public class EmailController {
     }
 
     @PostMapping(value = "/register")
-    public Mono<String> register(@RequestBody @Validated RegisterCodeRequest registerCodeRequest) {
+    public String register(@RequestBody @Validated RegisterCodeRequest registerCodeRequest) throws CustomizeException {
 //        return emailService.sendEmail(mailDTO.getEmail(), "register");
         return emailService.sendEmail(registerCodeRequest.getEmail(), "register");
     }
 
     @PostMapping(value = "/forget")
-    public Mono<String> forget(@RequestBody @Validated MailDTO mailDTO) {
+    public String forget(@RequestBody @Validated MailDTO mailDTO) throws CustomizeException {
         return emailService.sendEmail(mailDTO.getEmail(), "forget");
     }
 }

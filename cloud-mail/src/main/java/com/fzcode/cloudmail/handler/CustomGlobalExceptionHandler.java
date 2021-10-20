@@ -1,43 +1,48 @@
 package com.fzcode.cloudmail.handler;
 
-import com.fzcode.cloudmail.http.ErrorResponse;
+import com.fzcode.cloudmail.exception.CustomizeException;
+import com.fzcode.internalcommon.dto.http.ErrorResponse;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.support.WebExchangeBindException;
+
+import java.util.List;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler {
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(WebExchangeBindException.class)
-    public ErrorResponse serverWeb(WebExchangeBindException webExchangeBindException){
-//        System.out.println("---------");
-//        System.out.println(webExchangeBindException.getAllErrors().toString());
-//        System.out.println(webExchangeBindException.getMessage());
-//        System.out.println(webExchangeBindException.getObjectName());
-//        System.out.println(webExchangeBindException.getStatus());
-//        System.out.println(webExchangeBindException.getReason().toString());
-//        System.out.println(webExchangeBindException.getLocalizedMessage().toString());
-//        System.out.println(webExchangeBindException.getSuppressedFields().toString());
-//        System.out.println(webExchangeBindException.getModel().toString());
-//        System.out.println(webExchangeBindException);
-//        bind
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public com.fzcode.internalcommon.dto.http.ErrorResponse requestParamsNotEmpty(MethodArgumentNotValidException methodArgumentNotValidException) {
         String errMessage = "";
-//        System.out.println("---------");
-        for (ObjectError error:
-        webExchangeBindException.getAllErrors()) {
-//            System.out.println(error.getObjectName());
-//            System.out.println(error.getArguments().toString());
-//            System.out.println(error.getCode());
-//            System.out.println(error.getCodes().toString());
-//            System.out.println(error.getDefaultMessage());
-            errMessage+=error.getDefaultMessage()+";";
+        List<ObjectError> objectErrors = methodArgumentNotValidException.getBindingResult().getAllErrors();
+        for (ObjectError o : objectErrors) {
+            errMessage += o.getDefaultMessage()+";";
         }
-        return  ErrorResponse.error(1 ,errMessage);
+        return new com.fzcode.internalcommon.dto.http.ErrorResponse(400, errMessage);
     }
+
+    @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
+    @ResponseBody
+    @ExceptionHandler(CustomizeException.class)
+    public com.fzcode.internalcommon.dto.http.ErrorResponse customize(CustomizeException customizeException) {
+        return new com.fzcode.internalcommon.dto.http.ErrorResponse(400, customizeException.getMessage());
+    }
+
+
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    @ExceptionHandler(DataAccessException.class)
+    public com.fzcode.internalcommon.dto.http.ErrorResponse dataAccess(DataAccessException dataAccessException) {
+        return new ErrorResponse(400, dataAccessException.getMessage());
+    }
+
 }
+

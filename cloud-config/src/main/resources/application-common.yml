@@ -1,4 +1,3 @@
-
 server:
   port: 30201
 spring:

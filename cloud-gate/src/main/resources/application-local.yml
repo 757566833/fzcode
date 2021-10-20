@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    config:
+      uri: http://127.0.0.1:30201
+      profile: dev
+      label: master
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456789
+    timeout: 5000
+    database: 0
+    jedis:
+      pool:
+        max-idle: 200
+        min-idle: 0
+        max-active: 50
+        max-wait: 10000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:30200/eureka/
+  instance:
+    prefer-ip-address: true

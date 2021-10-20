@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    config:
+      uri: http://192.168.31.154:30201
+      profile: prod
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.31.154:30200/eureka/
+  instance:
+    prefer-ip-address: true
+#eureka:
+#  client:
+#    enabled: false

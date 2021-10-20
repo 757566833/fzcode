@@ -1,0 +1,20 @@
+server:
+  port: 30502
+spring:
+  application:
+    name: FILE-BLOG
+  config:
+    import: "optional:configserver:"
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 500MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

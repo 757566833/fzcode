@@ -1,0 +1,41 @@
+spring:
+  cloud:
+    config:
+      uri: http://127.0.0.1:30201
+      profile: dev
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
+  datasource:
+    username: fzcode
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/fzcode?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456789
+    timeout: 5000
+    database: 0
+    jedis:
+      pool:
+        max-idle: 200
+        min-idle: 0
+        max-active: 50
+        max-wait: 10000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: com.fzcode.serviceauth.config.Mysql
+  zipkin:
+    enabled: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:30200/eureka/
+  instance:
+    prefer-ip-address: true
