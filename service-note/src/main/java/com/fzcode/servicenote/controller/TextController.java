@@ -26,7 +26,7 @@ public class TextController {
     TextService textService;
 
     @Autowired
-    public void setNoteFlow(TextService textService) {
+    public void setTextService(TextService textService) {
         this.textService = textService;
     }
 
