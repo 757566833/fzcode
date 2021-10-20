@@ -9,19 +9,6 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:30650
-  cloud:
-    config:
-      uri: http://127.0.0.1:30201
-      profile: dev
-      #      discovery:
-      #        enabled: true
-      #        service-id: config-service
-      label: master
-
 eureka:
   client:
     service-url:

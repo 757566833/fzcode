@@ -32,10 +32,6 @@ spring:
     properties:
       hibernate:
         dialect: com.fzcode.serviceauth.config.Mysql
-  boot:
-    admin:
-      client:
-        url: http://192.168.31.155:30650
 eureka:
   client:
     service-url:

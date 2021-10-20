@@ -13,10 +13,6 @@ spring:
     properties:
       hibernate:
         dialect: com.fzcode.servicenote.config.Mysql
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:30650
 eureka:
   client:
     service-url:

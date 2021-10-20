@@ -9,6 +9,7 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
+
 eureka:
   client:
     service-url:
