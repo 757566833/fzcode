@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    group:
+      "dev": "common,dev"
+      "docker": "common,docker"
+      "local": "common,local"
+      "prod": "common,prod"
+    default: dev

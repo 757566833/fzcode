@@ -1,15 +1,15 @@
 package com.fzcode.servicenote.repositroy;
 
-import com.fzcode.servicenote.entity.CidTid;
+import com.fzcode.servicenote.entity.CidTidEntity;
 import com.fzcode.servicenote.repositroy.mapper.CidTidMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CidTidRepository extends JpaRepository<CidTid, Integer> {
-    List<CidTid> findByCid(Integer cid);
-    List<CidTid> findByTid(Integer tid);
+public interface CidTidRepository extends JpaRepository<CidTidEntity, Integer> {
+    List<CidTidEntity> findByCid(Integer cid);
+    List<CidTidEntity> findByTid(Integer tid);
     
     @Query(nativeQuery = true, value = "SELECT " +
             "tbl_cid_tid.tid, " +

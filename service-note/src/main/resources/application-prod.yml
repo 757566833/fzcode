@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    include: common
   datasource:
     username: fzcode
     password: fzcode_9876
@@ -15,14 +13,12 @@ spring:
         dialect: com.fzcode.servicenote.config.Mysql
   zipkin:
     base-url: http://192.168.31.158:30411
+  elasticsearch:
+    rest:
+      uris: http://192.168.31.153:30200
 eureka:
   client:
     service-url:
       defaultZone: http://192.168.31.154:30200/eureka/
   instance:
     prefer-ip-address: true
-elastic:
-  host: 192.168.31.153
-  port: 30200
-  scheme : http
-  index : note

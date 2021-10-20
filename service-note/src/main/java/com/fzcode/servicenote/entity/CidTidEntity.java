@@ -13,7 +13,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "tbl_cid_tid")
-public class CidTid {
+public class CidTidEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

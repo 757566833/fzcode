@@ -5,7 +5,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreate
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryDeleteRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryPatchRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryUpdateRequest;
-import com.fzcode.servicenote.entity.Categories;
+import com.fzcode.servicenote.entity.CategoriesEntity;
 import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.service.CategoryService;
 import io.swagger.annotations.Api;
@@ -58,15 +58,15 @@ public class CategoryController {
     }
     @ApiOperation(value = "获取分类列表")
     @GetMapping(value = "/list")
-    public List<Categories> getList() {
+    public List<CategoriesEntity> getList() {
         return categoryService.findAll();
     }
 
     @ApiOperation(value = "获取分类")
     @GetMapping(value = "/id/{id}")
     public SuccessResponse getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
-        Categories categories = categoryService.findById(id);
-        return new SuccessResponse("查询成功", categories);
+        CategoriesEntity categoriesEntity = categoryService.findById(id);
+        return new SuccessResponse("查询成功", categoriesEntity);
     }
 
     @ApiOperation(value = "添加分类")

@@ -1,6 +1,6 @@
 package com.fzcode.servicenote.dao.DB;
 
-import com.fzcode.servicenote.entity.Categories;
+import com.fzcode.servicenote.entity.CategoriesEntity;
 import com.fzcode.servicenote.repositroy.CategoryRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,43 +21,43 @@ public class CategoryDBDao {
     }
 
 
-    public Categories save(Categories categories) {
-        Categories categoriesResult = categoryRepository.save(categories);
-        return categoriesResult;
+    public CategoriesEntity save(CategoriesEntity categoriesEntity) {
+        CategoriesEntity categoriesEntityResult = categoryRepository.save(categoriesEntity);
+        return categoriesEntityResult;
     }
 
-    public List<Categories> findAll() {
-        List<Categories> list = categoryRepository.findByIsDelete(0);
+    public List<CategoriesEntity> findAll() {
+        List<CategoriesEntity> list = categoryRepository.findByIsDelete(0);
         return list;
     }
 
-    public Categories findById(Integer id) {
-        Optional<Categories> noteResult = categoryRepository.findById(id);
+    public CategoriesEntity findById(Integer id) {
+        Optional<CategoriesEntity> noteResult = categoryRepository.findById(id);
         return noteResult.get();
     }
 
-    public Categories update(Categories categories) {
-        Categories categoryResult = categoryRepository.save(categories);
+    public CategoriesEntity update(CategoriesEntity categoriesEntity) {
+        CategoriesEntity categoryResult = categoryRepository.save(categoriesEntity);
         return categoryResult;
     }
 
-    public Categories patch(Categories categories) {
-        Integer cid = categories.getCid();
-        Categories oldCategories = this.findById(cid);
-        Categories newCategories = new Categories();
-        BeanUtils.copyProperties(oldCategories, newCategories);
-        BeanUtils.copyProperties(categories, newCategories);
-        Categories categoriesResult = categoryRepository.save(newCategories);
-        return categoriesResult;
+    public CategoriesEntity patch(CategoriesEntity categoriesEntity) {
+        Integer cid = categoriesEntity.getCid();
+        CategoriesEntity oldCategoriesEntity = this.findById(cid);
+        CategoriesEntity newCategoriesEntity = new CategoriesEntity();
+        BeanUtils.copyProperties(oldCategoriesEntity, newCategoriesEntity);
+        BeanUtils.copyProperties(categoriesEntity, newCategoriesEntity);
+        CategoriesEntity categoriesEntityResult = categoryRepository.save(newCategoriesEntity);
+        return categoriesEntityResult;
     }
 
-    public Categories delete(Integer id, Integer deleteBy) {
-        Categories categories = new Categories();
-        categories.setIsDelete(1);
-        categories.setCid(id);
-        categories.setDeleteBy(deleteBy);
-        Categories categoriesResult = categoryRepository.save(categories);
-        return categoriesResult;
+    public CategoriesEntity delete(Integer id, Integer deleteBy) {
+        CategoriesEntity categoriesEntity = new CategoriesEntity();
+        categoriesEntity.setIsDelete(1);
+        categoriesEntity.setCid(id);
+        categoriesEntity.setDeleteBy(deleteBy);
+        CategoriesEntity categoriesEntityResult = categoryRepository.save(categoriesEntity);
+        return categoriesEntityResult;
     }
     public Boolean isHas (Integer id){
         return categoryRepository.existsById(id);

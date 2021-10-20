@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    include: common
   datasource:
     username: fzcode
     password: 123456
@@ -21,15 +19,14 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-
+  zipkin:
+    enabled: false
+  elasticsearch:
+    rest:
+      uris: http://192.168.31.153:30200
 eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:30200/eureka/
   instance:
     prefer-ip-address: true
-elastic:
-  host: 192.168.31.153
-  port: 30200
-  scheme : http
-  index : testnote

@@ -7,7 +7,7 @@ import com.fzcode.servicenote.repositroy.CidTidRepository;
 import com.fzcode.servicenote.repositroy.mapper.CidTidMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBFindListMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
-import com.fzcode.servicenote.entity.Texts;
+import com.fzcode.servicenote.entity.TextsEntity;
 import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.repositroy.TextRepository;
 import com.fzcode.servicenote.utils.ListUtils;
@@ -35,9 +35,9 @@ public class TextDBDao {
         this.cidTidRepository = cidTidRepository;
     }
 
-    public Texts save(Texts texts) {
-        Texts textsResult = textRepository.save(texts);
-        return textsResult;
+    public TextsEntity save(TextsEntity textsEntity) {
+        TextsEntity textsEntityResult = textRepository.save(textsEntity);
+        return textsEntityResult;
     }
 
     public ListResponseDTO<TextResponse> findAll(int page, int size) {
@@ -82,8 +82,8 @@ public class TextDBDao {
         return resDTO;
     }
 
-    public Texts findById(Integer id) {
-        Optional<Texts> noteResult = textRepository.findById(id);
+    public TextsEntity findById(Integer id) {
+        Optional<TextsEntity> noteResult = textRepository.findById(id);
         return noteResult.get();
     }
 
@@ -97,26 +97,26 @@ public class TextDBDao {
         return noteDBList.get(0);
     }
 
-    public Texts update(Texts texts) {
-        Texts textsResult = textRepository.save(texts);
-        return textsResult;
+    public TextsEntity update(TextsEntity textsEntity) {
+        TextsEntity textsEntityResult = textRepository.save(textsEntity);
+        return textsEntityResult;
     }
 
-    public Texts patch(Texts texts) {
-        Integer tid = texts.getTid();
-        Texts oldText = this.findById(tid);
-        Texts newText = new Texts();
+    public TextsEntity patch(TextsEntity textsEntity) {
+        Integer tid = textsEntity.getTid();
+        TextsEntity oldText = this.findById(tid);
+        TextsEntity newText = new TextsEntity();
         BeanUtils.copyProperties(oldText, newText);
-        BeanUtils.copyProperties(texts, newText);
-        Texts textResult = textRepository.save(newText);
+        BeanUtils.copyProperties(textsEntity, newText);
+        TextsEntity textResult = textRepository.save(newText);
         return textResult;
     }
 
-    public Texts delete(Integer id) {
-        Texts texts = new Texts();
-        texts.setIsDelete(1);
-        texts.setTid(id);
-        Texts textsResult = textRepository.save(texts);
-        return textsResult;
+    public TextsEntity delete(Integer id) {
+        TextsEntity textsEntity = new TextsEntity();
+        textsEntity.setIsDelete(1);
+        textsEntity.setTid(id);
+        TextsEntity textsEntityResult = textRepository.save(textsEntity);
+        return textsEntityResult;
     }
 }

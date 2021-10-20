@@ -1,6 +1,6 @@
 package com.fzcode.servicenote.dao.DB;
 
-import com.fzcode.servicenote.entity.CidTid;
+import com.fzcode.servicenote.entity.CidTidEntity;
 import com.fzcode.servicenote.repositroy.CidTidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,20 +19,20 @@ public class CidTidDao {
     }
 
 
-    public CidTid save(CidTid cidTid) {
-        CidTid cidTidRes = cidTidRepository.save(cidTid);
-        return cidTidRes;
+    public CidTidEntity save(CidTidEntity cidTidEntity) {
+        CidTidEntity cidTidEntityRes = cidTidRepository.save(cidTidEntity);
+        return cidTidEntityRes;
     }
-    public List<CidTid> saveAll(Iterable<CidTid> list) {
-         List<CidTid> l = cidTidRepository.saveAll(list);
+    public List<CidTidEntity> saveAll(Iterable<CidTidEntity> list) {
+         List<CidTidEntity> l = cidTidRepository.saveAll(list);
         return l;
     }
-    public List<CidTid> getByCid(Integer cid) {
-        List<CidTid> list = cidTidRepository.findByCid(cid);
+    public List<CidTidEntity> getByCid(Integer cid) {
+        List<CidTidEntity> list = cidTidRepository.findByCid(cid);
         return list;
     }
-    public List<CidTid> getByTid(Integer tid) {
-        List<CidTid> list = cidTidRepository.findByTid(tid);
+    public List<CidTidEntity> getByTid(Integer tid) {
+        List<CidTidEntity> list = cidTidRepository.findByTid(tid);
         return list;
     }
 }

@@ -8,8 +8,8 @@ import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
-import com.fzcode.servicenote.entity.CidTid;
-import com.fzcode.servicenote.entity.Texts;
+import com.fzcode.servicenote.entity.CidTidEntity;
+import com.fzcode.servicenote.entity.TextsEntity;
 import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
@@ -48,29 +48,29 @@ public class TextService {
 
     @Transactional(rollbackFor = Exception.class)
     public String create(TextCreateRequest textCreateRequest, Integer create_by) throws CustomizeException {
-        Texts texts = new Texts();
-        BeanUtils.copyProperties(textCreateRequest, texts);
-        texts.setCreateBy(create_by);
+        TextsEntity textsEntity = new TextsEntity();
+        BeanUtils.copyProperties(textCreateRequest, textsEntity);
+        textsEntity.setCreateBy(create_by);
 
         // 存正文
-        Texts saveResult;
+        TextsEntity saveResult;
         try {
-            saveResult = textDBDao.save(texts);
+            saveResult = textDBDao.save(textsEntity);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new CustomizeException("正文db存储失败");
         }
-        List<CidTid> cidTidList = new ArrayList<CidTid>();
+        List<CidTidEntity> cidTidEntityList = new ArrayList<CidTidEntity>();
         List<Integer> stringList = textCreateRequest.getCategories();
         for (Integer cid:stringList) {
-            CidTid cidTid = new CidTid();
-            cidTid.setCid(cid);
-            cidTid.setTid(saveResult.getTid());
-            cidTidList.add(cidTid);
+            CidTidEntity cidTidEntity = new CidTidEntity();
+            cidTidEntity.setCid(cid);
+            cidTidEntity.setTid(saveResult.getTid());
+            cidTidEntityList.add(cidTidEntity);
         }
         // 存分类
         try {
-             cidTidDao.saveAll(cidTidList);
+             cidTidDao.saveAll(cidTidEntityList);
         }catch (Exception e) {
             throw new CustomizeException("分类db存储失败");
         }
@@ -93,12 +93,12 @@ public class TextService {
     @Transactional(rollbackFor = Exception.class)
     public String update(Integer id, TextUpdateRequest textUpdateRequest) throws CustomizeException {
         if (textUpdateRequest.getDescription() != null) {
-            Texts texts = new Texts();
-            texts.setTid(id);
-            texts.setTitle(textUpdateRequest.getTitle());
-            texts.setDescription(textUpdateRequest.getDescription());
+            TextsEntity textsEntity = new TextsEntity();
+            textsEntity.setTid(id);
+            textsEntity.setTitle(textUpdateRequest.getTitle());
+            textsEntity.setDescription(textUpdateRequest.getDescription());
 //            texts.setText(textReqUpdateDTO.getText());
-            textDBDao.update(texts);
+            textDBDao.update(textsEntity);
         }
         TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textUpdateRequest.getTitle());
 //        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
@@ -111,15 +111,15 @@ public class TextService {
     @Transactional(rollbackFor = Exception.class)
     public String patch(Integer nid, TextPatchRequest textPatchRequest) throws CustomizeException {
         if (textPatchRequest.getDescription() != null || textPatchRequest.getTitle() != null) {
-            Texts texts = new Texts();
-            texts.setTid(nid);
+            TextsEntity textsEntity = new TextsEntity();
+            textsEntity.setTid(nid);
             if (textPatchRequest.getTitle() != null) {
-                texts.setTitle(textPatchRequest.getTitle());
+                textsEntity.setTitle(textPatchRequest.getTitle());
             }
             if (textPatchRequest.getDescription() != null) {
-                texts.setDescription(textPatchRequest.getDescription());
+                textsEntity.setDescription(textPatchRequest.getDescription());
             }
-            textDBDao.patch(texts);
+            textDBDao.patch(textsEntity);
         }
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
 //        textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());

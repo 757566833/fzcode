@@ -5,7 +5,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreate
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryDeleteRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryPatchRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryUpdateRequest;
-import com.fzcode.servicenote.entity.Categories;
+import com.fzcode.servicenote.entity.CategoriesEntity;
 import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.dao.DB.CategoryDBDao;
 import org.springframework.beans.BeanUtils;
@@ -27,13 +27,13 @@ public class CategoryService {
         if(authority!= AuthorityConstant.admin){
             throw new CustomizeException("权限不足");
         }
-        Categories categories = new Categories();
-        BeanUtils.copyProperties(cateGoryReqCreateDTO, categories);
-        categories.setCreateBy(aid);
-        Categories saveResult;
+        CategoriesEntity categoriesEntity = new CategoriesEntity();
+        BeanUtils.copyProperties(cateGoryReqCreateDTO, categoriesEntity);
+        categoriesEntity.setCreateBy(aid);
+        CategoriesEntity saveResult;
         System.out.println("create");
         try {
-            saveResult = categoryDBDao.save(categories);
+            saveResult = categoryDBDao.save(categoriesEntity);
         } catch (Exception e) {
             throw new CustomizeException("创建失败");
         }
@@ -41,18 +41,18 @@ public class CategoryService {
         return saveResult.getCid();
     }
 
-    public List<Categories> findAll() {
+    public List<CategoriesEntity> findAll() {
         return categoryDBDao.findAll();
     }
 
     public Integer update(CategoryUpdateRequest categoryUpdateRequest, Integer updateBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryUpdateRequest.getCid());
         if (isHas) {
-            Categories categories = new Categories();
-            BeanUtils.copyProperties(categoryUpdateRequest, categories);
-            categories.setUpdateBy(updateBy);
-            Categories categoriesResult = categoryDBDao.update(categories);
-            return categoriesResult.getCid();
+            CategoriesEntity categoriesEntity = new CategoriesEntity();
+            BeanUtils.copyProperties(categoryUpdateRequest, categoriesEntity);
+            categoriesEntity.setUpdateBy(updateBy);
+            CategoriesEntity categoriesEntityResult = categoryDBDao.update(categoriesEntity);
+            return categoriesEntityResult.getCid();
         } else {
             throw new CustomizeException("不存在");
         }
@@ -62,11 +62,11 @@ public class CategoryService {
     public Integer patch(CategoryPatchRequest categoryPatchRequest, Integer updateBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryPatchRequest.getCid());
         if (isHas) {
-            Categories categories = new Categories();
-            BeanUtils.copyProperties(categoryPatchRequest, categories);
-            categories.setUpdateBy(updateBy);
-            Categories categoriesResult = categoryDBDao.patch(categories);
-            return categoriesResult.getCid();
+            CategoriesEntity categoriesEntity = new CategoriesEntity();
+            BeanUtils.copyProperties(categoryPatchRequest, categoriesEntity);
+            categoriesEntity.setUpdateBy(updateBy);
+            CategoriesEntity categoriesEntityResult = categoryDBDao.patch(categoriesEntity);
+            return categoriesEntityResult.getCid();
         } else {
             throw new CustomizeException("不存在");
         }
@@ -75,7 +75,7 @@ public class CategoryService {
     public Integer delete(CategoryDeleteRequest categoryDeleteRequest, Integer deleteBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryDeleteRequest.getCid());
         if (isHas) {
-            Categories categoryResult = categoryDBDao.delete(categoryDeleteRequest.getCid(),deleteBy);
+            CategoriesEntity categoryResult = categoryDBDao.delete(categoryDeleteRequest.getCid(),deleteBy);
             return categoryResult.getCid();
         } else {
             throw new CustomizeException("不存在");
@@ -83,7 +83,7 @@ public class CategoryService {
 
     }
 
-    public Categories findById(Integer cid) throws CustomizeException {
+    public CategoriesEntity findById(Integer cid) throws CustomizeException {
         try {
             return categoryDBDao.findById(cid);
         } catch (Exception e) {

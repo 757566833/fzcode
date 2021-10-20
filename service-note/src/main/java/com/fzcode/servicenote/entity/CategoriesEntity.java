@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Categories {
+public class CategoriesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cid;
