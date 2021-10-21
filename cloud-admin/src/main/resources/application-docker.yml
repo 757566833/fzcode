@@ -7,7 +7,24 @@ spring:
       #        enabled: true
       #        service-id: config-service
       label: master
-
+  mail:
+    host: smtp.126.com
+    username: fzcode@126.com
+    password: TKOMBJXTWWYJQTMS
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  boot:
+    admin:
+      notify:
+        mail:
+          from: fzcode@126.com
+          to: 757566833@qq.com
 eureka:
   client:
     service-url:
