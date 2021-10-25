@@ -11,6 +11,10 @@ eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:30200/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
 
 knife4j:
   enableAggregation: true
