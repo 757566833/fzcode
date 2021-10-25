@@ -7,9 +7,9 @@ spring:
 #    import: "optional:configserver:"
   mail:
     host: smtp.126.com
-    port: 587
     username: fzcode@126.com
     password: TKOMBJXTWWYJQTMS
+    protocol: smtp
     default-encoding: UTF-8
     properties:
       mail:
@@ -20,6 +20,7 @@ spring:
           starttls:
             enable: true
             required: true
+
 management:
   endpoints:
     web:
