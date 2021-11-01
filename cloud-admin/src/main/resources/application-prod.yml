@@ -25,6 +25,10 @@ spring:
         mail:
           from: fzcode@126.com
           to: 757566833@qq.com
+      monitor:
+        default-timeout: 60000
+        status-interval: 15000
+        status-lifetime: 15000
 eureka:
   client:
     service-url:
