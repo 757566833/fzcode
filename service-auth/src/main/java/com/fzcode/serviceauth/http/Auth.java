@@ -4,11 +4,13 @@ import com.fzcode.serviceauth.config.Oauth;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
+import java.util.Collections;
 
 @Component
 public class Auth {
@@ -19,34 +21,21 @@ public class Auth {
         Auth.oauth = oauth;
     }
 
+    private  static RestTemplate  restTemplate;
+    @Autowired
+    public void setRestTemplate(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
+    }
+
     public static GithubAccessToken getGithubAccessToken(String code) {
-        return WebClient.create("https://github.com")
-
-                .get()
-
-                .uri("/login/oauth/access_token?client_id="
-                        + oauth.getClientId() +
-                        "&client_secret=" +
-                        oauth.getClientSecret() +
-                        "&code=" + code)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .block()
-                .bodyToMono(GithubAccessToken.class)
-                .timeout(Duration.ofSeconds(60))
-                .block();
-
+        return Auth.restTemplate.getForObject("https://github.com"+"/login/oauth/access_token?client_id=" + oauth.getClientId() + "&client_secret=" + oauth.getClientSecret() + "&code=" + code,GithubAccessToken.class);
     }
 
     public static GithubUserInfo getGithubUserInfo(String access_token) {
-        return WebClient.create("https://api.github.com")
-                .get()
-                .uri("/user")
-                .header("Authorization","token " +access_token)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GithubUserInfo.class)
-                .block();
+        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.put("Authorization", Collections.singletonList("token " +access_token));
+        HttpEntity<String> request =  new HttpEntity<String>(null, headers);
+        return  restTemplate.exchange("https://api.github.com"+"/user", HttpMethod.GET, request, GithubUserInfo.class).getBody();
 
     }
 }
