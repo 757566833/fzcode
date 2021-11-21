@@ -11,30 +11,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
 @Api(tags = "邮件模块")
 @RestController
 @RequestMapping(value = "/mail")
 public class MailController {
-    WebClient client;
+    RestTemplate restTemplate;
     Services services;
+    @Autowired
+    public void setRestTemplate(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
+    }
     @Autowired
     public void setServices(Services services){
         this.services = services;
-        client = WebClient.create(services.getCloud().getMail().getHost());
     }
 
     @ApiOperation(value = "获取注册验证码")
     @PostMapping(value = "/register/code")
     public SuccessResponse getRegisterCode (@RequestBody @Validated RegisterCodeRequest registerCodeRequest){
-        String result  = client.post()
-                .uri("/register")
-                .bodyValue(registerCodeRequest)
-                .exchange()
-                .block()
-                .bodyToMono(String.class)
-                .block();
+        String result =   restTemplate.postForObject(services.getCloud().getMail().getHost()+"/register",registerCodeRequest, String.class);
         return  new SuccessResponse("发送成功",result);
     }
 }

@@ -9,17 +9,21 @@ import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.utils.BeanUtils;
-import com.fzcode.internalcommon.utils.JSONUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.*;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +32,16 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
-    WebClient client;
+    RestTemplate restTemplate;
     Services services;
+    @Autowired
+    public void setRestTemplate(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
+    }
     @Autowired
     public void setServices(Services services){
         this.services = services;
-        client = WebClient.create(services.getService().getAuth().getHost());
     }
-
     @ApiOperation(value = "测试接口")
     @GetMapping(value = "/test")
     public String test (){
@@ -65,29 +71,13 @@ public class AuthController {
     @ApiOperation(value = "账号密码登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest){
-        return client
-                .post()
-                .uri("/login")
-                .bodyValue(loginRequest)
-                .exchange()
-                .block()
-                .bodyToMono(LoginResponse.class)
-                .block();
+        return  restTemplate.postForObject(services.getService().getAuth().getHost()+"/login",loginRequest,LoginResponse.class);
     }
 
     @ApiOperation(value = "账号密码注册")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String register (@RequestBody @Validated RegisterRequest registerRequest){
-        System.out.println("register");
-        System.out.println(services.getService().getAuth().getHost());
-        return client
-                .post()
-                .uri("/register")
-                .bodyValue(registerRequest)
-                .exchange()
-                .block()
-                .bodyToMono(String.class)
-                .block();
+        return  restTemplate.postForObject(services.getService().getAuth().getHost()+"/register",registerRequest,String.class);
     }
 
     @ApiOperation(value = "github方式登陆")
@@ -96,16 +86,7 @@ public class AuthController {
         Map map = new HashMap();
         map.put("code",code);
         map.put("socketId",socketId);
-//        System.out.println(JSON.toJSONString(map));
-        System.out.println(JSONUtils.stringify(map));
-        return client
-                .post()
-                .uri("/login/github")
-                .bodyValue(map)
-                .exchange()
-                .block()
-                .bodyToMono(String.class)
-                .block();
+        return  restTemplate.postForObject(services.getService().getAuth().getHost()+"/login/github",map,String.class);
     }
 
 //      .header("email", finalEmail)
@@ -115,17 +96,13 @@ public class AuthController {
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping(value = "/self")
     public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
-        Map<String, Object> info =  client
-                .get()
-                .uri("/self")
-                .header("email",email)
-                .header("aid",aid)
-                .header("authority",authority)
-                .exchange()
-                .block()
-                .bodyToMono(Map.class)
-                .block();
-        return  new SuccessResponse("查询成功",info);
+        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.put("email", Collections.singletonList(aid));
+        headers.put("aid", Collections.singletonList(aid));
+        headers.put("authority", Collections.singletonList(authority));
+        HttpEntity<String> request =  new HttpEntity<String>(null, headers);
+        ResponseEntity<Map> resEntity =  restTemplate.exchange(services.getService().getAuth().getHost()+"/self", HttpMethod.GET, request, Map.class);
+        return  new SuccessResponse("查询成功",resEntity.toString());
     }
 
     @ApiOperation(value = "管理员获取所有用户列表")
@@ -133,18 +110,11 @@ public class AuthController {
     public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
         System.out.println("email:"+email+",aid:"+aid);
         MultiValueMap<String, String> params = BeanUtils.bean2MultiValueMap(accountListRequest);
-        ListResponseDTO<Map<String, Object>> info =  client
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/admin/account")
-                        .queryParams(params)
-                        .build())
-                .header("email",email)
-                .header("aid",aid)
-                .exchange()
-                .block()
-                .bodyToMono(ListResponseDTO.class)
-                .block();
-        return  new SuccessResponse("查询成功",info);
+        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.put("email", Collections.singletonList(aid));
+        headers.put("aid", Collections.singletonList(aid));
+        HttpEntity<String> request =  new HttpEntity<String>(null, headers);
+        ResponseEntity<ListResponseDTO> resEntity =  restTemplate.exchange(services.getService().getAuth().getHost()+"/admin/account", HttpMethod.GET, request, ListResponseDTO.class);
+        return  new SuccessResponse("查询成功",resEntity);
     }
 }

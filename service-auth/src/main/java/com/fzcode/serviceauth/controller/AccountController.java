@@ -1,6 +1,5 @@
 package com.fzcode.serviceauth.controller;
 
-import com.fzcode.internalcommon.constant.RedisDBEnum;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
@@ -25,10 +24,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 import java.util.Map;
 
 @Api(tags = "账号模块")
