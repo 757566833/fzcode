@@ -1,6 +1,8 @@
 package com.fzcode.apiblog.controller;
 
 import com.fzcode.apiblog.config.Services;
+import com.fzcode.apiblog.exception.CustomizeException;
+import com.fzcode.apiblog.http.Http;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreateRequest;
@@ -14,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -23,11 +24,11 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/note")
 public class NoteController {
-    RestTemplate restTemplate;
+    Http http;
     Services services;
     @Autowired
-    public void setRestTemplate(RestTemplate restTemplate){
-        this.restTemplate = restTemplate;
+    public void setHttp( Http http){
+        this.http = http;
     }
     @Autowired
     public void setServices(Services services){
@@ -35,16 +36,15 @@ public class NoteController {
     }
     @ApiOperation(value = "获取文章分类列表")
     @GetMapping(value = "/category/list")
-    public SuccessResponse getCategoryList() {
-        RestTemplate restTemplate = new RestTemplate();
-        List<CategoryResponse> listResponseDTO =  restTemplate.getForObject(services.getService().getNote().getHost()+"/category/list", List.class);
+    public SuccessResponse getCategoryList() throws CustomizeException {
+        List<CategoryResponse> listResponseDTO =  http.post(services.getService().getNote().getHost()+"/category/list", List.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
 
     @ApiOperation(value = "添加文章分类")
     @PostMapping(value = "/category/add")
     public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest,@RequestHeader("aid") String aid) {
-        Integer id =  restTemplate.postForObject(services.getService().getNote().getHost()+"/category/add",cateGoryCreateRequest, Integer.class);
+        Integer id =  http.post(services.getService().getNote().getHost()+"/category/add",cateGoryCreateRequest, Integer.class);
         return new SuccessResponse("创建成功", id);
     }
     @ApiOperation(value = "添加文章")
@@ -53,19 +53,19 @@ public class NoteController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
         HttpEntity<TextCreateRequest> requestParam = new HttpEntity<TextCreateRequest>(textCreateRequest, headers);
-        Map listResponseDTO  =  restTemplate.postForObject(services.getService().getNote().getHost()+"/text/create",requestParam, Map.class);
+        Map listResponseDTO  =   http.post(services.getService().getNote().getHost()+"/text/create",requestParam, Map.class);
         return new SuccessResponse("添加成功", listResponseDTO);
     }
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/text/list")
     public SuccessResponse getTextList(TextGetListRequest textGetListRequest) {
-        ListResponseDTO<TextResponse> listResponseDTO  =  restTemplate.getForObject(services.getService().getNote().getHost()+"/text/list", ListResponseDTO.class,textGetListRequest);
+        ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/list", textGetListRequest,ListResponseDTO.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
     @ApiOperation(value = "获取指定文章")
     @GetMapping(value = "/text/{id}")
     public SuccessResponse getTextList(@PathVariable(name = "id") String id) {
-        Map map  =  restTemplate.getForObject(services.getService().getNote().getHost()+"/text/get/"+id, Map.class);
+        Map map  =   http.get(services.getService().getNote().getHost()+"/text/get/"+id, Map.class);
         return new SuccessResponse("查询成功", map);
     }
     @ApiOperation(value = "创建文章分类")
@@ -75,7 +75,7 @@ public class NoteController {
         headers.add("aid",aid);
         headers.add("authority",authority);
         HttpEntity<CategoryCreateRequest> requestParam = new HttpEntity<CategoryCreateRequest>(categoryCreateRequest, headers);
-        String listResponseDTO  =  restTemplate.postForObject(services.getService().getNote().getHost()+"/category/create",requestParam, String.class);
+        String listResponseDTO  =  http.post(services.getService().getNote().getHost()+"/category/create",requestParam, String.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
 }

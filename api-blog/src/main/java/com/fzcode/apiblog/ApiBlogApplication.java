@@ -1,5 +1,6 @@
 package com.fzcode.apiblog;
 
+import com.fzcode.internalcommon.handler.CustomResponseErrorHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,8 @@ public class ApiBlogApplication {
 
     @Bean
     public RestTemplate restTemplate(){
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
+        return restTemplate;
     }
 }

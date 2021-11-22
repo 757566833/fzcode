@@ -8,7 +8,7 @@ import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
-import com.fzcode.internalcommon.utils.BeanUtils;
+import com.fzcode.internalcommon.utils.ObjectUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +109,7 @@ public class AuthController {
     @GetMapping(value = "/admin/account")
     public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
         System.out.println("email:"+email+",aid:"+aid);
-        MultiValueMap<String, String> params = BeanUtils.bean2MultiValueMap(accountListRequest);
+        MultiValueMap<String, String> params = ObjectUtils.object2MultiValueMap(accountListRequest);
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.put("email", Collections.singletonList(aid));
         headers.put("aid", Collections.singletonList(aid));
