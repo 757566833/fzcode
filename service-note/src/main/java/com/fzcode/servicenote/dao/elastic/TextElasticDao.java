@@ -1,10 +1,10 @@
 package com.fzcode.servicenote.dao.elastic;
 
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.NoteEntity;
-import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.repositroy.NoteRepository;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import org.springframework.beans.BeanUtils;
@@ -41,7 +41,7 @@ public class TextElasticDao {
 //        try {
 //            client = ElasticBuilder.createElasticClient();
 //        } catch (Exception e) {
-//            throw new CustomizeException("打开io流出了问题");
+//            throw new CustomizeException("500","打开io流出了问题");
 //        }
 //
 //        TextESDTO textESDTO = new TextESDTO();
@@ -52,12 +52,12 @@ public class TextElasticDao {
 //        try {
 //            updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
 //        } catch (IOException e) {
-//            throw new CustomizeException("更新出了问题");
+//            throw new CustomizeException("500","更新出了问题");
 //        }
 //        try {
 //            client.close();
 //        } catch (IOException e) {
-//            throw new CustomizeException("关闭io流出了问题");
+//            throw new CustomizeException("500","关闭io流出了问题");
 //        }
         // TODO: 2021/10/20 没找到修改的方法
         return id;
@@ -68,7 +68,7 @@ public class TextElasticDao {
 //        try {
 //            client = ElasticBuilder.createElasticClient();
 //        } catch (IOException e) {
-//            throw new CustomizeException("打开io流出了问题");
+//            throw new CustomizeException("500","打开io流出了问题");
 //        }
 //        // 如果没有就插入 在后面加  upsert
 //        UpdateRequest updateRequest = new UpdateRequest(index, textESUpdateDTO.getId().toString()).doc(JSONUtils.stringify(textESUpdateDTO), XContentType.JSON);
@@ -77,12 +77,12 @@ public class TextElasticDao {
 //        try {
 //            updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
 //        } catch (IOException e) {
-//            throw new CustomizeException("更新出了问题");
+//            throw new CustomizeException("500","更新出了问题");
 //        }
 //        try {
 //            client.close();
 //        } catch (IOException e) {
-//            throw new CustomizeException("关闭io流出了问题");
+//            throw new CustomizeException("500","关闭io流出了问题");
 //        }
         // TODO: 2021/10/20 没找到修改的方法
         return textESUpdateDTO.getId();
@@ -92,7 +92,7 @@ public class TextElasticDao {
 //        try {
 //            client = ElasticBuilder.createElasticClient();
 //        } catch (IOException e) {
-//            throw new CustomizeException("打开io流出了问题");
+//            throw new CustomizeException("500","打开io流出了问题");
 //        }
 //
 //        // 如果没有就插入 在后面加  upsert
@@ -102,12 +102,12 @@ public class TextElasticDao {
 //        try {
 //            updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
 //        } catch (IOException e) {
-//            throw new CustomizeException("更新出了问题");
+//            throw new CustomizeException("500","更新出了问题");
 //        }
 //        try {
 //            client.close();
 //        } catch (IOException e) {
-//            throw new CustomizeException("关闭io流出了问题");
+//            throw new CustomizeException("500","关闭io流出了问题");
 //        }
         // TODO: 2021/10/20 没找到修改的方法
         return textESPatchDTO.getId();

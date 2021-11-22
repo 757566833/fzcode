@@ -2,13 +2,13 @@ package com.fzcode.servicenote.dao.DB;
 
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.servicenote.repositroy.CidTidRepository;
 import com.fzcode.servicenote.repositroy.mapper.CidTidMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBFindListMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.entity.TextsEntity;
-import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.repositroy.TextRepository;
 import com.fzcode.servicenote.utils.ListUtils;
 import org.springframework.beans.BeanUtils;
@@ -90,7 +90,7 @@ public class TextDBDao {
     public TextDBGetByIdMapper findByIdWithUserInfo(Integer id) throws CustomizeException {
         List<TextDBGetByIdMapper> noteDBList = textRepository.findByIdWithUserInfo(id);
         if (noteDBList.size() == 0) {
-            throw new CustomizeException("不存在");
+            throw new CustomizeException("500","不存在");
         }
 //        System.out.println(JSON.toJSONString(noteDBList.get(0)));
         System.out.println(JSONUtils.stringify(noteDBList.get(0)));

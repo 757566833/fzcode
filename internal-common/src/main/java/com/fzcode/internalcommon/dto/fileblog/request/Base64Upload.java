@@ -1,4 +1,4 @@
-package com.fzcode.internalcommon.dto.servicefile.request;
+package com.fzcode.internalcommon.dto.fileblog.request;
 
 import lombok.Data;
 

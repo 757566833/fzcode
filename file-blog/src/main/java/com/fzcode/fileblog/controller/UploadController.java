@@ -1,9 +1,9 @@
 package com.fzcode.fileblog.controller;
 
-import com.fzcode.internalcommon.dto.servicefile.request.Base64Upload;
+import com.fzcode.internalcommon.dto.fileblog.request.Base64Upload;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.FileUtils;
 import com.fzcode.fileblog.config.QiNiuAuth;
-import com.fzcode.fileblog.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -30,7 +30,7 @@ public class UploadController {
         try {
              inputStream =  file.getInputStream();
         }catch (IOException ioException){
-            throw new CustomizeException("IO错误");
+            throw new CustomizeException("500","IO错误");
         }
 
         Response response = null;

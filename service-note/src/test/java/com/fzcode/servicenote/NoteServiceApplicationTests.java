@@ -1,14 +1,8 @@
 package com.fzcode.servicenote;
 
-import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.dao.elastic.TextElasticDao;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootTest
 class NoteServiceApplicationTests {

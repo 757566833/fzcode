@@ -1,7 +1,9 @@
 package com.fzcode.apiblog.http;
 
-import com.fzcode.apiblog.exception.CustomizeException;
+import com.fzcode.internalcommon.dto.http.ErrorResponse;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.exception.RestTemplateCustomException;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.internalcommon.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -66,7 +68,9 @@ public class Http {
         }catch (RestTemplateCustomException e){
            System.out.println(e.getMessage());
             System.out.println(e.getBody());
-            throw new CustomizeException("错了");
+            ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
+
+            throw new CustomizeException("500","错了");
         }
         return p.getBody();
     }

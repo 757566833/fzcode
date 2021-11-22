@@ -4,16 +4,16 @@ import lombok.Data;
 
 @Data
 public class ErrorResponse {
-    private Integer code ;
+    private String status ;
     private String message;
     private Object data;
 
-    public ErrorResponse(Integer code,String message){
-        this.code = code;
+    public ErrorResponse(String status,String message){
+        this.status = status;
         this.message = message;
     }
-    public ErrorResponse(Integer code,String message,Object data){
-        this.code = code;
+    public ErrorResponse(String status,String message,Object data){
+        this.status = status;
         this.message = message;
         this.data = data;
     }

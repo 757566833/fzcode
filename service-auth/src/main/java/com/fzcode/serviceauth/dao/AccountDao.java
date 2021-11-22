@@ -2,10 +2,10 @@ package com.fzcode.serviceauth.dao;
 
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
-import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.repositroy.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -105,7 +105,7 @@ public class AccountDao {
     public Map<String, Object> findUserInfoByUid(Integer aid) throws CustomizeException {
         List<Map<String, Object>> mapList = accountRepository.findUserInfoByUid(aid);
         if (mapList.size() == 0) {
-            throw new CustomizeException("用户不存在");
+            throw new CustomizeException("500","用户不存在");
         }
         return mapList.get(0);
 

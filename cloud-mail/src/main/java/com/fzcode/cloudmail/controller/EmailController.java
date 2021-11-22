@@ -1,9 +1,9 @@
 package com.fzcode.cloudmail.controller;
 
-import com.fzcode.cloudmail.exception.CustomizeException;
 import com.fzcode.internalcommon.dto.cloudmail.request.RegisterCodeRequest;
 import com.fzcode.internalcommon.dto.cloudmail.common.MailDTO;
 import com.fzcode.cloudmail.service.EmailService;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;

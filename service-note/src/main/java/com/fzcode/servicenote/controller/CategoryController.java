@@ -5,8 +5,8 @@ import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreate
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryDeleteRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryPatchRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryUpdateRequest;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.entity.CategoriesEntity;
-import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

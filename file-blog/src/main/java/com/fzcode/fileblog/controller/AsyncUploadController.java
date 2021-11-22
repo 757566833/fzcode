@@ -64,7 +64,7 @@
 //            Part part = multiValueMap.getFirst("file");
 //            String fileName = part.headers().getContentDisposition().getFilename();
 //            if(fileName==null){
-//                return Mono.error(new CustomizeException("header中未含有filename"));
+//                return Mono.error(new CustomizeException("500","header中未含有filename"));
 //            }
 //            String preFix = FileUtil.getFilePrefix(fileName);
 //            String suffix = FileUtil.getFileSuffix(fileName);
@@ -135,7 +135,7 @@
 //            Part part = multiValueMap.getFirst("file");
 //            String fileName = part.headers().getContentDisposition().getFilename();
 //            if(fileName==null){
-//                return Mono.error(new CustomizeException("header中未含有filename"));
+//                return Mono.error(new CustomizeException("500","header中未含有filename"));
 //            }
 //            String preFix = FileUtil.getFilePrefix(fileName);
 //            String suffix = FileUtil.getFileSuffix(fileName);

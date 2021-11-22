@@ -1,7 +1,6 @@
 package com.fzcode.apiblog.controller;
 
 import com.fzcode.apiblog.config.Services;
-import com.fzcode.apiblog.exception.CustomizeException;
 import com.fzcode.apiblog.http.Http;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
@@ -10,6 +9,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.text.TextCreateRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextGetListRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.category.CategoryResponse;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.fzcode.fileblog.controller;
 
 import com.fzcode.fileblog.config.Minio;
-import com.fzcode.fileblog.exception.CustomizeException;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.FileUtils;
 import io.minio.*;
 import io.minio.messages.Tags;
@@ -88,27 +88,27 @@ public class MinIOController {
             }
             bigInt = new BigInteger(1, md.digest());
         } catch (Exception e) {
-            throw new CustomizeException("md5出错");
+            throw new CustomizeException("500","md5出错");
         }
         boolean found;
         try {
              found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(this.minio.getBucket()).build());
         } catch (Exception e) {
-            throw  new CustomizeException("无效参数");
+            throw  new CustomizeException("500","无效参数");
         }
         String filename = bigInt.toString()+"."+suffix;
         if (!found) {
             try {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(this.minio.getBucket()).build());
             }catch (Exception e){
-                throw  new CustomizeException("创建bucket异常");
+                throw  new CustomizeException("500","创建bucket异常");
             }
         }
         byte[] bytes;
         try {
             bytes = file.getBytes();
         }catch (Exception e){
-            throw  new CustomizeException("文件异常");
+            throw  new CustomizeException("500","文件异常");
         }
         try {
             minioClient.putObject(
@@ -119,7 +119,7 @@ public class MinIOController {
                             .contentType(file.getContentType())
                             .build());
         }catch (Exception e){
-            throw  new CustomizeException("存储异常");
+            throw  new CustomizeException("500","存储异常");
         }
         try {
             Map<String, String> map = new HashMap<>();
@@ -131,7 +131,7 @@ public class MinIOController {
                             .tags(map)
                             .build());
         }catch (Exception e){
-            throw  new CustomizeException("设置类型异常");
+            throw  new CustomizeException("500","设置类型异常");
         }
         return "/file/blog/io/test/"+filename;
     }
@@ -148,7 +148,7 @@ public class MinIOController {
                             .object(filename)
                             .build());
         }catch (Exception e){
-            throw  new CustomizeException("读取异常");
+            throw  new CustomizeException("500","读取异常");
         }
         MediaType mediaType= MediaType.APPLICATION_OCTET_STREAM;;
         if(!action.equals("download")){

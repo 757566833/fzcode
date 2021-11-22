@@ -6,10 +6,10 @@ import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Authorities;
 import com.fzcode.serviceauth.entity.Users;
-import com.fzcode.serviceauth.exception.CustomizeException;
 import com.fzcode.serviceauth.dao.AccountDao;
 import com.fzcode.serviceauth.dao.AuthorityDao;
 import com.fzcode.serviceauth.dao.UserDao;
@@ -51,7 +51,7 @@ public class AccountService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         Accounts userAccount = accountDao.findByAccount(email);
         if (userAccount==null||!bCryptPasswordEncoder.matches(password, userAccount.getPassword())) {
-            throw new CustomizeException("用户名密码错误");
+            throw new CustomizeException("500","用户名密码错误");
         }
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(TokenUtils.createBearer(accountDao.findByAccount(email).getAid(), email));
@@ -68,18 +68,18 @@ public class AccountService {
         accounts.setRegisterType(registerType);
         boolean b = accountDao.isHas(email);
         if (b) {
-            throw new CustomizeException("邮箱已存在");
+            throw new CustomizeException("500","邮箱已存在");
         }
         String redisCode = RedisUtils.getString(email + ":register");
         if (!redisCode.equals(code)) {
-            throw new CustomizeException("验证码错误");
+            throw new CustomizeException("500","验证码错误");
         }
         Accounts accountsResult;
         try {
             accountsResult = accountDao.create(accounts);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new CustomizeException("账号创建失败");
+            throw new CustomizeException("500","账号创建失败");
         }
         Integer aid = accountsResult.getAid();
         Users users = new Users();
@@ -90,7 +90,7 @@ public class AccountService {
             userDao.create(users);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new CustomizeException("账号信息创建失败");
+            throw new CustomizeException("500","账号信息创建失败");
         }
 
         Authorities authorities = new Authorities();
@@ -100,7 +100,7 @@ public class AccountService {
             authorityDao.create(authorities);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new CustomizeException("权限创建失败");
+            throw new CustomizeException("500","权限创建失败");
         }
         RegisterResponse registerResponse = new RegisterResponse();
         registerResponse.setToken(TokenUtils.createBearer(aid, email));
@@ -113,17 +113,17 @@ public class AccountService {
 //        UserService userService = new UserService(dataSource);
 //        boolean b = userService.userExists(email);
 //        if (!b) {
-//            throw new CustomizeException("账号不存在");
+//            throw new CustomizeException("500","账号不存在");
 //        }
 //        if (!RedisUtils.getString(email + ":" + "forget").equals(code)) {
-//            throw new CustomizeException("验证码错误");
+//            throw new CustomizeException("500","验证码错误");
 //        }
 //        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 //        try {
 //            userService.resetPassword(email, bCryptPasswordEncoder.encode(password));
 //        } catch (Exception e) {
 //            System.out.println(e.getMessage());
-//            throw new CustomizeException("修改失败");
+//            throw new CustomizeException("500","修改失败");
 //        }
 //        return email;
 //
@@ -133,7 +133,7 @@ public class AccountService {
 //        UserService userService = new UserService(dataSource);
 //        boolean b = userService.userExists(email);
 //        if (!b) {
-//            throw new CustomizeException("账号不存在");
+//            throw new CustomizeException("500","账号不存在");
 //        }
 //        UserDetails userDetails = userService.loadUserByUsername(email);
 //        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -144,7 +144,7 @@ public class AccountService {
 //            userService.changePassword(email, newPassword, newPassword);
 //        } catch (Exception e) {
 //            System.out.println(e.getMessage());
-//            throw new CustomizeException("修改失败");
+//            throw new CustomizeException("500","修改失败");
 //        }
 //        return email;
 //
@@ -158,7 +158,7 @@ public class AccountService {
         Accounts account = accountDao.findByAccount(email);
         if (account != null) {
             if (!bCryptPasswordEncoder.matches(githubUserInfo.getNode_id(), account.getPassword())) {
-                throw new CustomizeException("账号或密码错误，请找回密码");
+                throw new CustomizeException("500","账号或密码错误，请找回密码");
             } else {
                 RegisterResponse registerResponse = new RegisterResponse();
                 registerResponse.setToken(TokenUtils.createBearer(account.getAid(), email));
@@ -182,7 +182,7 @@ public class AccountService {
             try {
                 accountResult = accountDao.create(saveAccount);
             } catch (Exception e) {
-                throw new CustomizeException("账号创建失败，请重试");
+                throw new CustomizeException("500","账号创建失败，请重试");
 
             }
             Users users = new Users();
@@ -200,7 +200,7 @@ public class AccountService {
             try {
                 userDao.create(users);
             } catch (Exception e) {
-                throw new CustomizeException("账号资料创建失败，请重试");
+                throw new CustomizeException("500","账号资料创建失败，请重试");
             }
             Authorities authorities = new Authorities();
             authorities.setAccount(email);
@@ -208,7 +208,7 @@ public class AccountService {
             try {
                 authorityDao.create(authorities);
             } catch (Exception e) {
-                throw new CustomizeException("权限创建失败，请重试");
+                throw new CustomizeException("500","权限创建失败，请重试");
             }
             RegisterResponse registerResponse = new RegisterResponse();
             registerResponse.setToken(TokenUtils.createBearer(accountResult.getAid(), email));

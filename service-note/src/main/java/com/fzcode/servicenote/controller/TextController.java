@@ -4,7 +4,7 @@ import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicenote.request.text.*;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
-import com.fzcode.servicenote.exception.CustomizeException;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.service.TextService;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import io.swagger.annotations.Api;
@@ -41,7 +41,7 @@ public class TextController {
     @ResponseStatus(HttpStatus.CREATED)
     public Map create(@RequestBody @Validated TextCreateRequest textCreateRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         if (aid == null) {
-            throw new CustomizeException("用户未登录");
+            throw new CustomizeException("500","用户未登录");
         }
         String tid = textService.create(textCreateRequest,Integer.valueOf(aid));
         Map map = new HashMap();

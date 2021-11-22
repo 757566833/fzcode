@@ -1,15 +1,13 @@
 package com.fzcode.cloudmail.service.impl;
 
 import com.fzcode.cloudmail.util.RedisUtil;
-import com.fzcode.cloudmail.exception.CustomizeException;
 import com.fzcode.cloudmail.service.EmailService;
 import com.fzcode.cloudmail.util.CharUtil;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.MonoSink;
 
 import javax.mail.internet.MimeMessage;
 
@@ -26,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
         try {
             RedisUtil.setString(email + ":" + type, checkCode, 600);
         }catch (Exception e){
-            throw new CustomizeException("redis不可用");
+            throw new CustomizeException("500","redis不可用");
         }
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -49,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(message);
         } catch (Exception e) {
             System.out.println("邮件发送失败:" + e.getMessage());
-            throw new CustomizeException("邮件发送失败");
+            throw new CustomizeException("500","邮件发送失败");
         }
         return "success";
     }

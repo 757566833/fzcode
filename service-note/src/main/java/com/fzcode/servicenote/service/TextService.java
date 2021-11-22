@@ -5,12 +5,12 @@ import com.fzcode.internalcommon.dto.servicenote.request.text.TextCreateRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextPatchRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextUpdateRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.CidTidEntity;
 import com.fzcode.servicenote.entity.TextsEntity;
-import com.fzcode.servicenote.exception.CustomizeException;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
 import com.fzcode.servicenote.dao.DB.TextDBDao;
@@ -58,7 +58,7 @@ public class TextService {
             saveResult = textDBDao.save(textsEntity);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new CustomizeException("正文db存储失败");
+            throw new CustomizeException("500","正文db存储失败");
         }
         List<CidTidEntity> cidTidEntityList = new ArrayList<CidTidEntity>();
         List<Integer> stringList = textCreateRequest.getCategories();
@@ -72,7 +72,7 @@ public class TextService {
         try {
              cidTidDao.saveAll(cidTidEntityList);
         }catch (Exception e) {
-            throw new CustomizeException("分类db存储失败");
+            throw new CustomizeException("500","分类db存储失败");
         }
         Integer tid = saveResult.getTid();
         TextESCreateDTO textESCreateDTO = new TextESCreateDTO(
