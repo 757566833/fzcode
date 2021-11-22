@@ -66,11 +66,9 @@ public class Http {
         try {
             p = restTemplate.postForEntity(url,request, responseType);
         }catch (RestTemplateCustomException e){
-           System.out.println(e.getMessage());
-            System.out.println(e.getBody());
+            System.out.println("RestTemplateCustomException:"+e.getBody());
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-
-            throw new CustomizeException("500","错了");
+            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
         }
         return p.getBody();
     }
