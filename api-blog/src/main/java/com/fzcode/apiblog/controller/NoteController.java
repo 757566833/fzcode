@@ -37,7 +37,6 @@ public class NoteController {
     @GetMapping(value = "/category/list")
     public SuccessResponse getCategoryList() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getForEntity("/category/list",String.class);
         List<CategoryResponse> listResponseDTO =  restTemplate.getForObject(services.getService().getNote().getHost()+"/category/list", List.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
@@ -60,7 +59,7 @@ public class NoteController {
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/text/list")
     public SuccessResponse getTextList(TextGetListRequest textGetListRequest) {
-        ListResponseDTO<TextResponse> listResponseDTO  =  restTemplate.getForObject(services.getService().getNote().getHost()+"/text/create", ListResponseDTO.class,textGetListRequest);
+        ListResponseDTO<TextResponse> listResponseDTO  =  restTemplate.getForObject(services.getService().getNote().getHost()+"/text/list", ListResponseDTO.class,textGetListRequest);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
     @ApiOperation(value = "获取指定文章")
