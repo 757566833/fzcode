@@ -61,6 +61,7 @@ public class Http {
         try {
             p =   restTemplate.getForObject(url, responseType);
         }catch (RestTemplateCustomException e){
+            System.out.println("body"+e.getBody());
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
             throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
         }
