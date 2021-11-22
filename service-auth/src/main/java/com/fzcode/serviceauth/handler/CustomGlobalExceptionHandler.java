@@ -1,7 +1,7 @@
 package com.fzcode.serviceauth.handler;
 
 import com.fzcode.internalcommon.dto.http.ErrorResponse;
-import com.fzcode.serviceauth.exception.CustomizeException;
+import com.fzcode.internalcommon.exception.CustomizeException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
