@@ -1,6 +1,7 @@
 package com.fzcode.apiblog;
 
 import com.fzcode.internalcommon.handler.CustomResponseErrorHandler;
+import com.fzcode.internalcommon.http.Http;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,9 @@ public class ApiBlogApplication {
     }
 
     @Bean
-    public RestTemplate restTemplate(){
+    public Http http(){
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(new CustomResponseErrorHandler());
-        return restTemplate;
+        return  new Http(restTemplate);
     }
 }

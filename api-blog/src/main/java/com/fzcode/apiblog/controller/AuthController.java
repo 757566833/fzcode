@@ -8,14 +8,12 @@ import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.http.Http;
 import com.fzcode.internalcommon.utils.ObjectUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
@@ -32,11 +30,11 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
-    RestTemplate restTemplate;
+    Http http;
     Services services;
     @Autowired
-    public void setRestTemplate(RestTemplate restTemplate){
-        this.restTemplate = restTemplate;
+    public void setHttp(Http http){
+        this.http = http;
     }
     @Autowired
     public void setServices(Services services){
@@ -70,23 +68,23 @@ public class AuthController {
 
     @ApiOperation(value = "账号密码登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest){
-        return  restTemplate.postForObject(services.getService().getAuth().getHost()+"/login",loginRequest,LoginResponse.class);
+    public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest) throws CustomizeException {
+        return  http.post(services.getService().getAuth().getHost()+"/login",loginRequest,LoginResponse.class);
     }
 
     @ApiOperation(value = "账号密码注册")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String register (@RequestBody @Validated RegisterRequest registerRequest){
-        return  restTemplate.postForObject(services.getService().getAuth().getHost()+"/register",registerRequest,String.class);
+    public String register (@RequestBody @Validated RegisterRequest registerRequest) throws CustomizeException {
+        return  http.post(services.getService().getAuth().getHost()+"/register",registerRequest,String.class);
     }
 
     @ApiOperation(value = "github方式登陆")
     @GetMapping(value = "/login/github")
-    public String githubLogin (@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId){
+    public String githubLogin (@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId) throws CustomizeException {
         Map map = new HashMap();
         map.put("code",code);
         map.put("socketId",socketId);
-        return  restTemplate.postForObject(services.getService().getAuth().getHost()+"/login/github",map,String.class);
+        return  http.post(services.getService().getAuth().getHost()+"/login/github",map,String.class);
     }
 
 //      .header("email", finalEmail)
@@ -95,26 +93,23 @@ public class AuthController {
 
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping(value = "/self")
-    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority){
-        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.put("email", Collections.singletonList(aid));
-        headers.put("aid", Collections.singletonList(aid));
-        headers.put("authority", Collections.singletonList(authority));
-        HttpEntity<String> request =  new HttpEntity<String>(null, headers);
-        ResponseEntity<Map> resEntity =  restTemplate.exchange(services.getService().getAuth().getHost()+"/self", HttpMethod.GET, request, Map.class);
-        return  new SuccessResponse("查询成功",resEntity.toString());
+    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority) throws CustomizeException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("email",email);
+        headers.add("aid",aid);
+        headers.add("authority",authority);
+        Map map =  http.get(services.getService().getAuth().getHost()+"/self", headers, Map.class);
+        return  new SuccessResponse("查询成功",map);
     }
 
     @ApiOperation(value = "管理员获取所有用户列表")
     @GetMapping(value = "/admin/account")
     public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
-        System.out.println("email:"+email+",aid:"+aid);
         MultiValueMap<String, String> params = ObjectUtils.object2MultiValueMap(accountListRequest);
-        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.put("email", Collections.singletonList(aid));
-        headers.put("aid", Collections.singletonList(aid));
-        HttpEntity<String> request =  new HttpEntity<String>(null, headers);
-        ResponseEntity<ListResponseDTO> resEntity =  restTemplate.exchange(services.getService().getAuth().getHost()+"/admin/account", HttpMethod.GET, request, ListResponseDTO.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("email",email);
+        headers.add("aid",aid);
+        ListResponseDTO resEntity =  http.get(services.getService().getAuth().getHost()+"/admin/account", accountListRequest,headers, ListResponseDTO.class);
         return  new SuccessResponse("查询成功",resEntity);
     }
 }

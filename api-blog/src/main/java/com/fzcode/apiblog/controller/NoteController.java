@@ -1,7 +1,6 @@
 package com.fzcode.apiblog.controller;
 
 import com.fzcode.apiblog.config.Services;
-import com.fzcode.apiblog.http.Http;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreateRequest;
@@ -10,6 +9,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.text.TextGetListRequest
 import com.fzcode.internalcommon.dto.servicenote.response.category.CategoryResponse;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.http.Http;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +43,13 @@ public class NoteController {
 
     @ApiOperation(value = "添加文章分类")
     @PostMapping(value = "/category/add")
-    public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest,@RequestHeader("aid") String aid) {
+    public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest,@RequestHeader("aid") String aid) throws CustomizeException {
         Integer id =  http.post(services.getService().getNote().getHost()+"/category/add",cateGoryCreateRequest, Integer.class);
         return new SuccessResponse("创建成功", id);
     }
     @ApiOperation(value = "添加文章")
     @PostMapping(value = "/text/create")
-    public SuccessResponse createText(@RequestBody @Validated TextCreateRequest textCreateRequest,@RequestHeader("aid") String aid) {
+    public SuccessResponse createText(@RequestBody @Validated TextCreateRequest textCreateRequest,@RequestHeader("aid") String aid) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
         HttpEntity<TextCreateRequest> requestParam = new HttpEntity<TextCreateRequest>(textCreateRequest, headers);
@@ -58,19 +58,19 @@ public class NoteController {
     }
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/text/list")
-    public SuccessResponse getTextList(TextGetListRequest textGetListRequest) {
+    public SuccessResponse getTextList(TextGetListRequest textGetListRequest) throws CustomizeException {
         ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/list", textGetListRequest,ListResponseDTO.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
     @ApiOperation(value = "获取指定文章")
     @GetMapping(value = "/text/{id}")
-    public SuccessResponse getTextList(@PathVariable(name = "id") String id) {
+    public SuccessResponse getTextList(@PathVariable(name = "id") String id) throws CustomizeException {
         Map map  =   http.get(services.getService().getNote().getHost()+"/text/get/"+id, Map.class);
         return new SuccessResponse("查询成功", map);
     }
     @ApiOperation(value = "创建文章分类")
     @PostMapping(value = "/category/create")
-    public SuccessResponse createCategory(@RequestBody @Validated CategoryCreateRequest categoryCreateRequest, @RequestHeader("aid") String aid,@RequestHeader("authority") String authority) {
+    public SuccessResponse createCategory(@RequestBody @Validated CategoryCreateRequest categoryCreateRequest, @RequestHeader("aid") String aid,@RequestHeader("authority") String authority) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
         headers.add("authority",authority);
