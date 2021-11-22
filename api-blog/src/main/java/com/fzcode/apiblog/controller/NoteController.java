@@ -37,7 +37,7 @@ public class NoteController {
     @ApiOperation(value = "获取文章分类列表")
     @GetMapping(value = "/category/list")
     public SuccessResponse getCategoryList() throws CustomizeException {
-        List<CategoryResponse> listResponseDTO =  http.post(services.getService().getNote().getHost()+"/category/list", List.class);
+        List<CategoryResponse> listResponseDTO =  http.get(services.getService().getNote().getHost()+"/category/list", List.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
 
