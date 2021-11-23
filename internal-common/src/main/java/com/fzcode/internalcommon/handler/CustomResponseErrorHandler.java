@@ -32,8 +32,6 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
             errorHandler.handleError(response);
 
         } catch (RestClientException scx) {
-            System.out.println("RestClientException:"+ scx.getMessage());
-            System.out.println("body:"+ body);
             throw new RestTemplateCustomException(scx.getMessage(), scx, body);
         }
     }
