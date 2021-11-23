@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class TextsEntity {
+public class Texts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int tid;

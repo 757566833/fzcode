@@ -6,7 +6,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryDelete
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryPatchRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryUpdateRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
-import com.fzcode.servicenote.entity.CategoriesEntity;
+import com.fzcode.servicenote.entity.Categories;
 import com.fzcode.servicenote.dao.DB.CategoryDBDao;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,16 @@ public class CategoryService {
     }
 
     public Integer create(CategoryCreateRequest cateGoryReqCreateDTO, Integer aid,String authority) throws CustomizeException {
-        if(authority!= AuthorityConstant.admin){
+        if(!authority.equals(AuthorityConstant.admin)){
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限不足");
         }
-        CategoriesEntity categoriesEntity = new CategoriesEntity();
-        BeanUtils.copyProperties(cateGoryReqCreateDTO, categoriesEntity);
-        categoriesEntity.setCreateBy(aid);
-        CategoriesEntity saveResult;
+        Categories categories = new Categories();
+        BeanUtils.copyProperties(cateGoryReqCreateDTO, categories);
+        categories.setCreateBy(aid);
+        Categories saveResult;
         System.out.println("create");
         try {
-            saveResult = categoryDBDao.save(categoriesEntity);
+            saveResult = categoryDBDao.save(categories);
         } catch (Exception e) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"创建失败");
         }
@@ -42,18 +42,18 @@ public class CategoryService {
         return saveResult.getCid();
     }
 
-    public List<CategoriesEntity> findAll() {
+    public List<Categories> findAll() {
         return categoryDBDao.findAll();
     }
 
     public Integer update(CategoryUpdateRequest categoryUpdateRequest, Integer updateBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryUpdateRequest.getCid());
         if (isHas) {
-            CategoriesEntity categoriesEntity = new CategoriesEntity();
-            BeanUtils.copyProperties(categoryUpdateRequest, categoriesEntity);
-            categoriesEntity.setUpdateBy(updateBy);
-            CategoriesEntity categoriesEntityResult = categoryDBDao.update(categoriesEntity);
-            return categoriesEntityResult.getCid();
+            Categories categories = new Categories();
+            BeanUtils.copyProperties(categoryUpdateRequest, categories);
+            categories.setUpdateBy(updateBy);
+            Categories categoriesResult = categoryDBDao.update(categories);
+            return categoriesResult.getCid();
         } else {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
@@ -63,11 +63,11 @@ public class CategoryService {
     public Integer patch(CategoryPatchRequest categoryPatchRequest, Integer updateBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryPatchRequest.getCid());
         if (isHas) {
-            CategoriesEntity categoriesEntity = new CategoriesEntity();
-            BeanUtils.copyProperties(categoryPatchRequest, categoriesEntity);
-            categoriesEntity.setUpdateBy(updateBy);
-            CategoriesEntity categoriesEntityResult = categoryDBDao.patch(categoriesEntity);
-            return categoriesEntityResult.getCid();
+            Categories categories = new Categories();
+            BeanUtils.copyProperties(categoryPatchRequest, categories);
+            categories.setUpdateBy(updateBy);
+            Categories categoriesResult = categoryDBDao.patch(categories);
+            return categoriesResult.getCid();
         } else {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
@@ -76,7 +76,7 @@ public class CategoryService {
     public Integer delete(CategoryDeleteRequest categoryDeleteRequest, Integer deleteBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryDeleteRequest.getCid());
         if (isHas) {
-            CategoriesEntity categoryResult = categoryDBDao.delete(categoryDeleteRequest.getCid(),deleteBy);
+            Categories categoryResult = categoryDBDao.delete(categoryDeleteRequest.getCid(),deleteBy);
             return categoryResult.getCid();
         } else {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
@@ -84,7 +84,7 @@ public class CategoryService {
 
     }
 
-    public CategoriesEntity findById(Integer cid) throws CustomizeException {
+    public Categories findById(Integer cid) throws CustomizeException {
         try {
             return categoryDBDao.findById(cid);
         } catch (Exception e) {

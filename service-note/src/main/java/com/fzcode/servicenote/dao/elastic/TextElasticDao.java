@@ -4,17 +4,15 @@ import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
-import com.fzcode.servicenote.entity.NoteEntity;
+import com.fzcode.servicenote.entity.Note;
 import com.fzcode.servicenote.repositroy.NoteRepository;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class TextElasticDao {
@@ -27,15 +25,15 @@ public class TextElasticDao {
 
     public String create(TextESCreateDTO textESCreateDTO) throws CustomizeException {
 
-        NoteEntity noteEntity = new NoteEntity();
-        BeanUtils.copyProperties(textESCreateDTO, noteEntity);
-        NoteEntity s =  noteRepository.save(noteEntity);
+        Note note = new Note();
+        BeanUtils.copyProperties(textESCreateDTO, note);
+        Note s =  noteRepository.save(note);
         return s.getId();
     }
 
     public String delete(String id) throws CustomizeException {
-        NoteEntity noteEntity = new NoteEntity();
-        noteEntity.setId(id);
+        Note note = new Note();
+        note.setId(id);
 //        noteRepository.(noteEntity);
 //        return  "success";
 //        try {
@@ -113,7 +111,7 @@ public class TextElasticDao {
         return textESPatchDTO.getId();
     }
     public String getById(String id) throws CustomizeException {
-        Optional<NoteEntity> a =   noteRepository.findById(id);
+        Optional<Note> a =   noteRepository.findById(id);
         return  a.get().getText();
     }
 

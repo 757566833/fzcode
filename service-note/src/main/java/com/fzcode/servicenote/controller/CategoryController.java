@@ -6,7 +6,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryDelete
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryPatchRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryUpdateRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
-import com.fzcode.servicenote.entity.CategoriesEntity;
+import com.fzcode.servicenote.entity.Categories;
 import com.fzcode.servicenote.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,21 +67,23 @@ public class CategoryController {
     }
     @ApiOperation(value = "获取分类列表")
     @GetMapping(value = "/list")
-    public List<CategoriesEntity> getList() {
+    public List<Categories> getList() {
         return categoryService.findAll();
     }
 
     @ApiOperation(value = "获取分类")
     @GetMapping(value = "/id/{id}")
     public SuccessResponse getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
-        CategoriesEntity categoriesEntity = categoryService.findById(id);
-        return new SuccessResponse("查询成功", categoriesEntity);
+        Categories categories = categoryService.findById(id);
+        return new SuccessResponse("查询成功", categories);
     }
 
     @ApiOperation(value = "添加分类")
-    @PostMapping(value = "/add")
-    public Integer add(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") Integer aid, @RequestHeader("authority") String authority) throws CustomizeException {
-        System.out.println("add");
+    @PostMapping(value = "/create")
+    public Integer create(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") Integer aid, @RequestHeader("authority") String authority) throws CustomizeException {
+        System.out.println("create");
+        System.out.println(aid);
+        System.out.println(authority);
         return categoryService.create(cateGoryCreateRequest, aid,authority);
     }
 

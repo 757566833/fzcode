@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "tbl_cid_tid")
-public class CidTidEntity {
+public class CidTid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

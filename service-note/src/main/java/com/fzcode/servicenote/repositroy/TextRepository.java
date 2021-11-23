@@ -3,13 +3,13 @@ package com.fzcode.servicenote.repositroy;
 import com.fzcode.servicenote.repositroy.mapper.TextDBFindListMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBFindListCountMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
-import com.fzcode.servicenote.entity.TextsEntity;
+import com.fzcode.servicenote.entity.Texts;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface TextRepository extends JpaRepository<TextsEntity, Integer> {
+public interface TextRepository extends JpaRepository<Texts, Integer> {
 //    List<Texts> findByIsDelete(Integer bool);
     @Query(nativeQuery = true, value = "SELECT " +
             "texts.create_by, " +

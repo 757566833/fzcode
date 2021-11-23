@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteEntity {
+public class Note {
 
     @Id
     private String id;

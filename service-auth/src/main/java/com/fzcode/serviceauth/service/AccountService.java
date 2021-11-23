@@ -1,11 +1,13 @@
 package com.fzcode.serviceauth.service;
 
+import com.fzcode.internalcommon.constant.RegisterTypeEnum;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Authorities;
 import com.fzcode.serviceauth.entity.Users;
@@ -151,14 +153,14 @@ public class AccountService {
 //    }
     @Transactional(rollbackFor = Exception.class)
     public RegisterResponse githubRegister(GithubUserInfo githubUserInfo) throws CustomizeException {
+        System.out.println(JSONUtils.stringify(githubUserInfo));
         String email = githubUserInfo.getEmail();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String password = bCryptPasswordEncoder.encode(githubUserInfo.getNode_id());
-        System.out.println("password:" + password);
+        String password = bCryptPasswordEncoder.encode(githubUserInfo.getId().toString());
         Accounts account = accountDao.findByAccount(email);
         if (account != null) {
-            if (!bCryptPasswordEncoder.matches(githubUserInfo.getNode_id(), account.getPassword())) {
-                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"账号或密码错误，请找回密码");
+            if (!bCryptPasswordEncoder.matches(githubUserInfo.getId().toString(), account.getPassword())) {
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"你这号id怎么变了");
             } else {
                 RegisterResponse registerResponse = new RegisterResponse();
                 registerResponse.setToken(TokenUtils.createBearer(account.getAid(), email));
@@ -168,17 +170,9 @@ public class AccountService {
         } else {
             Accounts saveAccount = new Accounts();
             saveAccount.setAccount(email);
-            saveAccount.setRegisterType(1);
+            saveAccount.setRegisterType(RegisterTypeEnum.GITHUB_REGISTER.getCode());
             saveAccount.setPassword(password);
-            Accounts accountResult = null;
-//            UserDetails newUserDetails = MyUser
-//                    .withMyUsername(email)
-//                    .password(new BCryptPasswordEncoder().encode(password))
-//                    .accountExpired(true)
-//                    .accountLocked(true)
-//                    .registerType(registerType)
-//                    .roles("USER")
-//                    .build();
+            Accounts accountResult ;
             try {
                 accountResult = accountDao.create(saveAccount);
             } catch (Exception e) {

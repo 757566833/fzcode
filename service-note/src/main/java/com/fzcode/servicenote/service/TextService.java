@@ -9,8 +9,8 @@ import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
-import com.fzcode.servicenote.entity.CidTidEntity;
-import com.fzcode.servicenote.entity.TextsEntity;
+import com.fzcode.servicenote.entity.CidTid;
+import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
 import com.fzcode.servicenote.dao.DB.TextDBDao;
@@ -51,29 +51,29 @@ public class TextService {
 
     @Transactional(rollbackFor = Exception.class)
     public String create(TextCreateRequest textCreateRequest, Integer create_by) throws CustomizeException {
-        TextsEntity textsEntity = new TextsEntity();
-        BeanUtils.copyProperties(textCreateRequest, textsEntity);
-        textsEntity.setCreateBy(create_by);
+        Texts texts = new Texts();
+        BeanUtils.copyProperties(textCreateRequest, texts);
+        texts.setCreateBy(create_by);
 
         // 存正文
-        TextsEntity saveResult;
+        Texts saveResult;
         try {
-            saveResult = textDBDao.save(textsEntity);
+            saveResult = textDBDao.save(texts);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"正文db存储失败");
         }
-        List<CidTidEntity> cidTidEntityList = new ArrayList<CidTidEntity>();
+        List<CidTid> cidTidList = new ArrayList<CidTid>();
         List<Integer> stringList = textCreateRequest.getCategories();
         for (Integer cid:stringList) {
-            CidTidEntity cidTidEntity = new CidTidEntity();
-            cidTidEntity.setCid(cid);
-            cidTidEntity.setTid(saveResult.getTid());
-            cidTidEntityList.add(cidTidEntity);
+            CidTid cidTid = new CidTid();
+            cidTid.setCid(cid);
+            cidTid.setTid(saveResult.getTid());
+            cidTidList.add(cidTid);
         }
         // 存分类
         try {
-             cidTidDao.saveAll(cidTidEntityList);
+             cidTidDao.saveAll(cidTidList);
         }catch (Exception e) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"分类db存储失败");
         }
@@ -96,12 +96,12 @@ public class TextService {
     @Transactional(rollbackFor = Exception.class)
     public String update(Integer id, TextUpdateRequest textUpdateRequest) throws CustomizeException {
         if (textUpdateRequest.getDescription() != null) {
-            TextsEntity textsEntity = new TextsEntity();
-            textsEntity.setTid(id);
-            textsEntity.setTitle(textUpdateRequest.getTitle());
-            textsEntity.setDescription(textUpdateRequest.getDescription());
+            Texts texts = new Texts();
+            texts.setTid(id);
+            texts.setTitle(textUpdateRequest.getTitle());
+            texts.setDescription(textUpdateRequest.getDescription());
 //            texts.setText(textReqUpdateDTO.getText());
-            textDBDao.update(textsEntity);
+            textDBDao.update(texts);
         }
         TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textUpdateRequest.getTitle());
 //        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
@@ -114,15 +114,15 @@ public class TextService {
     @Transactional(rollbackFor = Exception.class)
     public String patch(Integer nid, TextPatchRequest textPatchRequest) throws CustomizeException {
         if (textPatchRequest.getDescription() != null || textPatchRequest.getTitle() != null) {
-            TextsEntity textsEntity = new TextsEntity();
-            textsEntity.setTid(nid);
+            Texts texts = new Texts();
+            texts.setTid(nid);
             if (textPatchRequest.getTitle() != null) {
-                textsEntity.setTitle(textPatchRequest.getTitle());
+                texts.setTitle(textPatchRequest.getTitle());
             }
             if (textPatchRequest.getDescription() != null) {
-                textsEntity.setDescription(textPatchRequest.getDescription());
+                texts.setDescription(textPatchRequest.getDescription());
             }
-            textDBDao.patch(textsEntity);
+            textDBDao.patch(texts);
         }
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
 //        textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());

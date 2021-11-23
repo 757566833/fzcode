@@ -1,9 +1,7 @@
 package com.fzcode.internalcommon.dto.http;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class ErrorResponse {
     private Integer status ;

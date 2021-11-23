@@ -47,13 +47,6 @@ public class NoteController {
         List<CategoryResponse> listResponseDTO =  http.get(services.getService().getNote().getHost()+"/category/list", List.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
-
-    @ApiOperation(value = "添加文章分类")
-    @PostMapping(value = "/category/add")
-    public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") String aid) throws CustomizeException {
-        Integer id =  http.post(services.getService().getNote().getHost()+"/category/add",cateGoryCreateRequest, Integer.class);
-        return new SuccessResponse("创建成功", id);
-    }
     @ApiOperation(value = "添加文章")
     @PostMapping(value = "/text/create")
     public SuccessResponse createText(@RequestBody @Validated TextCreateRequest textCreateRequest,@RequestHeader("aid") String aid) throws CustomizeException {
