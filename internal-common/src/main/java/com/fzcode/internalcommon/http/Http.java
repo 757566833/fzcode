@@ -34,6 +34,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -55,6 +56,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -77,6 +79,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -99,6 +102,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -123,6 +127,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -143,6 +148,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -165,6 +171,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
@@ -186,6 +193,7 @@ public class Http {
             if(errorResponse!=null){
                 throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
             }else{
+                System.out.println("url:"+url);
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
             }
         } catch (RestClientResponseException e){
