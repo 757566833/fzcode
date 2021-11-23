@@ -2,10 +2,13 @@ package com.fzcode.servicenote.utils;
 
 import org.springframework.beans.BeanUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 
 public class ListUtils {
-    public static <T> List<T>  copyList(Object obj, List<T> list2, Class<T> classObj) {
+    public static <T> List<T> copyList(Object obj, List<T> list2, Class<T> classObj) {
         if ((!Objects.isNull(obj)) && (!Objects.isNull(list2))) {
             List list1 = (List) obj;
             list1.forEach(item -> {

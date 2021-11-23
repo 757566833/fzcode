@@ -10,6 +10,7 @@ import com.fzcode.servicenote.entity.CategoriesEntity;
 import com.fzcode.servicenote.dao.DB.CategoryDBDao;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class CategoryService {
 
     public Integer create(CategoryCreateRequest cateGoryReqCreateDTO, Integer aid,String authority) throws CustomizeException {
         if(authority!= AuthorityConstant.admin){
-            throw new CustomizeException("500","权限不足");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限不足");
         }
         CategoriesEntity categoriesEntity = new CategoriesEntity();
         BeanUtils.copyProperties(cateGoryReqCreateDTO, categoriesEntity);
@@ -35,7 +36,7 @@ public class CategoryService {
         try {
             saveResult = categoryDBDao.save(categoriesEntity);
         } catch (Exception e) {
-            throw new CustomizeException("500","创建失败");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"创建失败");
         }
 
         return saveResult.getCid();
@@ -54,7 +55,7 @@ public class CategoryService {
             CategoriesEntity categoriesEntityResult = categoryDBDao.update(categoriesEntity);
             return categoriesEntityResult.getCid();
         } else {
-            throw new CustomizeException("500","不存在");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
 
     }
@@ -68,7 +69,7 @@ public class CategoryService {
             CategoriesEntity categoriesEntityResult = categoryDBDao.patch(categoriesEntity);
             return categoriesEntityResult.getCid();
         } else {
-            throw new CustomizeException("500","不存在");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
     }
 
@@ -78,7 +79,7 @@ public class CategoryService {
             CategoriesEntity categoryResult = categoryDBDao.delete(categoryDeleteRequest.getCid(),deleteBy);
             return categoryResult.getCid();
         } else {
-            throw new CustomizeException("500","不存在");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
 
     }
@@ -87,7 +88,7 @@ public class CategoryService {
         try {
             return categoryDBDao.findById(cid);
         } catch (Exception e) {
-            throw new CustomizeException("500","不存在");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
 
     }

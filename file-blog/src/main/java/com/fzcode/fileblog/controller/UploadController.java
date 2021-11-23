@@ -9,11 +9,17 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.Date;
 
@@ -30,7 +36,7 @@ public class UploadController {
         try {
              inputStream =  file.getInputStream();
         }catch (IOException ioException){
-            throw new CustomizeException("500","IO错误");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"IO错误");
         }
 
         Response response = null;

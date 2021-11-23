@@ -8,7 +8,11 @@ import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.repositroy.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
@@ -105,7 +109,7 @@ public class AccountDao {
     public Map<String, Object> findUserInfoByUid(Integer aid) throws CustomizeException {
         List<Map<String, Object>> mapList = accountRepository.findUserInfoByUid(aid);
         if (mapList.size() == 0) {
-            throw new CustomizeException("500","用户不存在");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"用户不存在");
         }
         return mapList.get(0);
 

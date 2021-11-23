@@ -3,7 +3,13 @@ package com.fzcode.fileblog.controller;
 import com.fzcode.fileblog.config.Minio;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.FileUtils;
-import io.minio.*;
+import io.minio.BucketExistsArgs;
+import io.minio.GetObjectArgs;
+import io.minio.GetObjectTagsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.SetObjectTagsArgs;
 import io.minio.messages.Tags;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,13 +19,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.Inet4Address;
@@ -88,27 +97,27 @@ public class MinIOController {
             }
             bigInt = new BigInteger(1, md.digest());
         } catch (Exception e) {
-            throw new CustomizeException("500","md5出错");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"md5出错");
         }
         boolean found;
         try {
              found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(this.minio.getBucket()).build());
         } catch (Exception e) {
-            throw  new CustomizeException("500","无效参数");
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"无效参数");
         }
         String filename = bigInt.toString()+"."+suffix;
         if (!found) {
             try {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(this.minio.getBucket()).build());
             }catch (Exception e){
-                throw  new CustomizeException("500","创建bucket异常");
+                throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"创建bucket异常");
             }
         }
         byte[] bytes;
         try {
             bytes = file.getBytes();
         }catch (Exception e){
-            throw  new CustomizeException("500","文件异常");
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"文件异常");
         }
         try {
             minioClient.putObject(
@@ -119,7 +128,7 @@ public class MinIOController {
                             .contentType(file.getContentType())
                             .build());
         }catch (Exception e){
-            throw  new CustomizeException("500","存储异常");
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"存储异常");
         }
         try {
             Map<String, String> map = new HashMap<>();
@@ -131,14 +140,14 @@ public class MinIOController {
                             .tags(map)
                             .build());
         }catch (Exception e){
-            throw  new CustomizeException("500","设置类型异常");
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"设置类型异常");
         }
         return "/file/blog/io/test/"+filename;
     }
 
     @ApiOperation(value = "获取接口")
     @GetMapping(value = "/test/{filename}")
-    public ResponseEntity preview(@PathVariable String filename,@RequestParam(name = "action", defaultValue = "preview") String action) throws CustomizeException {
+    public ResponseEntity preview(@PathVariable String filename, @RequestParam(name = "action", defaultValue = "preview") String action) throws CustomizeException {
         InputStream stream;
         System.out.println(action);
         try {
@@ -148,7 +157,7 @@ public class MinIOController {
                             .object(filename)
                             .build());
         }catch (Exception e){
-            throw  new CustomizeException("500","读取异常");
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"读取异常");
         }
         MediaType mediaType= MediaType.APPLICATION_OCTET_STREAM;;
         if(!action.equals("download")){

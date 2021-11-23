@@ -13,9 +13,16 @@ import com.fzcode.internalcommon.http.Http;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +50,7 @@ public class NoteController {
 
     @ApiOperation(value = "添加文章分类")
     @PostMapping(value = "/category/add")
-    public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest,@RequestHeader("aid") String aid) throws CustomizeException {
+    public SuccessResponse addCategory(@RequestBody @Validated CategoryCreateRequest cateGoryCreateRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         Integer id =  http.post(services.getService().getNote().getHost()+"/category/add",cateGoryCreateRequest, Integer.class);
         return new SuccessResponse("创建成功", id);
     }

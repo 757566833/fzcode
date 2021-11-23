@@ -13,9 +13,13 @@ import com.fzcode.servicenote.repositroy.TextRepository;
 import com.fzcode.servicenote.utils.ListUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TextDBDao {
@@ -90,7 +94,7 @@ public class TextDBDao {
     public TextDBGetByIdMapper findByIdWithUserInfo(Integer id) throws CustomizeException {
         List<TextDBGetByIdMapper> noteDBList = textRepository.findByIdWithUserInfo(id);
         if (noteDBList.size() == 0) {
-            throw new CustomizeException("500","不存在");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
         }
 //        System.out.println(JSON.toJSONString(noteDBList.get(0)));
         System.out.println(JSONUtils.stringify(noteDBList.get(0)));

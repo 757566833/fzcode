@@ -1,7 +1,8 @@
 package com.fzcode.serviceauth.util;
 
 import com.fzcode.serviceauth.config.Secret;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;

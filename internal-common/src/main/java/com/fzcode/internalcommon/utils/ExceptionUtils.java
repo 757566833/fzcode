@@ -16,23 +16,11 @@ public class ExceptionUtils {
         for (ObjectError o : objectErrors) {
             errMessage += o.getDefaultMessage()+";";
         }
-        return new ErrorResponse("400", errMessage);
+        return new ErrorResponse(400, errMessage);
     }
     public static ResponseEntity getCustomizeExceptionErrorMsg(CustomizeException customizeException){
-        String statusStr = customizeException.getStatus();
-        Integer statusNum;
-        try {
-            statusNum = Integer.valueOf(statusStr);
-        }catch (NumberFormatException e){
-            statusNum=500;
-        }
-        HttpStatus status;
-        try {
-            status = HttpStatus.valueOf(statusNum);
-        }catch (IllegalArgumentException e){
-            status=HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        ErrorResponse errorResponse = new ErrorResponse(statusStr, customizeException.getMessage());
+        HttpStatus status = customizeException.getStatus();
+        ErrorResponse errorResponse = new ErrorResponse(status.value(), customizeException.getMessage());
         return new ResponseEntity(errorResponse, status);
     }
 

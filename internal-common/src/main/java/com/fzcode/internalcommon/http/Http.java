@@ -8,8 +8,12 @@ import com.fzcode.internalcommon.utils.ObjectUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.UnknownContentTypeException;
 
 import java.net.URI;
 import java.util.Map;
@@ -27,7 +31,17 @@ public class Http {
             p  =  restTemplate.exchange(uri, HttpMethod.GET, request, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return p.getBody();
     }
@@ -38,7 +52,17 @@ public class Http {
             p  =  restTemplate.getForObject(uri, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return  p;
     }
@@ -50,7 +74,17 @@ public class Http {
             p  =  restTemplate.exchange(url, HttpMethod.GET, request, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return p.getBody();
     }
@@ -61,22 +95,42 @@ public class Http {
         try {
             p =   restTemplate.getForObject(url, responseType);
         }catch (RestTemplateCustomException e){
-            System.out.println("body"+e.getBody());
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return  p;
     }
 
 
     public <P> P  post (String url, Object params, HttpHeaders httpHeaders, Class<P> responseType) throws CustomizeException {
+        System.out.println("post1");
         HttpEntity<Map<String,String>> request =  new HttpEntity(params, httpHeaders);
         P p;
         try {
             p =   restTemplate.postForObject(url, request, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return  p;
     }
@@ -86,7 +140,17 @@ public class Http {
             p =  restTemplate.postForObject(url, params, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return  p;
     }
@@ -98,7 +162,17 @@ public class Http {
             p = restTemplate.postForObject(url,request, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return p;
     }
@@ -106,10 +180,20 @@ public class Http {
         HttpEntity<String> request =  new HttpEntity<>(null, null);
         P p;
         try {
-            p = restTemplate.postForObject(url,request, responseType);
+           p = restTemplate.postForObject(url,request, responseType);
         }catch (RestTemplateCustomException e){
             ErrorResponse errorResponse = JSONUtils.parse(e.getBody(),ErrorResponse.class);
-            throw new CustomizeException(errorResponse.getStatus(),errorResponse.getError());
+            if(errorResponse!=null){
+                throw new CustomizeException(HttpStatus.valueOf(errorResponse.getStatus()),errorResponse.getError());
+            }else{
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"未获取java的错误信息，可能跑ng上了");
+            }
+        } catch (RestClientResponseException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
+        } catch (ResourceAccessException e){
+            throw new CustomizeException(HttpStatus.GATEWAY_TIMEOUT,e.getMessage());
+        } catch (UnknownContentTypeException e){
+            throw new CustomizeException(HttpStatus.valueOf(e.getRawStatusCode()),e.getMessage());
         }
         return p;
     }

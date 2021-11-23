@@ -33,7 +33,7 @@ public class CustomGlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(DataAccessException.class)
     public ErrorResponse dataAccess(DataAccessException dataAccessException) {
-        return new ErrorResponse("400", dataAccessException.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), dataAccessException.getMessage());
     }
 
 }

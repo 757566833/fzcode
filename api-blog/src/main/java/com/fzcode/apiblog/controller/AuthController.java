@@ -13,10 +13,17 @@ import com.fzcode.internalcommon.utils.ObjectUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -92,7 +99,7 @@ public class AuthController {
 
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping(value = "/self")
-    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("aid") String aid,@RequestHeader("authority") String authority) throws CustomizeException {
+    public SuccessResponse getSelf (@RequestHeader("email") String email, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("email",email);
         headers.add("aid",aid);

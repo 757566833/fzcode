@@ -18,10 +18,13 @@ import com.fzcode.servicenote.dao.elastic.TextElasticDao;
 import com.fzcode.servicenote.utils.HtmlUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class TextService {
@@ -58,7 +61,7 @@ public class TextService {
             saveResult = textDBDao.save(textsEntity);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new CustomizeException("500","正文db存储失败");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"正文db存储失败");
         }
         List<CidTidEntity> cidTidEntityList = new ArrayList<CidTidEntity>();
         List<Integer> stringList = textCreateRequest.getCategories();
@@ -72,7 +75,7 @@ public class TextService {
         try {
              cidTidDao.saveAll(cidTidEntityList);
         }catch (Exception e) {
-            throw new CustomizeException("500","分类db存储失败");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"分类db存储失败");
         }
         Integer tid = saveResult.getTid();
         TextESCreateDTO textESCreateDTO = new TextESCreateDTO(
