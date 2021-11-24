@@ -22,14 +22,14 @@ public class Note {
     /**
      * 标题
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text,searchAnalyzer = "ik_smart",analyzer = "ik_max_word")
     private String title;
 
 
     /**
      * 内容
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text,searchAnalyzer = "ik_smart",analyzer = "ik_max_word")
     private String text;
 
     /**

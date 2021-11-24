@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class PageDTO {
+public class ListRequestDTO {
     private Integer page = 1;
     private Integer pageSize=10;
 

@@ -3,9 +3,10 @@ package com.fzcode.apiblog.controller;
 import com.fzcode.apiblog.config.Services;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
-import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryCreateRequest;
-import com.fzcode.internalcommon.dto.servicenote.request.text.TextCreateRequest;
-import com.fzcode.internalcommon.dto.servicenote.request.text.TextGetListRequest;
+import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryRequest;
+import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
+import com.fzcode.internalcommon.dto.servicenote.request.text.TextListRequest;
+import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.category.CategoryResponse;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
@@ -49,17 +50,17 @@ public class NoteController {
     }
     @ApiOperation(value = "添加文章")
     @PostMapping(value = "/text/create")
-    public SuccessResponse createText(@RequestBody @Validated TextCreateRequest textCreateRequest,@RequestHeader("aid") String aid) throws CustomizeException {
+    public SuccessResponse createText(@RequestBody @Validated TextRequest textRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
-        HttpEntity<TextCreateRequest> requestParam = new HttpEntity<TextCreateRequest>(textCreateRequest, headers);
+        HttpEntity<TextRequest> requestParam = new HttpEntity<TextRequest>(textRequest, headers);
         Map listResponseDTO  =   http.post(services.getService().getNote().getHost()+"/text/create",requestParam, Map.class);
         return new SuccessResponse("添加成功", listResponseDTO);
     }
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/text/list")
-    public SuccessResponse getTextList(TextGetListRequest textGetListRequest) throws CustomizeException {
-        ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/list", textGetListRequest,ListResponseDTO.class);
+    public SuccessResponse getTextList(TextListRequest textListRequest) throws CustomizeException {
+        ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/list", textListRequest,ListResponseDTO.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
     @ApiOperation(value = "获取指定文章")
@@ -70,12 +71,19 @@ public class NoteController {
     }
     @ApiOperation(value = "创建文章分类")
     @PostMapping(value = "/category/create")
-    public SuccessResponse createCategory(@RequestBody @Validated CategoryCreateRequest categoryCreateRequest, @RequestHeader("aid") String aid,@RequestHeader("authority") String authority) throws CustomizeException {
+    public SuccessResponse createCategory(@RequestBody @Validated CategoryRequest categoryRequest, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
         headers.add("authority",authority);
-        HttpEntity<CategoryCreateRequest> requestParam = new HttpEntity<CategoryCreateRequest>(categoryCreateRequest, headers);
+        HttpEntity<CategoryRequest> requestParam = new HttpEntity<CategoryRequest>(categoryRequest, headers);
         String listResponseDTO  =  http.post(services.getService().getNote().getHost()+"/category/create",requestParam, String.class);
+        return new SuccessResponse("查询成功", listResponseDTO);
+    }
+
+    @ApiOperation(value = "创建文章分类")
+    @GetMapping(value = "/search")
+    public SuccessResponse searchNote(SearchRequest searchRequest) throws CustomizeException {
+        ListResponseDTO listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/note/search",searchRequest, ListResponseDTO.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
 }

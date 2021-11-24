@@ -1,9 +1,7 @@
 package com.fzcode.servicenote.service;
 
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
-import com.fzcode.internalcommon.dto.servicenote.request.text.TextCreateRequest;
-import com.fzcode.internalcommon.dto.servicenote.request.text.TextPatchRequest;
-import com.fzcode.internalcommon.dto.servicenote.request.text.TextUpdateRequest;
+import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
@@ -31,28 +29,28 @@ public class TextService {
     TextElasticDao textElasticDao;
 
     @Autowired
-    public void setNoteElasticService(TextElasticDao textElasticDao) {
+    public void setTextElasticDao(TextElasticDao textElasticDao) {
         this.textElasticDao = textElasticDao;
     }
 
     TextDBDao textDBDao;
 
     @Autowired
-    public void setTextDBService(TextDBDao textDBDao) {
+    public void setTextDBDao(TextDBDao textDBDao) {
         this.textDBDao = textDBDao;
     }
 
     CidTidDao cidTidDao;
 
     @Autowired
-    public void setCidTidService(CidTidDao cidTidDao) {
+    public void setCidTidDao(CidTidDao cidTidDao) {
         this.cidTidDao = cidTidDao;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String create(TextCreateRequest textCreateRequest, Integer create_by) throws CustomizeException {
+    public String create(TextRequest textRequest, Integer create_by) throws CustomizeException {
         Texts texts = new Texts();
-        BeanUtils.copyProperties(textCreateRequest, texts);
+        BeanUtils.copyProperties(textRequest, texts);
         texts.setCreateBy(create_by);
 
         // 存正文
@@ -64,7 +62,7 @@ public class TextService {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"正文db存储失败");
         }
         List<CidTid> cidTidList = new ArrayList<CidTid>();
-        List<Integer> stringList = textCreateRequest.getCategories();
+        List<Integer> stringList = textRequest.getCategories();
         for (Integer cid:stringList) {
             CidTid cidTid = new CidTid();
             cidTid.setCid(cid);
@@ -80,11 +78,11 @@ public class TextService {
         Integer tid = saveResult.getTid();
         TextESCreateDTO textESCreateDTO = new TextESCreateDTO(
                 tid.toString(),
-                textCreateRequest.getTitle()
+                textRequest.getTitle()
         );
 
-        textESCreateDTO.setCategories(textCreateRequest.getCategories());
-        textESCreateDTO.setText(HtmlUtils.html2Text(textCreateRequest.getHtml()));
+        textESCreateDTO.setCategories(textRequest.getCategories());
+        textESCreateDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
 
         return textElasticDao.create(textESCreateDTO);
     }
@@ -94,41 +92,41 @@ public class TextService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String update(Integer id, TextUpdateRequest textUpdateRequest) throws CustomizeException {
-        if (textUpdateRequest.getDescription() != null) {
+    public String update(Integer id, TextRequest textRequest) throws CustomizeException {
+        if (textRequest.getDescription() != null) {
             Texts texts = new Texts();
             texts.setTid(id);
-            texts.setTitle(textUpdateRequest.getTitle());
-            texts.setDescription(textUpdateRequest.getDescription());
+            texts.setTitle(textRequest.getTitle());
+            texts.setDescription(textRequest.getDescription());
 //            texts.setText(textReqUpdateDTO.getText());
             textDBDao.update(texts);
         }
-        TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textUpdateRequest.getTitle());
+        TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textRequest.getTitle());
 //        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
-        textESUpdateDTO.setCategories(textUpdateRequest.getCategories());
+        textESUpdateDTO.setCategories(textRequest.getCategories());
 
-        textESUpdateDTO.setText(HtmlUtils.html2Text(textUpdateRequest.getHtml()));
+        textESUpdateDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
         return textElasticDao.update(textESUpdateDTO);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String patch(Integer nid, TextPatchRequest textPatchRequest) throws CustomizeException {
-        if (textPatchRequest.getDescription() != null || textPatchRequest.getTitle() != null) {
+    public String patch(Integer nid,  TextRequest textRequest) throws CustomizeException {
+        if (textRequest.getDescription() != null || textRequest.getTitle() != null) {
             Texts texts = new Texts();
             texts.setTid(nid);
-            if (textPatchRequest.getTitle() != null) {
-                texts.setTitle(textPatchRequest.getTitle());
+            if (textRequest.getTitle() != null) {
+                texts.setTitle(textRequest.getTitle());
             }
-            if (textPatchRequest.getDescription() != null) {
-                texts.setDescription(textPatchRequest.getDescription());
+            if (textRequest.getDescription() != null) {
+                texts.setDescription(textRequest.getDescription());
             }
             textDBDao.patch(texts);
         }
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
 //        textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());
-        textESPatchDTO.setCategories(textPatchRequest.getCategories());
-        textESPatchDTO.setText(HtmlUtils.html2Text(textPatchRequest.getHtml()));
-        textESPatchDTO.setTitle(textPatchRequest.getTitle());
+        textESPatchDTO.setCategories(textRequest.getCategories());
+        textESPatchDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
+        textESPatchDTO.setTitle(textRequest.getTitle());
         return textElasticDao.patch(textESPatchDTO);
     }
 

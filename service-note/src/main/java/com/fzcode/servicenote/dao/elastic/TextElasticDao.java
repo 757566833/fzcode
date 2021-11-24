@@ -1,17 +1,27 @@
 package com.fzcode.servicenote.dao.elastic;
 
+import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.Note;
 import com.fzcode.servicenote.repositroy.NoteRepository;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -21,6 +31,12 @@ public class TextElasticDao {
     @Autowired
     public void setNoteRepository(NoteRepository noteRepository){
         this.noteRepository = noteRepository;
+    }
+
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+    @Autowired
+    public void  setElasticsearchRestTemplate(ElasticsearchRestTemplate elasticsearchRestTemplate){
+        this.elasticsearchRestTemplate= elasticsearchRestTemplate;
     }
 
     public String create(TextESCreateDTO textESCreateDTO) throws CustomizeException {
@@ -115,10 +131,26 @@ public class TextElasticDao {
         return  a.get().getText();
     }
 
-    public ArrayList<TextESDTO> getList(String text) throws CustomizeException {
+    public SearchHits<Note> search(SearchRequest searchRequest) {
 //        noteRepository.searchSimilar()
 // TODO: 2021/10/20  搜索方法
-        return new ArrayList<>();
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+        // 分页参数
+        Pageable pageable = PageRequest.of(searchRequest.getPage()-1, searchRequest.getPageSize());
+        // 高亮参数
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        String preTags = "<span class='red'>";
+        String postTags = "</span>";
+        highlightBuilder.preTags(preTags);
+        highlightBuilder.postTags(postTags);
+        highlightBuilder.field("title");
+        highlightBuilder.field("text");
+        // 搜索参数
+        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchRequest.getSearch(),"text","title").type(MultiMatchQueryBuilder.Type.MOST_FIELDS);
+        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.withHighlightBuilder(highlightBuilder).withQuery(queryBuilder).withPageable(pageable).build();
+        SearchHits<Note> noteSearchHits = elasticsearchRestTemplate.search(nativeSearchQuery,Note.class, IndexCoordinates.of("blog-note"));
+
+        return  noteSearchHits;
 
     }
 }

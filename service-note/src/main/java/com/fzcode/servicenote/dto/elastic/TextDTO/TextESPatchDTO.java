@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class TextESPatchDTO {
@@ -11,7 +12,7 @@ public class TextESPatchDTO {
     private String id;
     private String title;
     private String text;
-    private ArrayList<Integer> categories;
+    private List<Integer> categories;
 
     public TextESPatchDTO(@NotEmpty String id) {
         this.id = id;

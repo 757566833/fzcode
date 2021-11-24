@@ -1,24 +1,31 @@
 package com.fzcode.servicenote;
 
-import com.fzcode.servicenote.dao.elastic.TextElasticDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class NoteServiceApplicationTests {
-
-    @Autowired
-    TextElasticDao textElasticDao;
-
+//    @Autowired
+//    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+//
 //    @Test
-//    void contextLoads() throws CustomizeException, IOException {
-//        List<String> lisar = new ArrayList<>();
-//        lisar.add("123");
-//        lisar.add("4312");
-//        System.out.println(JSON.toJSONString(lisar));
-//        String str = "123,4312";
-//        List<String> list = JSON.parseArray(str, String.class);
-//        System.out.println(list);
+//    void contextLoads() {
+//        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+//        // 分页参数
+//        Pageable pageable = PageRequest.of(0, 20);
+//        // 高亮参数
+//        HighlightBuilder highlightBuilder = new HighlightBuilder();
+//        String preTags = "<span class='red'>";
+//        String postTags = "</span>";
+//        highlightBuilder.preTags(preTags);
+//        highlightBuilder.postTags(postTags);
+//        highlightBuilder.field("title");
+//        highlightBuilder.field("text");
+//        // 搜索参数
+//        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery("恍惚","text","title").type(MultiMatchQueryBuilder.Type.MOST_FIELDS);
+//        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.withHighlightBuilder(highlightBuilder).withQuery(queryBuilder).withPageable(pageable).build();
+//        System.out.println("开始查询");
+//        SearchHits<Note> noteSearchHits = elasticsearchRestTemplate.search(nativeSearchQuery,Note.class, IndexCoordinates.of("blog-note"));
+//        noteSearchHits.stream().forEach(e->System.out.println(JSONUtils.stringify(e.getContent())));
 //    }
 
 }

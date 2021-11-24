@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class TextESUpdateDTO {
@@ -12,7 +13,7 @@ public class TextESUpdateDTO {
     @NotEmpty
     private String title;
     private String text;
-    private ArrayList<Integer> categories;
+    private List<Integer> categories;
 
 
     public TextESUpdateDTO(@NotEmpty String id, @NotEmpty String title) {

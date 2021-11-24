@@ -68,7 +68,5 @@ GRANT ALL ON fzcode.* TO 'fzcode'@'%';
 ```
 
 #elasticsearch 
-```shell script
-// postman  put
-http://192.168.31.150:6200/note
-```
+1. docker环境下安装ik分词器有个问题，plugins这个文件夹可能存在权限问题，最好是在docker容器内安装好，然后cp出来在进行映射，但是通过脚本安装，会缺少一个config，这就需要自己下载安装zip解压一下然后cp过去或者不用脚本安装，https://github.com/medcl/elasticsearch-analysis-ik/issues/808
+2. 如果是spring elasticsearch自动添加的索引，mapping是已经存在的，所以没办法直接设置mapping，只能修改
