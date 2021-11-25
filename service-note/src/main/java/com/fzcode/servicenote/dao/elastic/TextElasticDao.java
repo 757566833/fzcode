@@ -7,6 +7,7 @@ import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.Note;
 import com.fzcode.servicenote.repositroy.NoteRepository;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;

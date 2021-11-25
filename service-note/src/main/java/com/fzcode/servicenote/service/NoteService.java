@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NoteService {
@@ -22,19 +24,27 @@ public class NoteService {
         this.textElasticDao = textElasticDao;
     }
 
-    public ListResponseDTO<Note> search (SearchRequest searchRequest)  {
+    public ListResponseDTO<Map<String, List<String>>> search (SearchRequest searchRequest)  {
         SearchRequest _searchRequest = new SearchRequest();
         BeanUtils.copyProperties(searchRequest,_searchRequest);
         SearchHits<Note> searchHits = textElasticDao.search(_searchRequest);
 
         _searchRequest.setPageSize(10);
         List list = new ArrayList();
-        searchHits.stream().forEach(a-> list.add(a.getContent()));
+//        searchHits.stream().forEach(a-> list.add(a.getContent()));
+        searchHits.stream().forEach(a->{
+            Map map = new HashMap();
+            map.put("highlight",a.getHighlightFields());
+            map.put("title",a.getContent().getTitle());
+            map.put("id",a.getContent().getId());
+            list.add(map);
+        });
         ListResponseDTO listResponseDTO = new ListResponseDTO();
         listResponseDTO.setList(list);
         listResponseDTO.setCount((int)searchHits.getTotalHits());
         listResponseDTO.setPageSize(_searchRequest.getPageSize());
         listResponseDTO.setPage(searchRequest.getPage());
+
         return  listResponseDTO;
     }
 }

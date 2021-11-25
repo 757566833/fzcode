@@ -14,6 +14,7 @@ spring:
           username: fzcode@126.com
           password: fzcode_123
           skipSslValidation: true
+          default-label: master
 management:
   endpoints:
     web:
