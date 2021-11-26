@@ -4,6 +4,7 @@ import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
@@ -48,9 +49,13 @@ public class TextService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String create(TextRequest textRequest, Integer create_by) throws CustomizeException {
+    public Integer create(TextRequest textRequest, Integer create_by) throws CustomizeException {
+        System.out.println("createBy:"+create_by);
         Texts texts = new Texts();
+        System.out.println("before copy");
         BeanUtils.copyProperties(textRequest, texts);
+        System.out.println("after copy");
+        String content = HtmlUtils.html2Text(textRequest.getHtml());
         texts.setCreateBy(create_by);
 
         // 存正文
@@ -77,13 +82,24 @@ public class TextService {
         }
         Integer tid = saveResult.getTid();
         TextESCreateDTO textESCreateDTO = new TextESCreateDTO(
-                tid.toString(),
+                tid,
                 textRequest.getTitle()
         );
 
         textESCreateDTO.setCategories(textRequest.getCategories());
-        textESCreateDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
-
+        textESCreateDTO.setContent(content);
+        System.out.println("createBy2:"+saveResult.getCreateBy());
+        textESCreateDTO.setCreateBy(saveResult.getCreateBy());
+        textESCreateDTO.setCreateTime(saveResult.getCreateTime());
+        textESCreateDTO.setUpdateTime(saveResult.getUpdateTime());
+        System.out.println("json:"+JSONUtils.stringify(textESCreateDTO));
+        if(content!=null){
+            if (content.length() > 50) {
+                textESCreateDTO.setSummary(content.substring(0, 50));
+            } else {
+                textESCreateDTO.setSummary(content);
+            }
+        }
         return textElasticDao.create(textESCreateDTO);
     }
 
@@ -123,7 +139,6 @@ public class TextService {
             textDBDao.patch(texts);
         }
         TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
-//        textESPatchDTO.setSubTitle(textReqPatchDTO.getSubTitle());
         textESPatchDTO.setCategories(textRequest.getCategories());
         textESPatchDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
         textESPatchDTO.setTitle(textRequest.getTitle());
@@ -132,9 +147,9 @@ public class TextService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public String delete(Integer nid) throws CustomizeException {
+    public Integer delete(Integer nid) throws CustomizeException {
         textDBDao.delete(nid);
-        return textElasticDao.delete(nid.toString());
+        return textElasticDao.delete(nid);
     }
 
     public TextDBGetByIdMapper findById(Integer nid) throws CustomizeException {

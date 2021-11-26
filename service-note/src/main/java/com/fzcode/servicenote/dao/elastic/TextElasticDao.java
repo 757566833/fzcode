@@ -2,12 +2,12 @@ package com.fzcode.servicenote.dao.elastic;
 
 import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.Note;
 import com.fzcode.servicenote.repositroy.NoteRepository;
 import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -19,8 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SourceFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -40,15 +42,16 @@ public class TextElasticDao {
         this.elasticsearchRestTemplate= elasticsearchRestTemplate;
     }
 
-    public String create(TextESCreateDTO textESCreateDTO) throws CustomizeException {
+    public Integer create(TextESCreateDTO textESCreateDTO) throws CustomizeException {
 
         Note note = new Note();
         BeanUtils.copyProperties(textESCreateDTO, note);
+        System.out.println("create:"+ JSONUtils.stringify(note));
         Note s =  noteRepository.save(note);
         return s.getId();
     }
 
-    public String delete(String id) throws CustomizeException {
+    public Integer delete(Integer id) throws CustomizeException {
         Note note = new Note();
         note.setId(id);
 //        noteRepository.(noteEntity);
@@ -129,7 +132,7 @@ public class TextElasticDao {
     }
     public String getById(String id) throws CustomizeException {
         Optional<Note> a =   noteRepository.findById(id);
-        return  a.get().getText();
+        return  a.get().getContent();
     }
 
     public SearchHits<Note> search(SearchRequest searchRequest) {
@@ -145,10 +148,21 @@ public class TextElasticDao {
         highlightBuilder.preTags(preTags);
         highlightBuilder.postTags(postTags);
         highlightBuilder.field("title");
-        highlightBuilder.field("text");
+        highlightBuilder.field("content");
         // 搜索参数
-        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchRequest.getSearch(),"text","title").type(MultiMatchQueryBuilder.Type.MOST_FIELDS);
-        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.withHighlightBuilder(highlightBuilder).withQuery(queryBuilder).withPageable(pageable).build();
+        QueryBuilder queryBuilder = QueryBuilders
+                .multiMatchQuery(searchRequest.getSearch(),"content","title")
+                .type(MultiMatchQueryBuilder.Type.MOST_FIELDS)
+                ;
+        String[] includes = new String[]{};
+        String[] excludes = new String[]{"content"};
+        SourceFilter sourceFilter = new FetchSourceFilter(includes,excludes);
+        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder
+                .withHighlightBuilder(highlightBuilder)
+                .withQuery(queryBuilder)
+                .withPageable(pageable)
+                .withSourceFilter(sourceFilter)
+                .build();
         SearchHits<Note> noteSearchHits = elasticsearchRestTemplate.search(nativeSearchQuery,Note.class, IndexCoordinates.of("blog-note"));
 
         return  noteSearchHits;

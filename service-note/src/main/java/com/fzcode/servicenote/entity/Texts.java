@@ -18,7 +18,7 @@ import java.util.Date;
 public class Texts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int tid;
+    private Integer tid;
 
     @Column(name = "create_time")
     @CreatedDate

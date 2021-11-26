@@ -59,7 +59,7 @@ public class TextController {
         if (aid == null) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"用户未登录");
         }
-        String tid = textService.create(textRequest,Integer.valueOf(aid));
+        Integer tid = textService.create(textRequest,Integer.valueOf(aid));
         Map map = new HashMap();
         map.put("tid", tid);
         return  map;
@@ -86,7 +86,7 @@ public class TextController {
     @ApiOperation(value = "删除文章")
     @DeleteMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResponse delete(@RequestBody @Validated(value = Delete.class)  TextRequest textRequest) throws CustomizeException {
-        String tid = textService.delete(textRequest.getTid());
+        Integer tid = textService.delete(textRequest.getTid());
         Map map = new HashMap();
         map.put("tid", tid);
         return new SuccessResponse("更新成功", map);

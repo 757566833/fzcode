@@ -1,5 +1,5 @@
 package com.fzcode.internalcommon.crud;
 
-public class IncrementalUpdate {
+public interface IncrementalUpdate {
 
 }

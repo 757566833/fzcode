@@ -20,7 +20,7 @@ import java.util.Date;
 public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cid;
+    private Integer cid;
 
     @Column(name = "create_time")
     @CreatedDate
