@@ -1,13 +1,14 @@
 package com.fzcode.servicenote.service;
 
+import com.fzcode.internalcommon.crud.Create;
+import com.fzcode.internalcommon.crud.FullUpdate;
+import com.fzcode.internalcommon.crud.IncrementalUpdate;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.servicenote.es.TextESDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.CidTid;
 import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ public class TextService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Integer create(TextRequest textRequest, Integer create_by) throws CustomizeException {
+    public Integer create(@Validated(value = Create.class) TextRequest textRequest, Integer create_by) throws CustomizeException {
         System.out.println("createBy:"+create_by);
         Texts texts = new Texts();
         System.out.println("before copy");
@@ -81,7 +83,7 @@ public class TextService {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"分类db存储失败");
         }
         Integer tid = saveResult.getTid();
-        TextESCreateDTO textESCreateDTO = new TextESCreateDTO(
+        TextESDTO textESCreateDTO = new TextESDTO(
                 tid,
                 textRequest.getTitle()
         );
@@ -108,7 +110,7 @@ public class TextService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String update(Integer id, TextRequest textRequest) throws CustomizeException {
+    public Integer update(Integer id,@Validated(value = FullUpdate.class) TextRequest textRequest) throws CustomizeException {
         if (textRequest.getDescription() != null) {
             Texts texts = new Texts();
             texts.setTid(id);
@@ -117,16 +119,16 @@ public class TextService {
 //            texts.setText(textReqUpdateDTO.getText());
             textDBDao.update(texts);
         }
-        TextESUpdateDTO textESUpdateDTO = new TextESUpdateDTO(id.toString(), textRequest.getTitle());
+        TextESDTO textESUpdateDTO = new TextESDTO(id, textRequest.getTitle());
 //        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
         textESUpdateDTO.setCategories(textRequest.getCategories());
 
-        textESUpdateDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
+        textESUpdateDTO.setContent(HtmlUtils.html2Text(textRequest.getHtml()));
         return textElasticDao.update(textESUpdateDTO);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String patch(Integer nid,  TextRequest textRequest) throws CustomizeException {
+    public Integer patch(Integer nid, @Validated(value = IncrementalUpdate.class) TextRequest textRequest) throws CustomizeException {
         if (textRequest.getDescription() != null || textRequest.getTitle() != null) {
             Texts texts = new Texts();
             texts.setTid(nid);
@@ -138,9 +140,9 @@ public class TextService {
             }
             textDBDao.patch(texts);
         }
-        TextESPatchDTO textESPatchDTO = new TextESPatchDTO(nid.toString());
+        TextESDTO textESPatchDTO = new TextESDTO(nid,textRequest.getTitle());
         textESPatchDTO.setCategories(textRequest.getCategories());
-        textESPatchDTO.setText(HtmlUtils.html2Text(textRequest.getHtml()));
+        textESPatchDTO.setContent(HtmlUtils.html2Text(textRequest.getHtml()));
         textESPatchDTO.setTitle(textRequest.getTitle());
         return textElasticDao.patch(textESPatchDTO);
     }

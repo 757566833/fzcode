@@ -1,13 +1,11 @@
 package com.fzcode.servicenote.dao.elastic;
 
+import com.fzcode.internalcommon.dto.servicenote.es.TextESDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESCreateDTO;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESUpdateDTO;
 import com.fzcode.servicenote.entity.Note;
 import com.fzcode.servicenote.repositroy.NoteRepository;
-import com.fzcode.servicenote.dto.elastic.TextDTO.TextESPatchDTO;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -42,7 +40,7 @@ public class TextElasticDao {
         this.elasticsearchRestTemplate= elasticsearchRestTemplate;
     }
 
-    public Integer create(TextESCreateDTO textESCreateDTO) throws CustomizeException {
+    public Integer create(TextESDTO textESCreateDTO) throws CustomizeException {
 
         Note note = new Note();
         BeanUtils.copyProperties(textESCreateDTO, note);
@@ -81,7 +79,7 @@ public class TextElasticDao {
         return id;
     }
 
-    public String update(TextESUpdateDTO textESUpdateDTO) throws CustomizeException {
+    public Integer update(TextESDTO textESUpdateDTO) throws CustomizeException {
 //        RestHighLevelClient client = null;
 //        try {
 //            client = ElasticBuilder.createElasticClient();
@@ -105,7 +103,7 @@ public class TextElasticDao {
         // TODO: 2021/10/20 没找到修改的方法
         return textESUpdateDTO.getId();
     }
-    public String patch(TextESPatchDTO textESPatchDTO) throws CustomizeException {
+    public Integer patch(TextESDTO textESPatchDTO) throws CustomizeException {
 //        RestHighLevelClient client = null;
 //        try {
 //            client = ElasticBuilder.createElasticClient();

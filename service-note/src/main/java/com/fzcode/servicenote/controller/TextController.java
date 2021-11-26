@@ -68,7 +68,7 @@ public class TextController {
     @ApiOperation(value = "修改文章-全量")
     @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResponse update(@RequestBody @Validated(value = FullUpdate.class)  TextRequest textRequest, @PathVariable(name = "id") Integer id) throws CustomizeException {
-        String tid = textService.update(id, textRequest);
+        Integer tid = textService.update(id, textRequest);
         Map map = new HashMap();
         map.put("tid", tid);
         return new SuccessResponse("更新成功", map);
@@ -77,7 +77,7 @@ public class TextController {
     @ApiOperation(value = "修改文章-增量")
     @PatchMapping(value = "/patch/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SuccessResponse patch(@RequestBody @Validated(value = IncrementalUpdate.class)  TextRequest textRequest, @PathVariable(name = "id") Integer id) throws CustomizeException {
-        String tid = textService.patch(id, textRequest);
+        Integer tid = textService.patch(id, textRequest);
         Map map = new HashMap();
         map.put("tid", tid);
         return new SuccessResponse("更新成功", map);
