@@ -29,7 +29,7 @@ public class NoteService {
         SearchHits<Note> searchHits = textElasticDao.search(_searchRequest);
         List list = searchHits.stream().collect(Collectors.toList());
         ListResponseDTO listResponseDTO = new ListResponseDTO();
-        listResponseDTO.setList(list);
+        listResponseDTO.setData(list);
         listResponseDTO.setCount((int)searchHits.getTotalHits());
         listResponseDTO.setPageSize(_searchRequest.getPageSize());
         listResponseDTO.setPage(searchRequest.getPage());

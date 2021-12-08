@@ -9,5 +9,5 @@ public class ListResponseDTO<R> {
     private Integer count;
     private Integer page;
     private Integer pageSize;
-    private List<R> list;
+    private List<R> data;
 }

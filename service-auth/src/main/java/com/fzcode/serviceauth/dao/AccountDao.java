@@ -94,7 +94,7 @@ public class AccountDao {
         String count = countList.get(0).get("COUNT(1)").toString();
         ListResponseDTO<Map<String, Object>> listListResDTO = new ListResponseDTO<>();
         listListResDTO.setCount(Integer.valueOf(count));
-        listListResDTO.setList(accounts);
+        listListResDTO.setData(accounts);
         listListResDTO.setPage(accountDTO.getPage());
         listListResDTO.setPageSize(accountDTO.getPageSize());
         return listListResDTO;
