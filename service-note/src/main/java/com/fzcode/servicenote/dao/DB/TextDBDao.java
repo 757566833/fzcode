@@ -65,8 +65,8 @@ public class TextDBDao {
             hashMap.put(t.getTid(),t.getCidList());
         }
         Integer count = textRepository.findListCount(size,(page-1)*size).get(0).getCount();
-        resDTO.setData(new ArrayList<>());
-        List<TextResponse> resList = resDTO.getData();
+        resDTO.setList(new ArrayList<>());
+        List<TextResponse> resList = resDTO.getList();
         ListUtils.copyList(list,resList, TextResponse.class);
         for (TextResponse t:resList) {
             String arrStr =hashMap.get(t.getTid());
