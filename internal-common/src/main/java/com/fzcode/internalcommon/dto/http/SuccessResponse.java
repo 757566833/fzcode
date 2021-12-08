@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class SuccessResponse {
     private Integer code = 100000;
-    private String message;
+    private String msg;
 
     private Object data;
-    public  SuccessResponse(String message,Object data){
-        this.message=message;
+    public  SuccessResponse(String msg,Object data){
+        this.msg=msg;
         this.data = data;
     }
 }
