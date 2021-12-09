@@ -11,6 +11,7 @@ import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.http.Http;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.config.Github;
 import com.fzcode.serviceauth.config.Oauth;
@@ -19,9 +20,13 @@ import com.fzcode.serviceauth.http.Auth;
 import com.fzcode.serviceauth.util.RedisUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ResponseHeader;
+import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +37,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 @Api(tags = "账号模块")
@@ -87,10 +96,39 @@ public class AccountController {
 //        return new SuccessResDTO("修改成功", email);
 //    }
     @ApiOperation(value = "获取github oauth的 code")
-    @GetMapping(value = "/oauth/github")
-    @ResponseStatus(HttpStatus.MOVED_PERMANENTLY)
-    public String oauthGithub (){
-        return "https://github.com/login/oauth/authorize?client_id="+oauth.getClientId()+"&scope=read:user user:email&redirect_uri="+github.getLoginUrl();
+    @GetMapping(value = "/oauth/github/uri")
+    public SuccessResponse oauthGithub () throws CustomizeException {
+        System.out.println("获取github oauth的 code");
+        HttpHeaders headers = new HttpHeaders();
+        System.out.println(JSONUtils.stringify(github.getLoginUrl()));
+        System.out.println(JSONUtils.stringify(oauth.getClientId()));
+        URIBuilder uriBuilder;
+        try {
+            uriBuilder = new URIBuilder("https://github.com/login/oauth/authorize");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri路径出错");
+        }
+
+        uriBuilder.addParameter("client_id",oauth.getClientId());
+        uriBuilder.addParameter("scope","read:user user:email");
+        uriBuilder.addParameter("redirect_uri",github.getLoginUrl());
+        URI uri;
+        try {
+            uri = uriBuilder.build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri参数出错");
+        }
+
+        return  new SuccessResponse("获取成功", uri);
+//        System.out.println(uri);
+//        headers.setLocation(uri);
+//        ResponseEntity responseEntity = new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
+//        httpServletResponse.sendRedirect("https://github.com/login/oauth/authorize?client_id="+oauth.getClientId()+"&scope=read:user user:email&redirect_uri="+github.getLoginUrl());
+
+//return "https://github.com/login/oauth/authorize?client_id="+oauth.getClientId()+"&scope=read:user user:email&redirect_uri="+github.getLoginUrl();
+//        URI uri = URI.create("https://github.com/login/oauth/authorize?client_id="+oauth.getClientId()+"&scope=read:user user:email&redirect_uri="+github.getLoginUrl());
     }
 
     @ApiOperation(value = "github登陆")

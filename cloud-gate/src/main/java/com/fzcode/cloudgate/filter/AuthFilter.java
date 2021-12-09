@@ -51,6 +51,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                 || uri.getPath().indexOf("/auth/register") >= 0
                 || uri.getPath().indexOf("/auth/forget") >= 0
                 || uri.getPath().indexOf("/auth/github") >= 0
+                || uri.getPath().indexOf("/auth/oauth") >= 0
                 || uri.getPath().indexOf("/mail/register") >= 0
                 || uri.getPath().indexOf("/mail/forget") >= 0
         ) {

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,8 +79,8 @@ public class AuthController {
 
     @ApiOperation(value = "账号密码登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public LoginResponse login (@RequestBody @Validated LoginRequest loginRequest) throws CustomizeException {
-        return  http.post(services.getService().getAuth().getHost()+"/login",loginRequest,LoginResponse.class);
+    public String login (@RequestBody @Validated LoginRequest loginRequest) throws CustomizeException {
+        return  http.post(services.getService().getAuth().getHost()+"/login",loginRequest,String.class);
     }
 
     @ApiOperation(value = "账号密码注册")
@@ -87,8 +90,16 @@ public class AuthController {
     }
     @ApiOperation(value = "github获取")
     @GetMapping(value = "/oauth/github")
-    public String oauthGithub () throws CustomizeException {
-        return  http.get(services.getService().getAuth().getHost()+"/oauth/github",String.class);
+    public ResponseEntity oauthGithub () throws CustomizeException {
+        System.out.println("github获取");
+        URI uri = http.get(services.getService().getAuth().getHost()+"/oauth/github/url", URI.class);
+        HttpHeaders headers = new HttpHeaders();
+        System.out.println(uri);
+        headers.setLocation(uri);
+        ResponseEntity responseEntity = new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
+        return responseEntity;
+//        httpServletResponse.sendRedirect(str);
+//        return  http.get(services.getService().getAuth().getHost()+"/oauth/github",String.class);
     }
 
     @ApiOperation(value = "github方式登陆")
