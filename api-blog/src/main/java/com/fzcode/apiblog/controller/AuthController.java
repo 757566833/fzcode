@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.Inet4Address;
@@ -83,19 +85,19 @@ public class AuthController {
     public String register (@RequestBody @Validated RegisterRequest registerRequest) throws CustomizeException {
         return  http.post(services.getService().getAuth().getHost()+"/register",registerRequest,String.class);
     }
+    @ApiOperation(value = "github获取")
+    @GetMapping(value = "/oauth/github")
+    public String oauthGithub () throws CustomizeException {
+        return  http.get(services.getService().getAuth().getHost()+"/oauth/github",String.class);
+    }
 
     @ApiOperation(value = "github方式登陆")
     @GetMapping(value = "/login/github")
-    public String githubLogin (@RequestParam(value = "code") String code, @RequestParam(value = "socketId") String socketId) throws CustomizeException {
+    public String githubLogin (@RequestParam(value = "code") String code) throws CustomizeException {
         Map map = new HashMap();
         map.put("code",code);
-        map.put("socketId",socketId);
         return  http.post(services.getService().getAuth().getHost()+"/login/github",map,String.class);
     }
-
-//      .header("email", finalEmail)
-//                            .header("aid", finalAid.toString())
-//            .header("authority", authority)
 
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping(value = "/self")

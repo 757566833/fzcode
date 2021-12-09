@@ -31,8 +31,4 @@ public class RedisUtils {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public static void publishing(String msg){
-        System.out.println("发送消息:"+msg);
-        redisTemplate.convertAndSend(RedisConstant.channel,msg);
-    }
 }

@@ -12,12 +12,15 @@ import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
+import com.fzcode.serviceauth.config.Github;
+import com.fzcode.serviceauth.config.Oauth;
 import com.fzcode.serviceauth.service.AccountService;
 import com.fzcode.serviceauth.http.Auth;
 import com.fzcode.serviceauth.util.RedisUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -40,6 +44,21 @@ public class AccountController {
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
     }
+
+    private Github github;
+
+    @Autowired
+    public void setGithub(Github github) {
+        this.github = github;
+    }
+
+    private Oauth oauth;
+
+    @Autowired
+    public void setOauth(Oauth oauth) {
+        this.oauth = oauth;
+    }
+
 
     @ApiOperation(value = "登陆")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -67,10 +86,18 @@ public class AccountController {
 //        String email = accountFlow.reset(httpHeaders.getFirst("email"), resetDTO.getOldPassword(), resetDTO.getNewPassword());
 //        return new SuccessResDTO("修改成功", email);
 //    }
+    @ApiOperation(value = "获取github oauth的 code")
+    @GetMapping(value = "/oauth/github")
+    @ResponseStatus(HttpStatus.MOVED_PERMANENTLY)
+    public String oauthGithub (){
+        return "https://github.com/login/oauth/authorize?client_id="+oauth.getClientId()+"&scope=read:user user:email&redirect_uri="+github.getLoginUrl();
+    }
 
     @ApiOperation(value = "github登陆")
     @PostMapping(value = "/login/github")
     public String oauth2(@RequestBody @Validated GithubLoginRequest githubLoginRequest) throws CustomizeException {
+
+
         GithubAccessToken githubAccessToken = Auth.getGithubAccessToken(githubLoginRequest.getCode());
         GithubUserInfo githubUserInfo = Auth.getGithubUserInfo(githubAccessToken.getAccess_token());
         if (githubUserInfo.getEmail() == null) {
@@ -79,34 +106,11 @@ public class AccountController {
             // 这里偷懒了 直接用长度判断 token一定长
             RegisterResponse registerResponse = accountService.githubRegister(githubUserInfo);
             if (registerResponse.getToken().length() > 15) {
-                MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-                map.add("socketId", githubLoginRequest.getSocketId());
-                map.add("token", registerResponse.getToken());
-                map.add("role", registerResponse.getRole());
-                RedisUtils.publishing(JSONUtils.stringify(map));
-                return "<!DOCTYPE html>\n" +
-                        "<html lang=\"en\">\n" +
-                        "<head>\n" +
-                        "  <meta charset=\"UTF-8\">\n" +
-                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                        "  <title>Document</title>\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "  <div>登陆成功,<span id ='second'>5</span>秒后关闭页面，原页面未刷新请手动刷新</div>\n" +
-                        "</body>\n" +
-                        "<script>\n" +
-                        "  var secondDom =  document.getElementById(\"second\");\n" +
-                        "  var second = 5\n" +
-                        "  setInterval(()=>{\n" +
-                        "    secondDom.innerText=--second;\n" +
-                        "    if(second==0){\n" +
-                        "      window.close();\n" +
-                        "    }\n" +
-                        "  },1000);\n" +
-                        "</script>\n" +
-                        "</html>\n";
+                return "http://127.0.0.1:3000/github/login/success?token"+registerResponse.getToken()+"&role="+registerResponse.getRole();
+            }else{
+                return  registerResponse.getToken();
             }
-            return registerResponse.getToken();
+
         }
     }
 
