@@ -88,11 +88,11 @@ public class AuthController {
     public String register (@RequestBody @Validated RegisterRequest registerRequest) throws CustomizeException {
         return  http.post(services.getService().getAuth().getHost()+"/register",registerRequest,String.class);
     }
-    @ApiOperation(value = "github获取")
+    @ApiOperation(value = "跳转github授权")
     @GetMapping(value = "/oauth/github")
     public ResponseEntity oauthGithub () throws CustomizeException {
         System.out.println("github获取");
-        URI uri = http.get(services.getService().getAuth().getHost()+"/oauth/github/url", URI.class);
+        URI uri = http.get(services.getService().getAuth().getHost()+"/oauth/github/uri", URI.class);
         HttpHeaders headers = new HttpHeaders();
         System.out.println(uri);
         headers.setLocation(uri);
@@ -104,10 +104,21 @@ public class AuthController {
 
     @ApiOperation(value = "github方式登陆")
     @GetMapping(value = "/login/github")
-    public String githubLogin (@RequestParam(value = "code") String code) throws CustomizeException {
+    public ResponseEntity githubLogin (@RequestParam(value = "code") String code) throws CustomizeException {
         Map map = new HashMap();
         map.put("code",code);
-        return  http.post(services.getService().getAuth().getHost()+"/login/github",map,String.class);
+        String str =  http.post(services.getService().getAuth().getHost()+"/login/github",map,String.class);
+        if(str.startsWith("http")){
+            HttpHeaders headers = new HttpHeaders();
+            System.out.println(str);
+            headers.setLocation(URI.create(str));
+            ResponseEntity responseEntity = new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
+            return responseEntity;
+        }else {
+            ResponseEntity responseEntity = new ResponseEntity(str, HttpStatus.OK);
+            return responseEntity;
+        }
+//        return  http.post(services.getService().getAuth().getHost()+"/login/github",map,String.class);
     }
 
     @ApiOperation(value = "获取当前用户信息")

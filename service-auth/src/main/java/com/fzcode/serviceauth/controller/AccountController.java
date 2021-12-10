@@ -97,11 +97,8 @@ public class AccountController {
 //    }
     @ApiOperation(value = "获取github oauth的 code")
     @GetMapping(value = "/oauth/github/uri")
-    public SuccessResponse oauthGithub () throws CustomizeException {
+    public URI oauthGithub () throws CustomizeException {
         System.out.println("获取github oauth的 code");
-        HttpHeaders headers = new HttpHeaders();
-        System.out.println(JSONUtils.stringify(github.getLoginUrl()));
-        System.out.println(JSONUtils.stringify(oauth.getClientId()));
         URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder("https://github.com/login/oauth/authorize");
@@ -121,7 +118,7 @@ public class AccountController {
             throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri参数出错");
         }
 
-        return  new SuccessResponse("获取成功", uri);
+        return uri;
 //        System.out.println(uri);
 //        headers.setLocation(uri);
 //        ResponseEntity responseEntity = new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
@@ -134,20 +131,29 @@ public class AccountController {
     @ApiOperation(value = "github登陆")
     @PostMapping(value = "/login/github")
     public String oauth2(@RequestBody @Validated GithubLoginRequest githubLoginRequest) throws CustomizeException {
-
-
         GithubAccessToken githubAccessToken = Auth.getGithubAccessToken(githubLoginRequest.getCode());
         GithubUserInfo githubUserInfo = Auth.getGithubUserInfo(githubAccessToken.getAccess_token());
         if (githubUserInfo.getEmail() == null) {
             return "您的github尚未绑定邮箱，具体设置方法，右上角=>settings=>profile=>public email 选择您的邮箱";
         } else {
-            // 这里偷懒了 直接用长度判断 token一定长
-            RegisterResponse registerResponse = accountService.githubRegister(githubUserInfo);
-            if (registerResponse.getToken().length() > 15) {
-                return "http://127.0.0.1:3000/github/login/success?token"+registerResponse.getToken()+"&role="+registerResponse.getRole();
-            }else{
-                return  registerResponse.getToken();
+            URIBuilder uriBuilder;
+            try {
+                uriBuilder = new URIBuilder("http://127.0.0.1:3000/github/login/success");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri路径出错");
             }
+            RegisterResponse registerResponse = accountService.githubRegister(githubUserInfo);
+            uriBuilder.addParameter("token",registerResponse.getToken());
+            uriBuilder.addParameter("role",registerResponse.getRole());
+            URI uri;
+            try {
+                uri = uriBuilder.build();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri参数出错");
+            }
+            return uri.toString();
 
         }
     }
