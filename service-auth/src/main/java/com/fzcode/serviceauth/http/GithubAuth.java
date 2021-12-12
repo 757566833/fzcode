@@ -1,5 +1,6 @@
 package com.fzcode.serviceauth.http;
 
+import com.fzcode.internalcommon.http.Http;
 import com.fzcode.serviceauth.config.Oauth;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
@@ -14,17 +15,23 @@ import java.util.Collections;
 
 @Component
 public class Auth {
-    private static Oauth oauth;
+    private Oauth oauth;
 
     @Autowired
     public void setOauth(Oauth oauth) {
-        Auth.oauth = oauth;
+        this.oauth = oauth;
     }
 
-    private  static RestTemplate  restTemplate;
+//    private  static RestTemplate  restTemplate;
+//    @Autowired
+//    public void setRestTemplate(RestTemplate restTemplate){
+//        this.restTemplate = restTemplate;
+//    }
+
+    private Http http;
     @Autowired
-    public void setRestTemplate(RestTemplate restTemplate){
-        this.restTemplate = restTemplate;
+    public void setHttp(Http http){
+        this.http = http;
     }
 
     public static GithubAccessToken getGithubAccessToken(String code) {
