@@ -11,34 +11,19 @@ import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
 import com.fzcode.internalcommon.exception.CustomizeException;
-import com.fzcode.internalcommon.http.Http;
-import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.config.Github;
 import com.fzcode.serviceauth.config.Oauth;
+import com.fzcode.serviceauth.http.GithubAuth;
 import com.fzcode.serviceauth.service.AccountService;
-import com.fzcode.serviceauth.http.Auth;
-import com.fzcode.serviceauth.util.RedisUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ResponseHeader;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -59,6 +44,13 @@ public class AccountController {
     @Autowired
     public void setGithub(Github github) {
         this.github = github;
+    }
+
+    private GithubAuth githubAuth;
+
+    @Autowired
+    public void setGithubAuth(GithubAuth githubAuth) {
+        this.githubAuth = githubAuth;
     }
 
     private Oauth oauth;
@@ -97,7 +89,7 @@ public class AccountController {
 //    }
     @ApiOperation(value = "获取github oauth的 code")
     @GetMapping(value = "/oauth/github/uri")
-    public URI oauthGithub () throws CustomizeException {
+    public URI oauthGithub (@RequestParam(value = "redirect") String redirect) throws CustomizeException {
         System.out.println("获取github oauth的 code");
         URIBuilder uriBuilder;
         try {
@@ -109,7 +101,23 @@ public class AccountController {
 
         uriBuilder.addParameter("client_id",oauth.getClientId());
         uriBuilder.addParameter("scope","read:user user:email");
-        uriBuilder.addParameter("redirect_uri",github.getLoginUrl());
+        URIBuilder redirectBuilder;
+        try {
+            redirectBuilder = new URIBuilder(github.getLoginUrl());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析 redirect uri路径出错");
+        }
+        redirectBuilder.addParameter("redirect",redirect);
+        URI redirectURI;
+        try {
+             redirectURI =  redirectBuilder.build();
+        }catch (URISyntaxException e){
+            e.printStackTrace();
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析 redirect params 路径出错");
+        }
+
+        uriBuilder.addParameter("redirect_uri",redirectURI.toString());
         URI uri;
         try {
             uri = uriBuilder.build();
@@ -129,21 +137,24 @@ public class AccountController {
     }
 
     @ApiOperation(value = "github登陆")
-    @PostMapping(value = "/login/github")
-    public String oauth2(@RequestBody @Validated GithubLoginRequest githubLoginRequest) throws CustomizeException {
-        GithubAccessToken githubAccessToken = Auth.getGithubAccessToken(githubLoginRequest.getCode());
-        GithubUserInfo githubUserInfo = Auth.getGithubUserInfo(githubAccessToken.getAccess_token());
+    @GetMapping(value = "/login/github")
+    public String oauth2(@RequestParam(value = "code") String code,@RequestParam(value = "redirect") String redirect) throws CustomizeException {
+        System.out.println("auth:"+code);
+        GithubAccessToken githubAccessToken = githubAuth.getGithubAccessToken(code);
+        GithubUserInfo githubUserInfo = githubAuth.getGithubUserInfo(githubAccessToken.getAccess_token());
         if (githubUserInfo.getEmail() == null) {
-            return "您的github尚未绑定邮箱，具体设置方法，右上角=>settings=>profile=>public email 选择您的邮箱";
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"您的github尚未绑定邮箱，具体设置方法，右上角=>settings=>profile=>public email 选择您的邮箱");
         } else {
             URIBuilder uriBuilder;
             try {
                 uriBuilder = new URIBuilder("http://127.0.0.1:3000/github/login/success");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
+                System.out.println("解析uri路径出错");
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri路径出错");
             }
             RegisterResponse registerResponse = accountService.githubRegister(githubUserInfo);
+            uriBuilder.addParameter("redirect",redirect);
             uriBuilder.addParameter("token",registerResponse.getToken());
             uriBuilder.addParameter("role",registerResponse.getRole());
             URI uri;
@@ -151,6 +162,7 @@ public class AccountController {
                 uri = uriBuilder.build();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
+                System.out.println("解析uri参数出错");
                 throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri参数出错");
             }
             return uri.toString();

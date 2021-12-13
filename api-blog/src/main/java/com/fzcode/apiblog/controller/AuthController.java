@@ -3,13 +3,9 @@ package com.fzcode.apiblog.controller;
 import com.fzcode.apiblog.config.Services;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
-import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
-import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
-import com.fzcode.internalcommon.dto.serviceauth.request.RegisterRequest;
-import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
+import com.fzcode.internalcommon.dto.serviceauth.request.*;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.http.Http;
-import com.fzcode.internalcommon.utils.ObjectUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URI;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 @Api(tags = "账权模块")
@@ -90,9 +82,11 @@ public class AuthController {
     }
     @ApiOperation(value = "跳转github授权")
     @GetMapping(value = "/oauth/github")
-    public ResponseEntity oauthGithub () throws CustomizeException {
+    public ResponseEntity oauthGithub (@RequestParam(value = "redirect") String redirect) throws CustomizeException {
         System.out.println("github获取");
-        URI uri = http.get(services.getService().getAuth().getHost()+"/oauth/github/uri", URI.class);
+        OauthGithubUriRequest oauthGithubUriRequest = new OauthGithubUriRequest();
+        oauthGithubUriRequest.setRedirect(redirect);
+        URI uri = http.get(services.getService().getAuth().getHost()+"/oauth/github/uri",oauthGithubUriRequest, URI.class);
         HttpHeaders headers = new HttpHeaders();
         System.out.println(uri);
         headers.setLocation(uri);
@@ -104,10 +98,12 @@ public class AuthController {
 
     @ApiOperation(value = "github方式登陆")
     @GetMapping(value = "/login/github")
-    public ResponseEntity githubLogin (@RequestParam(value = "code") String code) throws CustomizeException {
-        Map map = new HashMap();
-        map.put("code",code);
-        String str =  http.post(services.getService().getAuth().getHost()+"/login/github",map,String.class);
+    public ResponseEntity githubLogin (@RequestParam(value = "code") String code,@RequestParam(value = "redirect") String redirect) throws CustomizeException {
+        LoginGithub loginGithub = new  LoginGithub();
+        loginGithub.setCode(code);
+        loginGithub.setRedirect(redirect);
+        String str =  http.get(services.getService().getAuth().getHost()+"/login/github",loginGithub,String.class);
+        System.out.println("after http");
         if(str.startsWith("http")){
             HttpHeaders headers = new HttpHeaders();
             System.out.println(str);
@@ -135,7 +131,7 @@ public class AuthController {
     @ApiOperation(value = "管理员获取所有用户列表")
     @GetMapping(value = "/admin/account")
     public SuccessResponse getUserList (AccountListRequest accountListRequest , @RequestHeader("email") String email, @RequestHeader("aid") String aid) throws CustomizeException {
-        MultiValueMap<String, String> params = ObjectUtils.object2MultiValueMap(accountListRequest);
+//        MultiValueMap<String, String> params = ObjectUtils.object2MultiValueMap(accountListRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("email",email);
         headers.add("aid",aid);

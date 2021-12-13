@@ -1,2 +1,8 @@
-package com.fzcode.internalcommon.dto.serviceauth.request;public class OauthGithubUriRequest {
+package com.fzcode.internalcommon.dto.serviceauth.request;
+
+import lombok.Data;
+
+@Data
+public class OauthGithubUriRequest {
+    private String redirect;
 }

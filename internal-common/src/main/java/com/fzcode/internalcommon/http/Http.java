@@ -68,7 +68,6 @@ public class Http {
         }
         return  p;
     }
-
     public <P> P  get (String url, HttpHeaders httpHeaders, Class<P> responseType) throws CustomizeException {
         HttpEntity<String> request =  new HttpEntity<>(null, httpHeaders);
         ResponseEntity<P> p;
