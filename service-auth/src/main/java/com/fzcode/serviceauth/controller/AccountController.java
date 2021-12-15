@@ -93,7 +93,7 @@ public class AccountController {
         System.out.println("获取github oauth的 code");
         URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder("https://github.com/login/oauth/authorize");
+            uriBuilder = new URIBuilder(github.getGithubAuthorize());
         } catch (URISyntaxException e) {
             e.printStackTrace();
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri路径出错");
