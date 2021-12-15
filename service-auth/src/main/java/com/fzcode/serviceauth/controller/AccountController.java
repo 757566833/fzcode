@@ -147,7 +147,7 @@ public class AccountController {
         } else {
             URIBuilder uriBuilder;
             try {
-                uriBuilder = new URIBuilder("http://127.0.0.1:3000/github/login/success");
+                uriBuilder = new URIBuilder(github.getSuccessUrl());
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 System.out.println("解析uri路径出错");

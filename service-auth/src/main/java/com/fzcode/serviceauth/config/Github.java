@@ -9,4 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class Github {
     private String loginUrl;
+    private String successUrl;
 }
