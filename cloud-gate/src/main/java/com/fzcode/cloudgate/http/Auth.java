@@ -20,11 +20,16 @@ public class Auth {
         this.services = services;
     }
 
+    private  WebClient webClient;
+    @Autowired
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
+
     public Mono<AuthorityDTO> getAuthority(String email) {
-        WebClient webClient = WebClient.create(services.getService().getAuth().getHost());
         Map<String, String> map = new HashMap<>();
         map.put("account", email);
-        return webClient.post().uri("/authority/get")
+        return webClient.post().uri(services.getService().getAuth().getHost()+"/authority/get")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue(map).retrieve().bodyToMono(AuthorityDTO.class);
 

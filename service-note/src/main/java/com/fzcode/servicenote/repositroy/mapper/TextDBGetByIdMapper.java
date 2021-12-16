@@ -15,4 +15,6 @@ public interface TextDBGetByIdMapper {
     String getUsername();
 
     String getGithub_url();
+    String getType();
+    String getText();
 }

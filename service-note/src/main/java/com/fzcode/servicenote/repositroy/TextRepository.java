@@ -17,6 +17,8 @@ public interface TextRepository extends JpaRepository<Texts, Integer> {
             "texts.title, " +
             "texts.html, " +
             "texts.raw, " +
+            "texts.type, " +
+            "texts.text, " +
             "users.avatar, " +
             "users.username, " +
             "users.github_url " +

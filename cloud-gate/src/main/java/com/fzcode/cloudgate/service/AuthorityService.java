@@ -1,4 +1,4 @@
-package com.fzcode.cloudgate.flow;
+package com.fzcode.cloudgate.service;
 
 import com.fzcode.cloudgate.util.RedisUtils;
 import com.fzcode.cloudgate.dao.AuthorityDao;
@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 
 @Component
-public class AuthorityFlow {
+public class AuthorityService {
     AuthorityDao authorityDao;
 
     @Autowired
