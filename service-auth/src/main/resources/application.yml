@@ -5,4 +5,4 @@ spring:
       "docker": "common,docker"
       "local": "common,local"
       "prod": "common,prod"
-    default: dev
+#    default: dev
