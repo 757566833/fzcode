@@ -93,10 +93,10 @@ public class AccountController {
         System.out.println("获取github oauth的 code");
         URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder("https://github.com/login/oauth/authorize");
+            uriBuilder = new URIBuilder(github.getGithubAuthorize());
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri路径出错");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"cant parse github oauth uri");
         }
 
         uriBuilder.addParameter("client_id",oauth.getClientId());
@@ -106,7 +106,7 @@ public class AccountController {
             redirectBuilder = new URIBuilder(github.getLoginUrl());
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析 redirect uri路径出错");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"cant parse server login uri");
         }
         redirectBuilder.addParameter("redirect",redirect);
         URI redirectURI;
@@ -114,7 +114,7 @@ public class AccountController {
              redirectURI =  redirectBuilder.build();
         }catch (URISyntaxException e){
             e.printStackTrace();
-            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析 redirect params 路径出错");
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"cant build server login uri ");
         }
 
         uriBuilder.addParameter("redirect_uri",redirectURI.toString());
@@ -123,7 +123,7 @@ public class AccountController {
             uri = uriBuilder.build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"解析uri参数出错");
+            throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"cant build github oauth uri");
         }
 
         return uri;
@@ -147,7 +147,7 @@ public class AccountController {
         } else {
             URIBuilder uriBuilder;
             try {
-                uriBuilder = new URIBuilder("http://127.0.0.1:3000/github/login/success");
+                uriBuilder = new URIBuilder(github.getSuccessUrl());
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 System.out.println("解析uri路径出错");

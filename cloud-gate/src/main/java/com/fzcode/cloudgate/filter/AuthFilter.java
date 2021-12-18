@@ -1,7 +1,7 @@
 package com.fzcode.cloudgate.filter;
 
 import com.fzcode.cloudgate.config.Services;
-import com.fzcode.cloudgate.flow.AuthorityFlow;
+import com.fzcode.cloudgate.service.AuthorityService;
 import com.fzcode.cloudgate.util.TokenUtils;
 import com.fzcode.internalcommon.dto.common.TokenInfoDTO;
 import lombok.SneakyThrows;
@@ -32,11 +32,11 @@ public class AuthFilter implements Ordered, GlobalFilter {
         this.services = services;
     }
 
-    AuthorityFlow authorityFlow;
+    AuthorityService authorityService;
 
     @Autowired
-    public void setAuthorityFlow(AuthorityFlow authorityFlow) {
-        this.authorityFlow = authorityFlow;
+    public void setAuthorityFlow(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 
     @SneakyThrows
@@ -65,7 +65,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
         else if(request.getMethod() == HttpMethod.GET &&uri.getPath().indexOf("/note/") >= 0){
             return chain.filter(exchange);
         }
-        // admin
+        // admin 管理员相关的接口
         else if (uri.getPath().indexOf("admin") >= 0) {
             String email = null;
             Integer aid = null;
@@ -87,7 +87,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
             }
                 String finalEmail = email;
                 Integer finalAid = aid;
-                return authorityFlow.getAuthority(email).flatMap(authority -> {
+                return authorityService.getAuthority(email).flatMap(authority -> {
                     System.out.println("authority:"+authority);
                     if (uri.getPath().indexOf("admin") > 0 && !authority.equals("ADMIN")) {
                         DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("没权限".getBytes());
@@ -104,12 +104,13 @@ public class AuthFilter implements Ordered, GlobalFilter {
                     return chain.filter(nextExchange);
                 });
 
-        }  else {
+        }
+        else {
             try {
                 TokenInfoDTO tokenInfoDTO = TokenUtils.parseBearer(auth);
                 String  email = tokenInfoDTO.getEmail();
                 Integer aid = tokenInfoDTO.getAid();
-                return authorityFlow.getAuthority(email).flatMap(authority -> {
+                return authorityService.getAuthority(email).flatMap(authority -> {
                     ServerHttpRequest nextRequest = request
                             .mutate()
                             .header("email", email)

@@ -8,5 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "github")
 @Data
 public class Github {
+    private String githubAuthorize;
     private String loginUrl;
+    private String successUrl;
 }
