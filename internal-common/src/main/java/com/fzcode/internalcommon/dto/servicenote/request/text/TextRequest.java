@@ -21,12 +21,11 @@ public class TextRequest {
     private String title;
     @NotBlank(message = "备注不能为空",groups = {Create.class, FullUpdate.class})
     private String description;
-    @NotBlank(message = "html不能为空",groups = {Create.class, FullUpdate.class})
-    private String html;
     @NotNull(message = "分类不能为空",groups = {Create.class, FullUpdate.class})
     private List<Integer> categories;
     @NotNull(message = "类型不能为空",groups = {Create.class, FullUpdate.class})
     private Integer type;
     private String raw;
+    @NotBlank(message = "内容不能为空",groups = {Create.class, FullUpdate.class})
     private String text;
 }

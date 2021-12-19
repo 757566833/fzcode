@@ -7,6 +7,7 @@ import com.fzcode.internalcommon.crud.IncrementalUpdate;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 
+import com.fzcode.internalcommon.dto.servicenote.request.text.SelfListRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextListRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
@@ -51,13 +52,17 @@ public class TextController {
     public ListResponseDTO<TextResponse> getList(TextListRequest textListRequest) {
         return textService.findAll(textListRequest.getPage(), textListRequest.getPageSize());
     }
-
+    @ApiOperation(value = "获取当前用户的文章列表")
+    @GetMapping(value = "/self/list")
+    public ListResponseDTO<TextResponse> getSelfList(SelfListRequest selfListRequest, @RequestHeader("aid") String aid) {
+        return textService.findSelfAll(aid,selfListRequest.getSearch(),selfListRequest.getPage(), selfListRequest.getPageSize());
+    }
     @ApiOperation(value = "创建文章")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Map create(@RequestBody @Validated(value = Create.class) TextRequest textRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         if (aid == null) {
-            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"用户未登录");
+            throw new CustomizeException(HttpStatus.UNAUTHORIZED,"用户未登录");
         }
         Integer tid = textService.create(textRequest,Integer.valueOf(aid));
         Map map = new HashMap();

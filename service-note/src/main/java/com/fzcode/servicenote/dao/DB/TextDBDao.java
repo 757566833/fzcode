@@ -13,6 +13,7 @@ import com.fzcode.servicenote.repositroy.TextRepository;
 import com.fzcode.servicenote.utils.ListUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -123,4 +124,19 @@ public class TextDBDao {
         Texts textsResult = textRepository.save(texts);
         return textsResult;
     }
+    public  ListResponseDTO<TextResponse> findSelfList (String aid,String search ,Integer page, Integer size){
+        Pageable pageable = PageRequest.of(page, size);;
+        Page list =  textRepository.findByTitleLike("%"+search+"%",pageable);
+        ListResponseDTO<TextResponse> resDTO = new ListResponseDTO<>();
+        resDTO.setList(list.toList());
+        resDTO.setPage(page);
+        resDTO.setPageSize(size);
+        Texts texts = new Texts();
+        texts.setCreateBy(Integer.valueOf(aid));
+        Long c  = textRepository.count(Example.of(texts));
+        Integer count = c != null ? c.intValue() : null;
+        resDTO.setCount(count);
+        return  resDTO;
+    }
+
 }

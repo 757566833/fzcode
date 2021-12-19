@@ -4,6 +4,8 @@ import com.fzcode.servicenote.repositroy.mapper.TextDBFindListMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBFindListCountMapper;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.entity.Texts;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,7 +17,6 @@ public interface TextRepository extends JpaRepository<Texts, Integer> {
             "texts.create_by, " +
             "texts.update_time, " +
             "texts.title, " +
-            "texts.html, " +
             "texts.raw, " +
             "texts.type, " +
             "texts.text, " +
@@ -60,4 +61,8 @@ public interface TextRepository extends JpaRepository<Texts, Integer> {
             "LIMIT ?1 OFFSET ?2 "
     )
     List<TextDBFindListCountMapper> findListCount(Integer limit , Integer offset);
+
+    Page<Texts> findByTitleLike(String title, Pageable pageable);
+
+//    long countByName(String name);
 }

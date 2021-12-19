@@ -134,7 +134,7 @@ public class AuthController {
 //        MultiValueMap<String, String> params = ObjectUtils.object2MultiValueMap(accountListRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("email",email);
-        headers.add("aid",aid);
+        headers.add("aid",aid);System.out.println("/admin/account");
         ListResponseDTO resEntity =  http.get(services.getService().getAuth().getHost()+"/admin/account", accountListRequest,headers, ListResponseDTO.class);
         return  new SuccessResponse("查询成功",resEntity);
     }

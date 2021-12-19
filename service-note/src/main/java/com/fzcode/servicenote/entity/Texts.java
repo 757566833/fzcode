@@ -46,9 +46,6 @@ public class Texts {
     @Column(name = "text", columnDefinition="varchar(2048) COMMENT 'text'")
     private String text;
 
-    @Column(name = "html", nullable = false,columnDefinition="varchar(2048) COMMENT 'html'")
-    private String html;
-
     @Column(name = "is_delete")
     private Integer isDelete = 0;
 

@@ -57,7 +57,7 @@ public class TextService {
         System.out.println("before copy");
         BeanUtils.copyProperties(textRequest, texts);
         System.out.println("after copy");
-        String content = HtmlUtils.html2Text(textRequest.getHtml());
+        String content = textRequest.getText();
         texts.setCreateBy(create_by);
 
         // 存正文
@@ -108,7 +108,10 @@ public class TextService {
     public ListResponseDTO<TextResponse> findAll(Integer page, Integer size) {
         return textDBDao.findAll(page, size);
     }
-
+    public ListResponseDTO<TextResponse> findSelfAll(String aid , String search ,Integer page, Integer size) {
+        System.out.println("findSelfAll");
+        return textDBDao.findSelfList(aid,search ,page, size);
+    }
     @Transactional(rollbackFor = Exception.class)
     public Integer update(Integer id,@Validated(value = FullUpdate.class) TextRequest textRequest) throws CustomizeException {
         if (textRequest.getDescription() != null) {
@@ -123,7 +126,7 @@ public class TextService {
 //        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
         textESUpdateDTO.setCategories(textRequest.getCategories());
 
-        textESUpdateDTO.setContent(HtmlUtils.html2Text(textRequest.getHtml()));
+        textESUpdateDTO.setContent(textRequest.getText());
         return textElasticDao.update(textESUpdateDTO);
     }
 
@@ -142,7 +145,7 @@ public class TextService {
         }
         TextESDTO textESPatchDTO = new TextESDTO(nid,textRequest.getTitle());
         textESPatchDTO.setCategories(textRequest.getCategories());
-        textESPatchDTO.setContent(HtmlUtils.html2Text(textRequest.getHtml()));
+        textESPatchDTO.setContent(textRequest.getText());
         textESPatchDTO.setTitle(textRequest.getTitle());
         return textElasticDao.patch(textESPatchDTO);
     }

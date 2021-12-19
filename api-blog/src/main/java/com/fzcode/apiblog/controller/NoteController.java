@@ -5,6 +5,7 @@ import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
+import com.fzcode.internalcommon.dto.servicenote.request.text.SelfListRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextListRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.category.CategoryResponse;
@@ -61,6 +62,16 @@ public class NoteController {
     @GetMapping(value = "/text/list")
     public SuccessResponse getTextList(TextListRequest textListRequest) throws CustomizeException {
         ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/list", textListRequest,ListResponseDTO.class);
+        return new SuccessResponse("查询成功", listResponseDTO);
+    }
+    @ApiOperation(value = "获取文章列表")
+    @GetMapping(value = "/text/self/list")
+    public SuccessResponse getSelfList(SelfListRequest selfListRequest, @RequestHeader("aid") String aid) throws CustomizeException {
+        System.out.println("getSelfList");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("aid",aid);
+        System.out.println(aid);
+        ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/self/list", selfListRequest,headers,ListResponseDTO.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
     @ApiOperation(value = "获取指定文章")
