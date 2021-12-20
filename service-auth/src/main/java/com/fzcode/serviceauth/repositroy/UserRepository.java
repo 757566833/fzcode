@@ -3,6 +3,8 @@ package com.fzcode.serviceauth.repositroy;
 import com.fzcode.serviceauth.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<Users, Integer> {
 //    @Transactional
 //    @Modifying
@@ -10,4 +12,6 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 //    Integer createAccountWithUserInfo(String account, String password);
 
 //    List<Users> findByIsDelete(Boolean bool);
+      Users findFirstByUid(String uid);
+      Users findFirstByAid(String aid);
 }

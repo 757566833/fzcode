@@ -12,6 +12,7 @@ import com.fzcode.internalcommon.dto.servicenote.response.category.CategoryRespo
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.http.Http;
+import com.fzcode.internalcommon.utils.JSONUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,11 +67,13 @@ public class NoteController {
     }
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/text/self/list")
-    public SuccessResponse getSelfList(SelfListRequest selfListRequest, @RequestHeader("aid") String aid) throws CustomizeException {
+    public SuccessResponse getSelfList(SelfListRequest selfListRequest, @RequestHeader HttpHeaders httpHeaders) throws CustomizeException {
         System.out.println("getSelfList");
+        System.out.println(JSONUtils.stringify(httpHeaders));
+        System.out.println(httpHeaders.get("aid"));
         HttpHeaders headers = new HttpHeaders();
-        headers.add("aid",aid);
-        System.out.println(aid);
+        headers.add("aid",httpHeaders.get("aid").toString());
+        System.out.println(httpHeaders.get("aid"));
         ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/self/list", selfListRequest,headers,ListResponseDTO.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }

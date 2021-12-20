@@ -2,20 +2,24 @@ package com.fzcode.serviceauth.entity;
 
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
 @Data
 @Entity
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class Users {
 
     @Id
-    private int uid;
+    @GeneratedValue(generator = "jpa-uuid")
+    private String uid;
 
 
     @Column(name = "update_time")
@@ -40,5 +44,8 @@ public class Users {
 
     @Column
     private String blog;
+
+    @Column
+    private String aid;
 
 }

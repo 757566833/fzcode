@@ -62,7 +62,7 @@ public interface TextRepository extends JpaRepository<Texts, Integer> {
     )
     List<TextDBFindListCountMapper> findListCount(Integer limit , Integer offset);
 
-    Page<Texts> findByTitleLike(String title, Pageable pageable);
+    Page<Texts> findByTitleContaining(String title, Pageable pageable);
 
 //    long countByName(String name);
 }

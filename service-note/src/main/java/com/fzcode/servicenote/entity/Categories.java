@@ -32,11 +32,11 @@ public class Categories {
 
     @Column(name = "create_by")
 //    @CreatedBy
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_by")
 //    @LastModifiedBy
-    private Integer updateBy;
+    private String updateBy;
 
     private String title;
 
@@ -46,7 +46,7 @@ public class Categories {
     private Integer isDelete = 0;
 
     @Column(name = "delete_by")
-    private Integer deleteBy;
+    private String deleteBy;
 
 
 }

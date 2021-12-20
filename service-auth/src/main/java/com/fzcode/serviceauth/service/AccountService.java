@@ -6,6 +6,7 @@ import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
+import com.fzcode.internalcommon.dto.serviceauth.response.SelfResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
@@ -16,9 +17,10 @@ import com.fzcode.serviceauth.dao.AuthorityDao;
 import com.fzcode.serviceauth.dao.UserDao;
 import com.fzcode.serviceauth.util.RedisUtils;
 import com.fzcode.serviceauth.util.TokenUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,11 +50,23 @@ public class AccountService {
         this.authorityDao = authorityDao;
     }
 
+    RedisUtils redisUtils;
+
+    @Autowired
+    public void setRedisUtils(RedisUtils redisUtils){
+        this.redisUtils = redisUtils;
+    }
+
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public LoginResponse login(String email, String password) throws CustomizeException {
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         Accounts userAccount = accountDao.findByAccount(email);
-        if (userAccount==null||!bCryptPasswordEncoder.matches(password, userAccount.getPassword())) {
+        if (userAccount==null||!passwordEncoder.matches(password, userAccount.getPassword())) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"用户名密码错误");
         }
         LoginResponse loginResponse = new LoginResponse();
@@ -63,19 +77,19 @@ public class AccountService {
 
     @Transactional(rollbackFor = Exception.class)
     public RegisterResponse register(String email, String password, String code, int registerType) throws CustomizeException {
-
-        Accounts accounts = new Accounts();
-        accounts.setAccount(email);
-        accounts.setPassword(new BCryptPasswordEncoder().encode(password));
-        accounts.setRegisterType(registerType);
         boolean b = accountDao.isHas(email);
         if (b) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"邮箱已存在");
         }
-        String redisCode = RedisUtils.getString(email + ":register");
+        String redisCode = redisUtils.getString(email + ":register");
         if (!redisCode.equals(code)) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"验证码错误");
         }
+        Accounts accounts = new Accounts();
+        accounts.setAccount(email);
+        accounts.setPassword(passwordEncoder.encode(password));
+        accounts.setRegisterType(registerType);
+
         Accounts accountsResult;
         try {
             accountsResult = accountDao.create(accounts);
@@ -83,13 +97,13 @@ public class AccountService {
             System.out.println(e.getMessage());
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"账号创建失败");
         }
-        Integer aid = accountsResult.getAid();
+        String aid = accountsResult.getAid();
         Users users = new Users();
-        users.setUid(aid);
+        users.setAid(aid);
         users.setUsername(email);
-
+        Users userResult ;
         try {
-            userDao.create(users);
+            userResult =  userDao.create(users);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"账号信息创建失败");
@@ -98,6 +112,8 @@ public class AccountService {
         Authorities authorities = new Authorities();
         authorities.setAccount(email);
         authorities.setAuthority("USER");
+        authorities.setAid(accountsResult.getAid());
+        authorities.setUid(userResult.getUid());
         try {
             authorityDao.create(authorities);
         } catch (Exception e) {
@@ -153,13 +169,11 @@ public class AccountService {
 //    }
     @Transactional(rollbackFor = Exception.class)
     public RegisterResponse githubRegister(GithubUserInfo githubUserInfo) throws CustomizeException {
-        System.out.println(JSONUtils.stringify(githubUserInfo));
         String email = githubUserInfo.getEmail();
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String password = bCryptPasswordEncoder.encode(githubUserInfo.getId().toString());
+
         Accounts account = accountDao.findByAccount(email);
         if (account != null) {
-            if (!bCryptPasswordEncoder.matches(githubUserInfo.getId().toString(), account.getPassword())) {
+            if (!passwordEncoder.matches(githubUserInfo.getId().toString(), account.getPassword())) {
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"你这号id怎么变了");
             } else {
                 RegisterResponse registerResponse = new RegisterResponse();
@@ -168,6 +182,7 @@ public class AccountService {
                 return registerResponse;
             }
         } else {
+            String password = passwordEncoder.encode(githubUserInfo.getId().toString());
             Accounts saveAccount = new Accounts();
             saveAccount.setAccount(email);
             saveAccount.setRegisterType(RegisterTypeEnum.GITHUB_REGISTER.getCode());
@@ -180,7 +195,7 @@ public class AccountService {
 
             }
             Users users = new Users();
-            users.setUid(accountResult.getAid());
+            users.setAid(accountResult.getAid());
             if (githubUserInfo.getName() != null) {
                 users.setUsername(githubUserInfo.getName());
             } else {
@@ -191,17 +206,21 @@ public class AccountService {
             users.setBlog(githubUserInfo.getBlog());
             users.setGithubUrl("https://github.com/"+githubUserInfo.getLogin());
             users.setIdCard("");
+            Users userResult ;
             try {
-                userDao.create(users);
+                userResult = userDao.create(users);
             } catch (Exception e) {
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"账号资料创建失败，请重试");
             }
             Authorities authorities = new Authorities();
             authorities.setAccount(email);
             authorities.setAuthority("USER");
+            authorities.setAid(accountResult.getAid());
+            authorities.setUid(userResult.getUid());
             try {
                 authorityDao.create(authorities);
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限创建失败，请重试");
             }
             RegisterResponse registerResponse = new RegisterResponse();
@@ -219,7 +238,18 @@ public class AccountService {
         return accountDao.findList(accountListRequest);
     }
 
-    public Map<String, Object> findByAid(Integer aid) throws CustomizeException {
-        return accountDao.findUserInfoByUid(aid);
+    public SelfResponse findFirstByAid(String aid) throws CustomizeException {
+        Accounts accounts = accountDao.findFirstByAid(aid);
+        Users  users = userDao.findFirstByAid(aid);
+        SelfResponse selfResponse = new SelfResponse();
+        BeanUtils.copyProperties(accounts,selfResponse);
+        BeanUtils.copyProperties(users,selfResponse);
+        System.out.println("=============");
+        System.out.println(JSONUtils.stringify(accounts));
+        System.out.println(JSONUtils.stringify(users));
+        System.out.println("=============");
+        System.out.println(JSONUtils.stringify(selfResponse));
+        System.out.println("=============");
+        return selfResponse;
     }
 }

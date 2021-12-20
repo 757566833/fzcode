@@ -51,7 +51,7 @@ public class CategoryDBDao {
         return categoriesResult;
     }
 
-    public Categories delete(Integer id, Integer deleteBy) {
+    public Categories delete(Integer id, String deleteBy) {
         Categories categories = new Categories();
         categories.setIsDelete(1);
         categories.setCid(id);

@@ -68,25 +68,29 @@ public class AuthFilter implements Ordered, GlobalFilter {
         // admin 管理员相关的接口
         else if (uri.getPath().indexOf("admin") >= 0) {
             String email = null;
-            Integer aid = null;
+            String aid = null;
             // 解析token
             try {
                 TokenInfoDTO tokenInfoDTO = TokenUtils.parseBearer(auth);
                 email = tokenInfoDTO.getEmail();
                 aid = tokenInfoDTO.getAid();
+
             } catch (Exception e) {
+                System.out.println("error1");
+                System.out.println(e.getMessage());
                 DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token不存在".getBytes());
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
             }
 //            email 非空判断
             if (email == null) {
+                System.out.println("error2");
                 DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("token不对".getBytes());
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
             }
                 String finalEmail = email;
-                Integer finalAid = aid;
+                String finalAid = aid;
                 return authorityService.getAuthority(email).flatMap(authority -> {
                     System.out.println("authority:"+authority);
                     if (uri.getPath().indexOf("admin") > 0 && !authority.equals("ADMIN")) {
@@ -97,7 +101,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
                     ServerHttpRequest nextRequest = request
                             .mutate()
                             .header("email", finalEmail)
-                            .header("aid", finalAid.toString())
+                            .header("aid", finalAid)
                             .header("authority", authority)
                             .build();
                     ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
@@ -109,18 +113,21 @@ public class AuthFilter implements Ordered, GlobalFilter {
             try {
                 TokenInfoDTO tokenInfoDTO = TokenUtils.parseBearer(auth);
                 String  email = tokenInfoDTO.getEmail();
-                Integer aid = tokenInfoDTO.getAid();
+                String aid = tokenInfoDTO.getAid();
+                System.out.println(aid);
+                System.out.println(email);
                 return authorityService.getAuthority(email).flatMap(authority -> {
                     ServerHttpRequest nextRequest = request
                             .mutate()
                             .header("email", email)
-                            .header("aid", aid.toString())
+                            .header("aid", aid)
                             .header("authority", authority)
                             .build();
                     ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
                     return chain.filter(nextExchange);
                 });
             } catch (Exception e) {
+                System.out.println("error3");
                 ServerHttpResponse res = exchange.getResponse();
                 res.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();

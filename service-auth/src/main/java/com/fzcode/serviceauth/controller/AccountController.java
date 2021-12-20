@@ -9,9 +9,11 @@ import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubAccessToken;
 import com.fzcode.internalcommon.dto.serviceauth.common.GithubUserInfo;
+import com.fzcode.internalcommon.dto.serviceauth.response.SelfResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.serviceauth.config.Github;
 import com.fzcode.serviceauth.config.Oauth;
+import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.http.GithubAuth;
 import com.fzcode.serviceauth.service.AccountService;
 import io.swagger.annotations.Api;
@@ -171,9 +173,8 @@ public class AccountController {
 
     @ApiOperation(value = "获取个人信息")
     @GetMapping("/self")
-    public Map<String, Object> getSelf(@RequestHeader("aid") String aid) throws CustomizeException {
-
-        return accountService.findByAid(Integer.parseInt(aid));
+    public SelfResponse getSelf(@RequestHeader("aid") String aid) throws CustomizeException {
+        return accountService.findFirstByAid(aid);
     }
 
     @ApiOperation(value = "获取账号列表（必须是管理员）")

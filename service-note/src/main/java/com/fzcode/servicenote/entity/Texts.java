@@ -30,11 +30,11 @@ public class Texts {
 
     @Column(name = "create_by")
 //    @CreatedBy
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_by")
 //    @LastModifiedBy
-    private Integer updateBy;
+    private String updateBy;
 
     private String title;
 

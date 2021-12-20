@@ -27,8 +27,11 @@ public class UserDao {
         return list;
     }
 
-    public Users findById(Integer id) {
-        return userRepository.findById(id).get();
+    public Users findFirstByUid(String uid) {
+        return userRepository.findFirstByUid(uid);
+    }
+    public Users findFirstByAid(String aid) {
+        return userRepository.findFirstByAid(aid);
     }
 
     public Users create(Users users) {
@@ -41,8 +44,8 @@ public class UserDao {
     }
 
     public Users patch(Users users) {
-        Integer uid = users.getUid();
-        Users oldUsers = this.findById(uid);
+        String uid = users.getUid();
+        Users oldUsers = this.findFirstByUid(uid);
         Users newUsers = new Users();
         BeanUtils.copyProperties(oldUsers, newUsers);
         BeanUtils.copyProperties(users, newUsers);

@@ -106,8 +106,9 @@ public class AccountDao {
 
     }
 
-    public Map<String, Object> findUserInfoByUid(Integer aid) throws CustomizeException {
-        List<Map<String, Object>> mapList = accountRepository.findUserInfoByUid(aid);
+    public Accounts findFirstByAid(String aid) throws CustomizeException {
+
+        List<Accounts> mapList = accountRepository.findFirstByAid(aid);
         if (mapList.size() == 0) {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"用户不存在");
         }

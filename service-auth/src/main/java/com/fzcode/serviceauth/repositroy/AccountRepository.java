@@ -54,5 +54,6 @@ public interface AccountRepository extends JpaRepository<Accounts, Integer> {
             "WHERE " +
             "users.uid = ?1"
     )
-    List<Map<String, Object>> findUserInfoByUid(Integer uid);
+    List<Map<String, Object>> findUserInfoByUid(String uid);
+    List<Accounts> findFirstByAid(String aid);
 }

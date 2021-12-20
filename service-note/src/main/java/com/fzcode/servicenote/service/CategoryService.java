@@ -26,7 +26,7 @@ public class CategoryService {
         this.categoryDBDao = categoryDBDao;
     }
 
-    public Integer create(@Validated(value = Create.class)CategoryRequest cateGoryReqCreateDTO, Integer aid, String authority) throws CustomizeException {
+    public Integer create(@Validated(value = Create.class)CategoryRequest cateGoryReqCreateDTO, String aid, String authority) throws CustomizeException {
         if(!authority.equals(AuthorityConstant.admin)){
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限不足");
         }
@@ -48,7 +48,7 @@ public class CategoryService {
         return categoryDBDao.findAll();
     }
 
-    public Integer update(@Validated(value = FullUpdate.class)CategoryRequest categoryRequest, Integer updateBy) throws CustomizeException {
+    public Integer update(@Validated(value = FullUpdate.class)CategoryRequest categoryRequest, String updateBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryRequest.getCid());
         if (isHas) {
             Categories categories = new Categories();
@@ -62,7 +62,7 @@ public class CategoryService {
 
     }
 
-    public Integer patch(@Validated(value = IncrementalUpdate.class)CategoryRequest categoryRequest, Integer updateBy) throws CustomizeException {
+    public Integer patch(@Validated(value = IncrementalUpdate.class)CategoryRequest categoryRequest, String updateBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryRequest.getCid());
         if (isHas) {
             Categories categories = new Categories();
@@ -75,7 +75,7 @@ public class CategoryService {
         }
     }
 
-    public Integer delete(@Validated(value = Delete.class)CategoryRequest categoryRequest, Integer deleteBy) throws CustomizeException {
+    public Integer delete(@Validated(value = Delete.class)CategoryRequest categoryRequest, String deleteBy) throws CustomizeException {
         Boolean isHas = categoryDBDao.isHas(categoryRequest.getCid());
         if (isHas) {
             Categories categoryResult = categoryDBDao.delete(categoryRequest.getCid(),deleteBy);

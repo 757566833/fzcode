@@ -81,7 +81,7 @@ public class CategoryController {
 
     @ApiOperation(value = "添加分类")
     @PostMapping(value = "/create")
-    public Integer create(@RequestBody @Validated(value = Create.class) CategoryRequest categoryRequest, @RequestHeader("aid") Integer aid, @RequestHeader("authority") String authority) throws CustomizeException {
+    public Integer create(@RequestBody @Validated(value = Create.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
         System.out.println("create");
         System.out.println(aid);
         System.out.println(authority);
@@ -90,21 +90,21 @@ public class CategoryController {
 
     @ApiOperation(value = "修改分类-全量")
     @PutMapping(value = "/update")
-    public SuccessResponse update(@RequestBody @Validated(value = FullUpdate.class) CategoryRequest categoryRequest, @RequestHeader("aid") Integer aid) throws CustomizeException {
+    public SuccessResponse update(@RequestBody @Validated(value = FullUpdate.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         Integer cid = categoryService.update(categoryRequest,aid);
         return new SuccessResponse("更新成功", cid);
     }
 
     @ApiOperation(value = "修改分类-增量")
     @PatchMapping(value = "/patch")
-    public SuccessResponse patch(@RequestBody @Validated(value = IncrementalUpdate.class) CategoryRequest categoryRequest, @RequestHeader("aid") Integer aid) throws CustomizeException {
+    public SuccessResponse patch(@RequestBody @Validated(value = IncrementalUpdate.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         Integer cid = categoryService.patch(categoryRequest,aid);
         return new SuccessResponse("更新成功", cid);
     }
 
     @ApiOperation(value = "删除分类")
     @DeleteMapping(value = "/delete")
-    public SuccessResponse del(@RequestBody @Validated(value = Delete.class) CategoryRequest categoryRequest, @RequestHeader("aid") Integer aid) throws CustomizeException {
+    public SuccessResponse del(@RequestBody @Validated(value = Delete.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         Integer cid = categoryService.delete(categoryRequest,aid);
         return new SuccessResponse("删除", cid);
     }

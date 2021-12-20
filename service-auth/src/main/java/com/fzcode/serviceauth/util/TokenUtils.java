@@ -28,7 +28,7 @@ public class TokenUtils {
         TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
     }
 
-    public static String createBearer(Integer aid,String username) {
+    public static String createBearer(String aid,String username) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, 3);

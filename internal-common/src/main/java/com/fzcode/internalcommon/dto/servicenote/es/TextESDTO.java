@@ -27,7 +27,7 @@ public class TextESDTO {
     @NotEmpty(groups = {Create.class,FullUpdate.class})
     private Date updateTime;
     @NotEmpty(groups = {Create.class,FullUpdate.class})
-    private Integer createBy;
+    private String createBy;
     @NotEmpty(groups = {Create.class,FullUpdate.class})
     private String summary;
 

@@ -65,7 +65,7 @@ public class  TokenUtils {
         Object emailObj = jws.getHeader().get("email");
         Object aidObj = jws.getHeader().get("aid");
         TokenInfoDTO tokenInfoDTO = new TokenInfoDTO();
-        tokenInfoDTO.setAid(Integer.parseInt(aidObj.toString()));
+        tokenInfoDTO.setAid(aidObj.toString());
         tokenInfoDTO.setEmail(emailObj.toString());
         return tokenInfoDTO;
     }

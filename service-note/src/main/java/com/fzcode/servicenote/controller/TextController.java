@@ -64,7 +64,7 @@ public class TextController {
         if (aid == null) {
             throw new CustomizeException(HttpStatus.UNAUTHORIZED,"用户未登录");
         }
-        Integer tid = textService.create(textRequest,Integer.valueOf(aid));
+        Integer tid = textService.create(textRequest,aid);
         Map map = new HashMap();
         map.put("tid", tid);
         return  map;

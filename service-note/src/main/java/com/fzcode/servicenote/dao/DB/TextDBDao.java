@@ -125,14 +125,14 @@ public class TextDBDao {
         return textsResult;
     }
     public  ListResponseDTO<TextResponse> findSelfList (String aid,String search ,Integer page, Integer size){
-        Pageable pageable = PageRequest.of(page, size);;
-        Page list =  textRepository.findByTitleLike("%"+search+"%",pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page list =  textRepository.findByTitleContaining(search,pageable);
         ListResponseDTO<TextResponse> resDTO = new ListResponseDTO<>();
         resDTO.setList(list.toList());
         resDTO.setPage(page);
         resDTO.setPageSize(size);
         Texts texts = new Texts();
-        texts.setCreateBy(Integer.valueOf(aid));
+        texts.setCreateBy(aid);
         Long c  = textRepository.count(Example.of(texts));
         Integer count = c != null ? c.intValue() : null;
         resDTO.setCount(count);

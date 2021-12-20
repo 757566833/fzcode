@@ -15,7 +15,6 @@ import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
 import com.fzcode.servicenote.dao.DB.TextDBDao;
 import com.fzcode.servicenote.dao.elastic.TextElasticDao;
-import com.fzcode.servicenote.utils.HtmlUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,7 +50,7 @@ public class TextService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Integer create(@Validated(value = Create.class) TextRequest textRequest, Integer create_by) throws CustomizeException {
+    public Integer create(@Validated(value = Create.class) TextRequest textRequest, String create_by) throws CustomizeException {
         System.out.println("createBy:"+create_by);
         Texts texts = new Texts();
         System.out.println("before copy");

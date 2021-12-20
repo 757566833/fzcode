@@ -1,6 +1,7 @@
 package com.fzcode.serviceauth.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,11 +17,12 @@ import java.util.Date;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class Accounts {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int aid;
+    @GeneratedValue(generator = "jpa-uuid")
+    private String aid;
 
     @Column(name = "create_time")
     @CreatedDate
