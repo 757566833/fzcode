@@ -56,7 +56,7 @@ public class TextService {
         System.out.println("before copy");
         BeanUtils.copyProperties(textRequest, texts);
         System.out.println("after copy");
-        String content = textRequest.getText();
+        String content = textRequest.getContent();
         texts.setCreateBy(create_by);
 
         // 存正文
@@ -125,7 +125,7 @@ public class TextService {
 //        textESUpdateDTO.setSubTitle(textReqUpdateDTO.getSubTitle());
         textESUpdateDTO.setCategories(textRequest.getCategories());
 
-        textESUpdateDTO.setContent(textRequest.getText());
+        textESUpdateDTO.setContent(textRequest.getContent());
         return textElasticDao.update(textESUpdateDTO);
     }
 
@@ -144,7 +144,7 @@ public class TextService {
         }
         TextESDTO textESPatchDTO = new TextESDTO(nid,textRequest.getTitle());
         textESPatchDTO.setCategories(textRequest.getCategories());
-        textESPatchDTO.setContent(textRequest.getText());
+        textESPatchDTO.setContent(textRequest.getContent());
         textESPatchDTO.setTitle(textRequest.getTitle());
         return textElasticDao.patch(textESPatchDTO);
     }

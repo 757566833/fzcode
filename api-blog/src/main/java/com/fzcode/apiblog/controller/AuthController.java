@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,13 +69,13 @@ public class AuthController {
     }
 
     @ApiOperation(value = "账号密码登陆")
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     public String login (@RequestBody @Validated LoginRequest loginRequest) throws CustomizeException {
         return  http.post(services.getService().getAuth().getHost()+"/login",loginRequest,String.class);
     }
 
     @ApiOperation(value = "账号密码注册")
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/register")
     public String register (@RequestBody @Validated RegisterRequest registerRequest) throws CustomizeException {
         return  http.post(services.getService().getAuth().getHost()+"/register",registerRequest,String.class);
     }

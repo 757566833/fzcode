@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "权限模块")
 @RestController
-@RequestMapping(value = "/authority",consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/authority")
 public class AuthorityController {
     private AuthorityDao authorityDao;
 

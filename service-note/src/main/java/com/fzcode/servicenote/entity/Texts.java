@@ -40,11 +40,8 @@ public class Texts {
 
     private String description;
 
-    @Column(name = "raw",  columnDefinition="varchar(2048) COMMENT 'raw'")
-    private String raw;
-
-    @Column(name = "text", columnDefinition="varchar(2048) COMMENT 'text'")
-    private String text;
+    @Column(name = "value", columnDefinition="varchar(2048) COMMENT 'value'")
+    private String value;
 
     @Column(name = "is_delete")
     private Integer isDelete = 0;

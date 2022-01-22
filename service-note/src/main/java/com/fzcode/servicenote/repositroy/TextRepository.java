@@ -17,7 +17,6 @@ public interface TextRepository extends JpaRepository<Texts, Integer> {
             "texts.create_by, " +
             "texts.update_time, " +
             "texts.title, " +
-            "texts.raw, " +
             "texts.type, " +
             "texts.text, " +
             "users.avatar, " +

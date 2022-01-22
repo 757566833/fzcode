@@ -15,17 +15,18 @@ import java.util.List;
 @Data
 public class TextRequest {
     // 改的功能id在patch中，不需要校验
-    @NotEmpty(groups = {Retrieve.class, Delete.class})
+    @NotEmpty(message = "tid:id不能为空",groups = {Retrieve.class, Delete.class})
     private Integer tid;
-    @NotBlank(message = "标题不能为空",groups = {Create.class, FullUpdate.class})
+    @NotBlank(message = "title:标题不能为空",groups = {Create.class, FullUpdate.class})
     private String title;
-    @NotBlank(message = "备注不能为空",groups = {Create.class, FullUpdate.class})
+    @NotBlank(message = "description:备注不能为空",groups = {Create.class, FullUpdate.class})
     private String description;
-    @NotNull(message = "分类不能为空",groups = {Create.class, FullUpdate.class})
+    @NotNull(message = "categories:分类不能为空",groups = {Create.class, FullUpdate.class})
     private List<Integer> categories;
-    @NotNull(message = "类型不能为空",groups = {Create.class, FullUpdate.class})
+    @NotNull(message = "type:类型不能为空",groups = {Create.class, FullUpdate.class})
     private Integer type;
-    private String raw;
-    @NotBlank(message = "内容不能为空",groups = {Create.class, FullUpdate.class})
-    private String text;
+    @NotNull(message = "value:值不能为空",groups = {Create.class, FullUpdate.class})
+    private String value;
+    @NotBlank(message = "content:内容不能为空",groups = {Create.class, FullUpdate.class})
+    private String content;
 }

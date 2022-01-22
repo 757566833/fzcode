@@ -1,6 +1,7 @@
 package com.fzcode.apiblog.controller;
 
 import com.fzcode.apiblog.config.Services;
+import com.fzcode.internalcommon.crud.Create;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.servicenote.request.category.CategoryRequest;
@@ -52,7 +53,7 @@ public class NoteController {
     }
     @ApiOperation(value = "添加文章")
     @PostMapping(value = "/text/create")
-    public SuccessResponse createText(@RequestBody @Validated TextRequest textRequest, @RequestHeader("aid") String aid) throws CustomizeException {
+    public SuccessResponse createText(@RequestBody @Validated(value = Create.class) TextRequest textRequest, @RequestHeader("aid") String aid) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
         HttpEntity<TextRequest> requestParam = new HttpEntity<TextRequest>(textRequest, headers);
@@ -85,7 +86,7 @@ public class NoteController {
     }
     @ApiOperation(value = "创建文章分类")
     @PostMapping(value = "/category/create")
-    public SuccessResponse createCategory(@RequestBody @Validated CategoryRequest categoryRequest, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
+    public SuccessResponse createCategory(@RequestBody @Validated(value = Create.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
         headers.add("authority",authority);

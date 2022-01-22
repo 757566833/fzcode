@@ -7,8 +7,6 @@ public interface TextDBGetByIdMapper {
 
     String getTitle();
 
-    String getRaw();
-
     String getAvatar();
 
     String getUsername();

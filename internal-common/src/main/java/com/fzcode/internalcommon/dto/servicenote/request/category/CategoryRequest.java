@@ -14,11 +14,11 @@ import java.util.List;
 
 @Data
 public class CategoryRequest {
-    @NotNull(message = "id不能为空",groups = {Delete.class,IncrementalUpdate.class, FullUpdate.class, Retrieve.class})
+    @NotNull(message = "cid:id不能为空",groups = {Delete.class,IncrementalUpdate.class, FullUpdate.class, Retrieve.class})
     private Integer cid;
-    @NotEmpty(message = "标题不能为空",groups = { FullUpdate.class, Create.class})
+    @NotEmpty(message = "title:标题不能为空",groups = { FullUpdate.class, Create.class})
     private String title;
-    @NotEmpty(message = "备注不能为空",groups = { FullUpdate.class, Create.class})
+    @NotEmpty(message = "description:备注不能为空",groups = { FullUpdate.class, Create.class})
     private String description;
     private String img;
     private String detail;

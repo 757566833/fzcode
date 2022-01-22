@@ -1,5 +1,9 @@
 server:
   port: 30202
+  servlet:
+    encoding:
+      charset: utf-8
+      force-response: true
   ssl:
     enabled: false
 spring:

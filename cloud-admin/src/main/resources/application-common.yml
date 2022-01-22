@@ -1,5 +1,9 @@
 server:
   port: 30650
+  servlet:
+    encoding:
+      charset: utf-8
+      force-response: true
 spring:
   application:
     name: CLOUD-ADMIN
