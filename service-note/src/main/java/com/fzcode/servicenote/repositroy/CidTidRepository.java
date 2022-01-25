@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CidTidRepository extends JpaRepository<CidTid, Integer> {
+public interface CidTidRepository extends JpaRepository<CidTid, String> {
     List<CidTid> findByCid(Integer cid);
     List<CidTid> findByTid(Integer tid);
     

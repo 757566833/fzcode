@@ -68,9 +68,7 @@ public class RedisUtils {
     }
 
     public static Mono<String> getHash(String hashName, String key) {
-        System.out.println("getHash:" + key);
         ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveRedisTemplate.opsForHash();
-        System.out.println("???");
         return reactiveHashOperations.hasKey(hashName, key).flatMap(bool -> {
             if (bool) {
                 return reactiveHashOperations.get(hashName, key);

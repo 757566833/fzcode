@@ -81,11 +81,11 @@ public class CategoryController {
 
     @ApiOperation(value = "添加分类")
     @PostMapping(value = "/create")
-    public Integer create(@RequestBody @Validated(value = Create.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
+    public Integer create(@RequestBody @Validated(value = Create.class) CategoryRequest categoryRequest, @RequestHeader("uid") String uid, @RequestHeader("authority") String authority) throws CustomizeException {
         System.out.println("create");
-        System.out.println(aid);
+        System.out.println(uid);
         System.out.println(authority);
-        return categoryService.create(categoryRequest, aid,authority);
+        return categoryService.create(categoryRequest, uid,authority);
     }
 
     @ApiOperation(value = "修改分类-全量")

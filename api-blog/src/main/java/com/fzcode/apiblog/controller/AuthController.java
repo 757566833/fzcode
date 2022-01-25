@@ -118,10 +118,11 @@ public class AuthController {
 
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping(value = "/self")
-    public SuccessResponse getSelf (@RequestHeader("email") String email, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
+    public SuccessResponse getSelf (@RequestHeader("email") String email,@RequestHeader("uid") String uid, @RequestHeader("aid") String aid, @RequestHeader("authority") String authority) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("email",email);
         headers.add("aid",aid);
+        headers.add("uid",uid);
         headers.add("authority",authority);
         Map map =  http.get(services.getService().getAuth().getHost()+"/self", headers, Map.class);
         return  new SuccessResponse("查询成功",map);

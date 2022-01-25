@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Component
 public class  TokenUtils {
-    private static SecretKey key;
+    private  SecretKey key;
     private Secret secret;
 
     @Autowired
@@ -30,28 +30,10 @@ public class  TokenUtils {
     }
     @PostConstruct
     public void init(){
-        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secret.getSecret()));
-    }
-    public static String createBearer(String username) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DAY_OF_MONTH, 3);
-
-        Map<String, Object> header = new HashMap<String, Object>();
-        header.put("email", username);
-
-        String compactJws = Jwts.builder()
-                .setHeader(header)
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(c.getTime())
-                .signWith(TokenUtils.key, SignatureAlgorithm.HS256)
-                .compact();
-        return "bearer "+compactJws;
-
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secret.getSecret()));
     }
 
-    public static TokenInfoDTO parseBearer(String token) {
+    public  TokenInfoDTO parseBearer(String token) {
         int preIndex = token.indexOf("bearer ");
         if(preIndex==-1){
             throw new JwtException("token格式不对");
@@ -59,18 +41,20 @@ public class  TokenUtils {
         String jwsStr = token.substring(7);
         Jws<Claims> jws;
         jws = Jwts.parserBuilder()
-                .setSigningKey(TokenUtils.key)
+                .setSigningKey(this.key)
                 .build()
                 .parseClaimsJws(jwsStr);
         Object emailObj = jws.getHeader().get("email");
         Object aidObj = jws.getHeader().get("aid");
+        String uid = jws.getBody().getSubject();
         TokenInfoDTO tokenInfoDTO = new TokenInfoDTO();
         tokenInfoDTO.setAid(aidObj.toString());
         tokenInfoDTO.setEmail(emailObj.toString());
+        tokenInfoDTO.setUid(uid);
         return tokenInfoDTO;
     }
 
-    public static String createBasic(String serviceName, String password) {
+    public  String createBasic(String serviceName, String password) {
         return "basic " + serviceName+":"+password;
     }
 }

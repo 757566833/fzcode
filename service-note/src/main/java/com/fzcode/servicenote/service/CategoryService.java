@@ -26,13 +26,13 @@ public class CategoryService {
         this.categoryDBDao = categoryDBDao;
     }
 
-    public Integer create(@Validated(value = Create.class)CategoryRequest cateGoryReqCreateDTO, String aid, String authority) throws CustomizeException {
+    public Integer create(@Validated(value = Create.class)CategoryRequest cateGoryReqCreateDTO, String uid, String authority) throws CustomizeException {
         if(!authority.equals(AuthorityConstant.admin)){
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限不足");
         }
         Categories categories = new Categories();
         BeanUtils.copyProperties(cateGoryReqCreateDTO, categories);
-        categories.setCreateBy(aid);
+        categories.setCreateBy(uid);
         Categories saveResult;
         System.out.println("create");
         try {

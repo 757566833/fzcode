@@ -6,4 +6,5 @@ import lombok.Data;
 public class TokenInfoDTO {
     private String aid;
     private String email;
+    private String uid;
 }

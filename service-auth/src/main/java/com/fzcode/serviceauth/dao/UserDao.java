@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Repository
 public class UserDao {
 
@@ -26,7 +28,10 @@ public class UserDao {
         Page<Users> list = userRepository.findAll(pageable);
         return list;
     }
-
+    public Users findById (String uid){
+        Optional<Users> o = userRepository.findById(uid);
+        return o.get();
+    }
     public Users findFirstByUid(String uid) {
         return userRepository.findFirstByUid(uid);
     }

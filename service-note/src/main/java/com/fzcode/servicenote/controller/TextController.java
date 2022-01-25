@@ -12,6 +12,7 @@ import com.fzcode.internalcommon.dto.servicenote.request.text.TextListRequest;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.service.TextService;
 import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import io.swagger.annotations.Api;
@@ -54,17 +55,17 @@ public class TextController {
     }
     @ApiOperation(value = "获取当前用户的文章列表")
     @GetMapping(value = "/self/list")
-    public ListResponseDTO<TextResponse> getSelfList(SelfListRequest selfListRequest, @RequestHeader("aid") String aid) {
-        return textService.findSelfAll(aid,selfListRequest.getSearch(),selfListRequest.getPage(), selfListRequest.getPageSize());
+    public ListResponseDTO<TextResponse> getSelfList(SelfListRequest selfListRequest, @RequestHeader("uid") String uid) {
+        return textService.findSelfAll(uid,selfListRequest.getSearch(),selfListRequest.getPage(), selfListRequest.getPageSize());
     }
     @ApiOperation(value = "创建文章")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Map create(@RequestBody @Validated(value = Create.class) TextRequest textRequest, @RequestHeader("aid") String aid) throws CustomizeException {
-        if (aid == null) {
+    public Map create(@RequestBody @Validated(value = Create.class) TextRequest textRequest, @RequestHeader("uid") String uid) throws CustomizeException {
+        if (uid == null) {
             throw new CustomizeException(HttpStatus.UNAUTHORIZED,"用户未登录");
         }
-        Integer tid = textService.create(textRequest,aid);
+        Integer tid = textService.create(textRequest,uid);
         Map map = new HashMap();
         map.put("tid", tid);
         return  map;
@@ -99,7 +100,7 @@ public class TextController {
 
     @ApiOperation(value = "获取文章")
     @GetMapping(value = "/get/{id}")
-    public TextDBGetByIdMapper getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
+    public Texts getById(@PathVariable(name = "id") Integer id) throws CustomizeException {
         return textService.findById(id);
     }
 }

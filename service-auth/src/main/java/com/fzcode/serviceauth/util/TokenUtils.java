@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class TokenUtils {
-    private static SecretKey key;
+    private SecretKey key;
     private Secret secret;
     @Autowired
     public void setSecret(Secret secret) {
@@ -25,10 +25,10 @@ public class TokenUtils {
     }
     @PostConstruct
     public void init(){
-        TokenUtils.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
     }
 
-    public static String createBearer(String aid,String username) {
+    public  String createBearer(String aid,String uid,String username) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, 3);
@@ -36,19 +36,15 @@ public class TokenUtils {
         Map<String, Object> header = new HashMap<>();
         header.put("email", username);
         header.put("aid", aid);
-        System.out.println("JwtUtils.key:" + TokenUtils.key);
+        System.out.println("JwtUtils.key:" + this.key);
         String compactJws = Jwts.builder()
                 .setHeader(header)
-                .setSubject(username)
+                .setSubject(uid)
                 .setIssuedAt(new Date())
                 .setExpiration(c.getTime())
-                .signWith(TokenUtils.key, SignatureAlgorithm.HS256)
+                .signWith(this.key, SignatureAlgorithm.HS256)
                 .compact();
         return "bearer " + compactJws;
 
-    }
-
-    public static String createBasic(String serviceName, String password) {
-        return "basic " + serviceName+":"+password;
     }
 }

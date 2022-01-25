@@ -30,17 +30,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 @Api(tags = "文章模块")
 @RestController
-@RequestMapping(value = "/text")
-public class TextController {
+@RequestMapping(value = "/category")
+public class CategoryController {
     Http http;
     @Autowired
     public void setHttp( Http http){
@@ -53,46 +49,21 @@ public class TextController {
         this.services = services;
     }
 
-    TextService textService;
-    @Autowired
-    public void setTextService(TextService textService){
-        this.textService = textService;
-    }
-
-    @ApiOperation(value = "添加文章")
-    @PostMapping(value = "/create")
-    public SuccessResponse createText(@RequestBody @Validated(value = Create.class) TextRequest textRequest, @RequestHeader("uid") String uid) throws CustomizeException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("uid",uid);
-        HttpEntity<TextRequest> requestParam = new HttpEntity<TextRequest>(textRequest, headers);
-        Map listResponseDTO  =   http.post(services.getService().getNote().getHost()+"/text/create",requestParam, Map.class);
-        return new SuccessResponse("添加成功", listResponseDTO);
-    }
-    @ApiOperation(value = "获取文章列表")
+    @ApiOperation(value = "获取文章分类列表")
     @GetMapping(value = "/list")
-    public SuccessResponse getTextList(TextListRequest textListRequest) throws CustomizeException {
-        ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/list", textListRequest,ListResponseDTO.class);
+    public SuccessResponse getCategoryList() throws CustomizeException {
+        List<CategoryResponse> listResponseDTO =  http.get(services.getService().getNote().getHost()+"/category/list", List.class);
         return new SuccessResponse("查询成功", listResponseDTO);
     }
-    @ApiOperation(value = "获取自己的文章列表")
-    @GetMapping(value = "/self/list")
-    public SuccessResponse getSelfList(SelfListRequest selfListRequest, @RequestHeader("email") String email,@RequestHeader("uid") String uid, @RequestHeader("aid") String aid) throws CustomizeException {
-        System.out.println("getSelfList");
-        System.out.println(uid);
-        System.out.println(aid);
-        System.out.println(email);
+    @ApiOperation(value = "创建文章分类")
+    @PostMapping(value = "/create")
+    public SuccessResponse createCategory(@RequestBody @Validated(value = Create.class) CategoryRequest categoryRequest, @RequestHeader("aid") String aid,@RequestHeader("uid") String uid, @RequestHeader("authority") String authority) throws CustomizeException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("aid",aid);
+        headers.add("authority",authority);
         headers.add("uid",uid);
-        headers.add("email",email);
-        ListResponseDTO<TextResponse> listResponseDTO  =  http.get(services.getService().getNote().getHost()+"/text/self/list", selfListRequest,headers,ListResponseDTO.class);
+        HttpEntity<CategoryRequest> requestParam = new HttpEntity<CategoryRequest>(categoryRequest, headers);
+        String listResponseDTO  =  http.post(services.getService().getNote().getHost()+"/category/create",requestParam, String.class);
         return new SuccessResponse("查询成功", listResponseDTO);
-    }
-    @ApiOperation(value = "获取指定文章")
-    @GetMapping(value = "/get/{id}")
-    public SuccessResponse getTextList(@PathVariable(name = "id") String id) throws CustomizeException {
-        System.out.println("获取指定文章"+id);
-        TextDetailDTO textDetail  =  textService.getNote(id);
-        return new SuccessResponse("查询成功", textDetail);
     }
 }

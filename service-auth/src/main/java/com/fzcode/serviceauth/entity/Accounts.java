@@ -60,4 +60,5 @@ public class Accounts {
     private Integer isDelete = 0;
 
     private Date deleteTime;
+    private String uid;
 }

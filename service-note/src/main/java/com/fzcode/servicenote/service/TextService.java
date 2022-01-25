@@ -11,7 +11,6 @@ import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.servicenote.entity.CidTid;
 import com.fzcode.servicenote.entity.Texts;
-import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
 import com.fzcode.servicenote.dao.DB.TextDBDao;
 import com.fzcode.servicenote.dao.elastic.TextElasticDao;
@@ -50,14 +49,14 @@ public class TextService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Integer create(@Validated(value = Create.class) TextRequest textRequest, String create_by) throws CustomizeException {
-        System.out.println("createBy:"+create_by);
+    public Integer create(@Validated(value = Create.class) TextRequest textRequest, String uid) throws CustomizeException {
+        System.out.println("createBy:"+uid);
         Texts texts = new Texts();
         System.out.println("before copy");
         BeanUtils.copyProperties(textRequest, texts);
         System.out.println("after copy");
         String content = textRequest.getContent();
-        texts.setCreateBy(create_by);
+        texts.setCreateBy(uid);
 
         // 存正文
         Texts saveResult;
@@ -76,9 +75,11 @@ public class TextService {
             cidTidList.add(cidTid);
         }
         // 存分类
+        System.out.println(JSONUtils.stringify(cidTidList));
         try {
              cidTidDao.saveAll(cidTidList);
         }catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"分类db存储失败");
         }
         Integer tid = saveResult.getTid();
@@ -107,9 +108,9 @@ public class TextService {
     public ListResponseDTO<TextResponse> findAll(Integer page, Integer size) {
         return textDBDao.findAll(page, size);
     }
-    public ListResponseDTO<TextResponse> findSelfAll(String aid , String search ,Integer page, Integer size) {
+    public ListResponseDTO<TextResponse> findSelfAll(String uid , String search ,Integer page, Integer size) {
         System.out.println("findSelfAll");
-        return textDBDao.findSelfList(aid,search ,page, size);
+        return textDBDao.findSelfList(uid,search ,page, size);
     }
     @Transactional(rollbackFor = Exception.class)
     public Integer update(Integer id,@Validated(value = FullUpdate.class) TextRequest textRequest) throws CustomizeException {
@@ -156,27 +157,8 @@ public class TextService {
         return textElasticDao.delete(nid);
     }
 
-    public TextDBGetByIdMapper findById(Integer nid) throws CustomizeException {
-        TextDBGetByIdMapper texts = textDBDao.findByIdWithUserInfo(nid);
-//        System.out.println(texts.get("tags").toString());
-//        List<String> list = JSON.parseArray(texts.get("tags").toString(), String.class);
-//
-//        Map<String,Object> map = new HashMap<>();
-//        BeanUtils.copyProperties(texts,map);
-//        map.put("tags",list);
-//        List<String> list = JSONArray.parseArray(texts.get("tags").toString(), String.class);
-
-
-//        String sourceString = textElasticService.getById(nid.toString());
-//        TextESDTO textESDTO = JSON.parseObject(sourceString, TextESDTO.class);
-//        TextResDTO textResDTO = new TextResDTO(
-//                nid,
-//                texts.getTitle(),
-//                texts.getDescription(),
-//                texts.getText(),
-//                Arrays.asList(texts.getCategories().split(","))
-//
-//        );
+    public Texts findById(Integer nid) {
+        Texts texts = textDBDao.findById(nid);
         return texts;
     }
 }

@@ -23,6 +23,7 @@ public class Http {
     public Http(RestTemplate restTemplate){
         this.restTemplate = restTemplate;
     }
+
     public <P> P  get (String url, Object params, HttpHeaders httpHeaders, Class<P> responseType) throws CustomizeException {
         HttpEntity<String> request =  new HttpEntity<>(null, httpHeaders);
         URI uri = ObjectUtils.object2URI(url,params);

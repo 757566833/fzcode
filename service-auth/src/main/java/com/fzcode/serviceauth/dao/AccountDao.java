@@ -3,10 +3,12 @@ package com.fzcode.serviceauth.dao;
 import com.fzcode.internalcommon.dto.common.ListResponseDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.utils.CopyUtils;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.repositroy.AccountRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,11 +32,26 @@ public class AccountDao {
         this.accountRepository = accountRepository;
     }
 
-    public Accounts create(Accounts accounts) {
+    public Accounts create(Accounts accounts) throws CustomizeException {
 
+        Boolean bool =  accountRepository.existsByAccount(accounts.getAccount());
+        if(bool){
+            throw new CustomizeException(HttpStatus.BAD_REQUEST,"账号已存在");
+        }
         return accountRepository.save(accounts);
     }
-
+    public Accounts patch(String aid,Accounts accounts) throws CustomizeException {
+        Boolean bool = accountRepository.existsById(aid);
+        if(!bool){
+            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"账号不存在");
+        }
+        Accounts _accounts = accountRepository.getById(aid);
+        Accounts nextAccounts = new Accounts();
+        CopyUtils.copyProperties(_accounts,nextAccounts);
+        CopyUtils.copyProperties(accounts,nextAccounts);
+        nextAccounts.setAid(aid);
+        return accountRepository.save(nextAccounts);
+    }
     public Page<Accounts> findAll(Integer page, Integer size, String asc, String desc) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(asc).ascending().and(Sort.by(desc).descending()));
         Page<Accounts> accounts = accountRepository.findAll(pageable);
@@ -122,4 +139,5 @@ public class AccountDao {
         return bool;
 //        return accountRepository.findOne(example);
     }
+
 }

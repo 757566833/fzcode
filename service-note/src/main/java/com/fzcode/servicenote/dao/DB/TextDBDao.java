@@ -68,6 +68,7 @@ public class TextDBDao {
         Integer count = textRepository.findListCount(size,(page-1)*size).get(0).getCount();
         resDTO.setList(new ArrayList<>());
         List<TextResponse> resList = resDTO.getList();
+        // todo 这里类型不对 主要是uid
         ListUtils.copyList(list,resList, TextResponse.class);
         for (TextResponse t:resList) {
             String arrStr =hashMap.get(t.getTid());
@@ -92,16 +93,6 @@ public class TextDBDao {
         return noteResult.get();
     }
 
-    public TextDBGetByIdMapper findByIdWithUserInfo(Integer id) throws CustomizeException {
-        List<TextDBGetByIdMapper> noteDBList = textRepository.findByIdWithUserInfo(id);
-        if (noteDBList.size() == 0) {
-            throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"不存在");
-        }
-//        System.out.println(JSON.toJSONString(noteDBList.get(0)));
-        System.out.println(JSONUtils.stringify(noteDBList.get(0)));
-        return noteDBList.get(0);
-    }
-
     public Texts update(Texts texts) {
         Texts textsResult = textRepository.save(texts);
         return textsResult;
@@ -124,15 +115,15 @@ public class TextDBDao {
         Texts textsResult = textRepository.save(texts);
         return textsResult;
     }
-    public  ListResponseDTO<TextResponse> findSelfList (String aid,String search ,Integer page, Integer size){
-        Pageable pageable = PageRequest.of(page, size);
+    public  ListResponseDTO<TextResponse> findSelfList (String uid,String search ,Integer page, Integer size){
+        Pageable pageable = PageRequest.of(page-1, size);
         Page list =  textRepository.findByTitleContaining(search,pageable);
         ListResponseDTO<TextResponse> resDTO = new ListResponseDTO<>();
         resDTO.setList(list.toList());
         resDTO.setPage(page);
         resDTO.setPageSize(size);
         Texts texts = new Texts();
-        texts.setCreateBy(aid);
+        texts.setCreateBy(uid);
         Long c  = textRepository.count(Example.of(texts));
         Integer count = c != null ? c.intValue() : null;
         resDTO.setCount(count);

@@ -13,22 +13,24 @@ import java.util.List;
 
 public interface TextRepository extends JpaRepository<Texts, Integer> {
 //    List<Texts> findByIsDelete(Integer bool);
-    @Query(nativeQuery = true, value = "SELECT " +
-            "texts.create_by, " +
-            "texts.update_time, " +
-            "texts.title, " +
-            "texts.type, " +
-            "texts.text, " +
-            "users.avatar, " +
-            "users.username, " +
-            "users.github_url " +
-            "FROM " +
-            "texts " +
-            "JOIN users ON texts.create_by = users.uid " +
-            "WHERE " +
-            "texts.tid = ?1"
-    )
-    List<TextDBGetByIdMapper> findByIdWithUserInfo(Integer id);
+//    @Query(nativeQuery = true, value = "SELECT " +
+//            "texts.create_by, " +
+//            "texts.update_time, " +
+//            "texts.title, " +
+//            "texts.type, " +
+//            "texts.text, " +
+//            "users.avatar, " +
+//            "users.username, " +
+//            "users.github_url " +
+//            "FROM " +
+//            "texts " +
+//            "JOIN users ON texts.create_by = users.uid " +
+//            "WHERE " +
+//            "texts.tid = ?1"
+//    )
+//    List<TextDBGetByIdMapper> findByIdWithUserInfo(Integer id);
+
+    Texts findByTid(Integer id);
 
     @Query(nativeQuery = true, value = "SELECT " +
             "texts.tid, " +

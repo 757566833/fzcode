@@ -63,6 +63,12 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    TokenUtils tokenUtils;
+    @Autowired
+    public void setTokenUtils( TokenUtils tokenUtils){
+        this.tokenUtils = tokenUtils;
+    }
+
     public LoginResponse login(String email, String password) throws CustomizeException {
 
         Accounts userAccount = accountDao.findByAccount(email);
@@ -70,7 +76,8 @@ public class AccountService {
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"用户名密码错误");
         }
         LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(TokenUtils.createBearer(accountDao.findByAccount(email).getAid(), email));
+        Accounts account = accountDao.findByAccount(email);
+        loginResponse.setToken(this.tokenUtils.createBearer(account.getAid(),account.getUid(), email));
         loginResponse.setRole(authorityDao.findByAccount(email).getAuthority());
         return  loginResponse;
     }
@@ -120,8 +127,11 @@ public class AccountService {
             System.out.println(e.getMessage());
             throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限创建失败");
         }
+        Accounts nextAccount = new Accounts();
+        nextAccount.setUid(userResult.getUid());
+        accountDao.patch(accountsResult.getAid(),nextAccount);
         RegisterResponse registerResponse = new RegisterResponse();
-        registerResponse.setToken(TokenUtils.createBearer(aid, email));
+        registerResponse.setToken(this.tokenUtils.createBearer(aid, userResult.getUid(),email));
         registerResponse.setRole("USER");
         return registerResponse;
 
@@ -169,16 +179,20 @@ public class AccountService {
 //    }
     @Transactional(rollbackFor = Exception.class)
     public RegisterResponse githubRegister(GithubUserInfo githubUserInfo) throws CustomizeException {
-        String email = githubUserInfo.getEmail();
 
+        String email = githubUserInfo.getEmail();
+        System.out.println("githubRegister："+email);
         Accounts account = accountDao.findByAccount(email);
+
         if (account != null) {
             if (!passwordEncoder.matches(githubUserInfo.getId().toString(), account.getPassword())) {
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"你这号id怎么变了");
             } else {
+
                 RegisterResponse registerResponse = new RegisterResponse();
-                registerResponse.setToken(TokenUtils.createBearer(account.getAid(), email));
+                registerResponse.setToken(this.tokenUtils.createBearer(account.getAid(),account.getUid(), email));
                 registerResponse.setRole(authorityDao.findByAccount(email).getAuthority());
+                System.out.println(JSONUtils.stringify(registerResponse));
                 return registerResponse;
             }
         } else {
@@ -223,8 +237,11 @@ public class AccountService {
                 System.out.println(e.getMessage());
                 throw new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"权限创建失败，请重试");
             }
+            Accounts nextAccount = new Accounts();
+            nextAccount.setUid(userResult.getUid());
+            accountDao.patch(accountResult.getAid(),nextAccount);
             RegisterResponse registerResponse = new RegisterResponse();
-            registerResponse.setToken(TokenUtils.createBearer(accountResult.getAid(), email));
+            registerResponse.setToken(this.tokenUtils.createBearer(accountResult.getAid(),userResult.getUid(), email));
             registerResponse.setRole("USER");
             return registerResponse;
         }
