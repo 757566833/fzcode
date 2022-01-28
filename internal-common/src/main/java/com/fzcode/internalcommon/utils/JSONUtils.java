@@ -3,6 +3,7 @@ package com.fzcode.internalcommon.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fzcode.internalcommon.dto.common.Users;
 
 public class JSONUtils {
     private static ObjectMapper objectMapper = new ObjectMapper()
@@ -36,4 +37,5 @@ public class JSONUtils {
 
         return null;
     }
+
 }

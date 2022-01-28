@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class TextResponse implements ITexts, IUsers, ICategories {
+public class TextResponse implements ITexts, IUsers {
     private Integer tid;
     private Date createTime;
     private Date updateTime;
@@ -29,5 +29,5 @@ public class TextResponse implements ITexts, IUsers, ICategories {
     private String githubUrl;
     private String blog;
     private String aid;
-    private List<ICategories> categories;
+    private List<Integer> categories;
 }

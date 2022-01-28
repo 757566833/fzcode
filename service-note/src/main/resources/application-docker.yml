@@ -11,6 +11,14 @@ spring:
     properties:
       hibernate:
         dialect: com.fzcode.servicenote.config.Mysql
+  cloud:
+    config:
+      uri: http://192.168.31.154:30201
+      profile: docker
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
   zipkin:
     base-url: http://192.168.31.158:30411
   elasticsearch:

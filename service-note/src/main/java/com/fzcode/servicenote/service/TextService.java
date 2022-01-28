@@ -3,12 +3,17 @@ package com.fzcode.servicenote.service;
 import com.fzcode.internalcommon.crud.Create;
 import com.fzcode.internalcommon.crud.FullUpdate;
 import com.fzcode.internalcommon.crud.IncrementalUpdate;
+import com.fzcode.internalcommon.dto.common.BatchGetDTO;
 import com.fzcode.internalcommon.dto.common.ListDTO;
+import com.fzcode.internalcommon.dto.common.Users;
 import com.fzcode.internalcommon.dto.servicenote.es.TextESDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
+import com.fzcode.internalcommon.http.Http;
+import com.fzcode.internalcommon.utils.CopyUtils;
 import com.fzcode.internalcommon.utils.JSONUtils;
+import com.fzcode.servicenote.config.Services;
 import com.fzcode.servicenote.dao.DB.CategoryDBDao;
 import com.fzcode.servicenote.entity.Categories;
 import com.fzcode.servicenote.entity.CidTid;
@@ -16,6 +21,7 @@ import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
 import com.fzcode.servicenote.dao.DB.TextDBDao;
 import com.fzcode.servicenote.dao.elastic.TextElasticDao;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -57,6 +60,18 @@ public class TextService {
     @Autowired
     public void setCidTidDao(CategoryDBDao categoryDBDao) {
         this.categoryDBDao = categoryDBDao;
+    }
+
+    private Http http;
+    @Autowired
+    public void setHttp(Http http) {
+        this.http = http;
+    }
+
+    Services services;
+    @Autowired
+    public void setServices(Services services){
+        this.services = services;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -116,8 +131,7 @@ public class TextService {
         return textElasticDao.create(textESCreateDTO);
     }
 
-    // todo
-    public ListDTO<Texts> findAll(Integer page, Integer size) {
+    public ListDTO<TextResponse> findAll(Integer page, Integer size) throws CustomizeException {
         /**
          * 内容
          */
@@ -127,55 +141,62 @@ public class TextService {
         /**
          * 内容列表中提取tid
          */
+        HashSet<String> textUidSet = new HashSet<>();
         ArrayList<Integer> textTidList = new ArrayList<>();
         textList.getList().forEach((texts)->{
             textTidList.add(texts.getTid());
+            textUidSet.add(texts.getCreateBy());
         });
-        System.out.println("textTidList");
-        System.out.println(JSONUtils.stringify(textTidList));
         /**
          * 根据提取的tid查找分类
          */
         List<CidTid> cidTidList =  cidTidDao.getListByTid(textTidList);
-        System.out.println("cidTidList");
-        System.out.println(JSONUtils.stringify(cidTidList));
         /**
          * tid cid的 map
          */
-        HashMap<Integer,Integer> tidCidMap = new HashMap<>();
+        HashMap<Integer,HashSet<Integer>> tidCidMap = new HashMap<>();
         /**
          * tid去重
          */
         HashSet<Integer> textCidSet = new HashSet<>();
         cidTidList.forEach((cidTid)->{
             textCidSet.add(cidTid.getCid());
-            tidCidMap.put(cidTid.getTid(),cidTid.getCid());
+            if(tidCidMap.get(cidTid.getTid())==null){
+                HashSet set = new HashSet();
+                set.add(cidTid.getCid());
+                tidCidMap.put(cidTid.getTid(),set);
+            }else{
+                tidCidMap.get(cidTid.getTid()).add(cidTid.getCid());
+            }
         });
-        System.out.println("textCidSet");
-        System.out.println(JSONUtils.stringify(textCidSet));
-        System.out.println("tidCidMap");
-        System.out.println(JSONUtils.stringify(tidCidMap));
-        /**
-         * 去重后的cid 查询具体信息
-         */
-        List<Categories> categoriesList = categoryDBDao.getCategoriesByCidIn(textCidSet);
-        System.out.println("categoriesList");
-        System.out.println(JSONUtils.stringify(categoriesList));
-        /**
-         * cid 和category的map
-         */
-        HashMap<Integer,Categories> cidMap = new HashMap<>();
-        categoriesList.forEach((categories)->{
-            cidMap.put(categories.getCid(),categories);
-        });
-        System.out.println("cidMap");
-        System.out.println(JSONUtils.stringify(cidMap));
 
+        String[] arr = textUidSet.toArray(new String[textCidSet.size()]);
+        BatchGetDTO params = new BatchGetDTO();
+        params.setIds(StringUtils.join(arr,","));
+        Users[] userList =http.get(services.getService().getAuth().getHost()+"/user/get/list", params,Users[].class);
+        HashMap<String,Users> userMap = new HashMap();
+        for (int i = 0; i < userList.length; i++) {
+            Users user  = userList[i];
+            System.out.println(user);
+            System.out.println(JSONUtils.stringify(user));
+            System.out.println(user.getClass().getName());
+            userMap.put(user.getUid(),user);
+        }
+        ListDTO<TextResponse> listDTO = new ListDTO();
+        List<TextResponse> textResponseList = new ArrayList<>();
         textList.getList().forEach((texts)->{
-
+            TextResponse textResponse = new TextResponse();
+            CopyUtils.copyProperties(userMap.get(texts.getCreateBy()),textResponse);
+            CopyUtils.copyProperties(texts,textResponse);
+            HashSet<Integer> set = tidCidMap.get(texts.getTid());
+            textResponse.setCategories(new ArrayList<>(set));
+            textResponseList.add(textResponse);
         });
-
-        return textList;
+        listDTO.setList(textResponseList);
+        listDTO.setCount(textList.getCount());
+        listDTO.setPage(page);
+        listDTO.setPageSize(size);
+        return listDTO;
     }
     public ListDTO<TextResponse> findSelfAll(String uid , String search , Integer page, Integer size) {
         System.out.println("findSelfAll");

@@ -49,7 +49,7 @@ public class TextController {
 
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/list")
-    public ListDTO<Texts> getList(TextListRequest textListRequest) {
+    public ListDTO<TextResponse> getList(TextListRequest textListRequest) throws CustomizeException {
         return textService.findAll(textListRequest.getPage(), textListRequest.getPageSize());
     }
     @ApiOperation(value = "获取当前用户的文章列表")

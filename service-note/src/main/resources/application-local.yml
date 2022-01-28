@@ -11,6 +11,14 @@ spring:
     properties:
       hibernate:
         dialect: com.fzcode.servicenote.config.Mysql
+  cloud:
+    config:
+      uri: http://127.0.0.1:30201
+      profile: local
+      #      discovery:
+      #        enabled: true
+      #        service-id: config-service
+      label: master
   zipkin:
     enabled: false
   elasticsearch:

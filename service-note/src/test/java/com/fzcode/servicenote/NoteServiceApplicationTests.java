@@ -1,5 +1,6 @@
 package com.fzcode.servicenote;
 
+import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.service.TextService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ class NoteServiceApplicationTests {
     private TextService textService;
 
     @Test
-    void contextLoads() {
+    void contextLoads() throws CustomizeException {
         textService.findAll(1,20);
     }
 

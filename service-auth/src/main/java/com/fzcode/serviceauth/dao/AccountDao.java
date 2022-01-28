@@ -24,6 +24,7 @@ import java.util.Map;
 @Repository
 public class AccountDao {
 
+
     private AccountRepository accountRepository;
 
     @Autowired
@@ -109,7 +110,7 @@ public class AccountDao {
         System.out.println(JSONUtils.stringify(countList.get(0)));
         String count = countList.get(0).get("COUNT(1)").toString();
         ListDTO<Map<String, Object>> listListResDTO = new ListDTO<>();
-        listListResDTO.setCount(Integer.valueOf(count));
+//        listListResDTO.setCount();
         listListResDTO.setList(accounts);
         listListResDTO.setPage(accountDTO.getPage());
         listListResDTO.setPageSize(accountDTO.getPageSize());

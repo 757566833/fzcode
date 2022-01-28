@@ -74,7 +74,7 @@ public class AuthFilter implements Ordered, GlobalFilter {
             /**
              * 不一定所有的都是免登录
              */
-            if(auth!=null){
+            if(auth!=null&&!auth.equals("")){
                 TokenInfoDTO tokenInfoDTO = this.tokenUtils.parseBearer(auth);
                 String email = tokenInfoDTO.getEmail();
                 String aid = tokenInfoDTO.getAid();

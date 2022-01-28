@@ -1,8 +1,10 @@
 package com.fzcode.serviceauth.repositroy;
 
 import com.fzcode.serviceauth.entity.Users;
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<Users, String> {
@@ -15,4 +17,5 @@ public interface UserRepository extends JpaRepository<Users, String> {
 
       Users findFirstByUid(String uid);
       Users findFirstByAid(String aid);
+      List<Users> findByUidIn(Collection<String> ids);
 }
