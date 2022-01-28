@@ -1,6 +1,7 @@
 package com.fzcode.servicenote.entity;
 
 
+import com.fzcode.internalcommon.ifs.entity.ICategories;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,7 +18,7 @@ import java.util.Date;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Categories {
+public class Categories implements ICategories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cid;

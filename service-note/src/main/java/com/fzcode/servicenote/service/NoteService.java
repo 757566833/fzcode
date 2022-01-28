@@ -1,6 +1,6 @@
 package com.fzcode.servicenote.service;
 
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
 import com.fzcode.servicenote.dao.elastic.TextElasticDao;
 import com.fzcode.servicenote.entity.Note;
@@ -22,18 +22,18 @@ public class NoteService {
         this.textElasticDao = textElasticDao;
     }
 
-    public ListResponseDTO<Map<String, List<String>>> search (SearchRequest searchRequest)  {
+    public ListDTO<Map<String, List<String>>> search (SearchRequest searchRequest)  {
         SearchRequest _searchRequest = new SearchRequest();
         BeanUtils.copyProperties(searchRequest,_searchRequest);
         _searchRequest.setPageSize(10);
         SearchHits<Note> searchHits = textElasticDao.search(_searchRequest);
         List list = searchHits.stream().collect(Collectors.toList());
-        ListResponseDTO listResponseDTO = new ListResponseDTO();
-        listResponseDTO.setList(list);
-        listResponseDTO.setCount((int)searchHits.getTotalHits());
-        listResponseDTO.setPageSize(_searchRequest.getPageSize());
-        listResponseDTO.setPage(searchRequest.getPage());
+        ListDTO listDTO = new ListDTO();
+        listDTO.setList(list);
+        listDTO.setCount(searchHits.getTotalHits());
+        listDTO.setPageSize(_searchRequest.getPageSize());
+        listDTO.setPage(searchRequest.getPage());
 
-        return  listResponseDTO;
+        return listDTO;
     }
 }

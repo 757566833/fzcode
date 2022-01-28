@@ -1,6 +1,6 @@
 package com.fzcode.servicenote.controller;
 
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.note.SearchRequest;
 import com.fzcode.servicenote.service.NoteService;
 import io.swagger.annotations.Api;
@@ -24,7 +24,7 @@ public class SearchController {
     }
     @ApiOperation(value = "搜索文章")
     @GetMapping(value = "/search")
-    public ListResponseDTO<Map<String, List<String>>> search(SearchRequest searchRequest){
+    public ListDTO<Map<String, List<String>>> search(SearchRequest searchRequest){
         return  noteService.search(searchRequest);
     }
 

@@ -22,7 +22,7 @@ public class CategoryService {
     CategoryDBDao categoryDBDao;
 
     @Autowired
-    public void setColumnDBService(CategoryDBDao categoryDBDao) {
+    public void setCategoryDBDao(CategoryDBDao categoryDBDao) {
         this.categoryDBDao = categoryDBDao;
     }
 

@@ -3,12 +3,14 @@ package com.fzcode.servicenote.service;
 import com.fzcode.internalcommon.crud.Create;
 import com.fzcode.internalcommon.crud.FullUpdate;
 import com.fzcode.internalcommon.crud.IncrementalUpdate;
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.servicenote.es.TextESDTO;
 import com.fzcode.internalcommon.dto.servicenote.request.text.TextRequest;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.JSONUtils;
+import com.fzcode.servicenote.dao.DB.CategoryDBDao;
+import com.fzcode.servicenote.entity.Categories;
 import com.fzcode.servicenote.entity.CidTid;
 import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.dao.DB.CidTidDao;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -46,6 +50,13 @@ public class TextService {
     @Autowired
     public void setCidTidDao(CidTidDao cidTidDao) {
         this.cidTidDao = cidTidDao;
+    }
+
+    CategoryDBDao categoryDBDao;
+
+    @Autowired
+    public void setCidTidDao(CategoryDBDao categoryDBDao) {
+        this.categoryDBDao = categoryDBDao;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -105,10 +116,68 @@ public class TextService {
         return textElasticDao.create(textESCreateDTO);
     }
 
-    public ListResponseDTO<TextResponse> findAll(Integer page, Integer size) {
-        return textDBDao.findAll(page, size);
+    // todo
+    public ListDTO<Texts> findAll(Integer page, Integer size) {
+        /**
+         * 内容
+         */
+        ListDTO<Texts> textList = textDBDao.findByPage(page,size);
+        System.out.println("textList");
+        System.out.println(JSONUtils.stringify(textList));
+        /**
+         * 内容列表中提取tid
+         */
+        ArrayList<Integer> textTidList = new ArrayList<>();
+        textList.getList().forEach((texts)->{
+            textTidList.add(texts.getTid());
+        });
+        System.out.println("textTidList");
+        System.out.println(JSONUtils.stringify(textTidList));
+        /**
+         * 根据提取的tid查找分类
+         */
+        List<CidTid> cidTidList =  cidTidDao.getListByTid(textTidList);
+        System.out.println("cidTidList");
+        System.out.println(JSONUtils.stringify(cidTidList));
+        /**
+         * tid cid的 map
+         */
+        HashMap<Integer,Integer> tidCidMap = new HashMap<>();
+        /**
+         * tid去重
+         */
+        HashSet<Integer> textCidSet = new HashSet<>();
+        cidTidList.forEach((cidTid)->{
+            textCidSet.add(cidTid.getCid());
+            tidCidMap.put(cidTid.getTid(),cidTid.getCid());
+        });
+        System.out.println("textCidSet");
+        System.out.println(JSONUtils.stringify(textCidSet));
+        System.out.println("tidCidMap");
+        System.out.println(JSONUtils.stringify(tidCidMap));
+        /**
+         * 去重后的cid 查询具体信息
+         */
+        List<Categories> categoriesList = categoryDBDao.getCategoriesByCidIn(textCidSet);
+        System.out.println("categoriesList");
+        System.out.println(JSONUtils.stringify(categoriesList));
+        /**
+         * cid 和category的map
+         */
+        HashMap<Integer,Categories> cidMap = new HashMap<>();
+        categoriesList.forEach((categories)->{
+            cidMap.put(categories.getCid(),categories);
+        });
+        System.out.println("cidMap");
+        System.out.println(JSONUtils.stringify(cidMap));
+
+        textList.getList().forEach((texts)->{
+
+        });
+
+        return textList;
     }
-    public ListResponseDTO<TextResponse> findSelfAll(String uid , String search ,Integer page, Integer size) {
+    public ListDTO<TextResponse> findSelfAll(String uid , String search , Integer page, Integer size) {
         System.out.println("findSelfAll");
         return textDBDao.findSelfList(uid,search ,page, size);
     }

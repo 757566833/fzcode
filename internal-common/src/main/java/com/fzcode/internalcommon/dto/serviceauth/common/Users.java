@@ -1,6 +1,6 @@
 package com.fzcode.internalcommon.dto.serviceauth.common;
 
-import com.fzcode.internalcommon.dto.serviceauth.ifs.IUsers;
+import com.fzcode.internalcommon.ifs.entity.IUsers;
 import lombok.Data;
 
 import java.util.Date;

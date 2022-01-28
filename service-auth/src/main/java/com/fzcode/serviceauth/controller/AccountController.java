@@ -1,6 +1,6 @@
 package com.fzcode.serviceauth.controller;
 
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.request.LoginRequest;
@@ -13,7 +13,6 @@ import com.fzcode.internalcommon.dto.serviceauth.response.SelfResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.serviceauth.config.Github;
 import com.fzcode.serviceauth.config.Oauth;
-import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.http.GithubAuth;
 import com.fzcode.serviceauth.service.AccountService;
 import io.swagger.annotations.Api;
@@ -179,7 +178,7 @@ public class AccountController {
 
     @ApiOperation(value = "获取账号列表（必须是管理员）")
     @GetMapping(value = "/admin/account")
-    public ListResponseDTO<Map<String, Object>> getAccountList(@Validated AccountListRequest accountListRequest) {
+    public ListDTO<Map<String, Object>> getAccountList(@Validated AccountListRequest accountListRequest) {
         return accountService.findAllAccount(accountListRequest);
     }
 

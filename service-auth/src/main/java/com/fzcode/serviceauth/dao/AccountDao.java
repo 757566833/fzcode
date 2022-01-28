@@ -1,6 +1,6 @@
 package com.fzcode.serviceauth.dao;
 
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.CopyUtils;
@@ -8,7 +8,6 @@ import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.repositroy.AccountRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,7 +57,7 @@ public class AccountDao {
         return accounts;
     }
 
-    public ListResponseDTO<Map<String, Object>> findList(AccountListRequest accountDTO) {
+    public ListDTO<Map<String, Object>> findList(AccountListRequest accountDTO) {
         Integer offset = (accountDTO.getPage() - 1) * accountDTO.getPageSize();
         Integer length = accountDTO.getPageSize();
         String desc = null;
@@ -109,7 +108,7 @@ public class AccountDao {
         List<Map<String, Object>> countList = accountRepository.findListCount(accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl());
         System.out.println(JSONUtils.stringify(countList.get(0)));
         String count = countList.get(0).get("COUNT(1)").toString();
-        ListResponseDTO<Map<String, Object>> listListResDTO = new ListResponseDTO<>();
+        ListDTO<Map<String, Object>> listListResDTO = new ListDTO<>();
         listListResDTO.setCount(Integer.valueOf(count));
         listListResDTO.setList(accounts);
         listListResDTO.setPage(accountDTO.getPage());

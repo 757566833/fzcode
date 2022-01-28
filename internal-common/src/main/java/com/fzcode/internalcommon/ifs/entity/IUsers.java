@@ -1,4 +1,4 @@
-package com.fzcode.internalcommon.dto.serviceauth.ifs;
+package com.fzcode.internalcommon.ifs.entity;
 
 import java.util.Date;
 

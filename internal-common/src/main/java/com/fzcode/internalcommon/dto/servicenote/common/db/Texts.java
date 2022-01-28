@@ -1,5 +1,5 @@
 package com.fzcode.internalcommon.dto.servicenote.common.db;
-import com.fzcode.internalcommon.dto.servicenote.ifs.ITexts;
+import com.fzcode.internalcommon.ifs.entity.ITexts;
 import lombok.Data;
 import java.util.Date;
 

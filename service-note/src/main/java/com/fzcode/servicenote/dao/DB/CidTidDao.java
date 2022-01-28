@@ -5,6 +5,7 @@ import com.fzcode.servicenote.repositroy.CidTidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -34,5 +35,8 @@ public class CidTidDao {
     public List<CidTid> getByTid(Integer tid) {
         List<CidTid> list = cidTidRepository.findByTid(tid);
         return list;
+    }
+    public List<CidTid> getListByTid(Collection<Integer> ids) {
+        return cidTidRepository.findByTidIn(ids);
     }
 }

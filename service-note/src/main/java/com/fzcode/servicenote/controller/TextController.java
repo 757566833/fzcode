@@ -4,7 +4,7 @@ import com.fzcode.internalcommon.crud.Create;
 import com.fzcode.internalcommon.crud.Delete;
 import com.fzcode.internalcommon.crud.FullUpdate;
 import com.fzcode.internalcommon.crud.IncrementalUpdate;
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 
 import com.fzcode.internalcommon.dto.servicenote.request.text.SelfListRequest;
@@ -14,7 +14,6 @@ import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.service.TextService;
-import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +49,12 @@ public class TextController {
 
     @ApiOperation(value = "获取文章列表")
     @GetMapping(value = "/list")
-    public ListResponseDTO<TextResponse> getList(TextListRequest textListRequest) {
+    public ListDTO<Texts> getList(TextListRequest textListRequest) {
         return textService.findAll(textListRequest.getPage(), textListRequest.getPageSize());
     }
     @ApiOperation(value = "获取当前用户的文章列表")
     @GetMapping(value = "/self/list")
-    public ListResponseDTO<TextResponse> getSelfList(SelfListRequest selfListRequest, @RequestHeader("uid") String uid) {
+    public ListDTO<TextResponse> getSelfList(SelfListRequest selfListRequest, @RequestHeader("uid") String uid) {
         return textService.findSelfAll(uid,selfListRequest.getSearch(),selfListRequest.getPage(), selfListRequest.getPageSize());
     }
     @ApiOperation(value = "创建文章")

@@ -1,7 +1,7 @@
 package com.fzcode.serviceauth.service;
 
 import com.fzcode.internalcommon.constant.RegisterTypeEnum;
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.serviceauth.request.AccountListRequest;
 import com.fzcode.internalcommon.dto.serviceauth.response.LoginResponse;
 import com.fzcode.internalcommon.dto.serviceauth.response.RegisterResponse;
@@ -251,7 +251,7 @@ public class AccountService {
 
     }
 
-    public ListResponseDTO<Map<String, Object>> findAllAccount(AccountListRequest accountListRequest) {
+    public ListDTO<Map<String, Object>> findAllAccount(AccountListRequest accountListRequest) {
         return accountDao.findList(accountListRequest);
     }
 

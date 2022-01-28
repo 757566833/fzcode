@@ -1,7 +1,7 @@
 package com.fzcode.internalcommon.dto.apiblog.response;
 
-import com.fzcode.internalcommon.dto.serviceauth.ifs.IUsers;
-import com.fzcode.internalcommon.dto.servicenote.ifs.ITexts;
+import com.fzcode.internalcommon.ifs.entity.IUsers;
+import com.fzcode.internalcommon.ifs.entity.ITexts;
 
 import java.util.Date;
 

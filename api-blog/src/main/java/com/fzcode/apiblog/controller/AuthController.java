@@ -1,7 +1,7 @@
 package com.fzcode.apiblog.controller;
 
 import com.fzcode.apiblog.config.Services;
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.dto.serviceauth.request.*;
 import com.fzcode.internalcommon.exception.CustomizeException;
@@ -135,7 +135,7 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("email",email);
         headers.add("aid",aid);System.out.println("/admin/account");
-        ListResponseDTO resEntity =  http.get(services.getService().getAuth().getHost()+"/admin/account", accountListRequest,headers, ListResponseDTO.class);
+        ListDTO resEntity =  http.get(services.getService().getAuth().getHost()+"/admin/account", accountListRequest,headers, ListDTO.class);
         return  new SuccessResponse("查询成功",resEntity);
     }
 }

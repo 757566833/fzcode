@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,11 @@ public class CategoryDBDao {
         categories.setDeleteBy(deleteBy);
         Categories categoriesResult = categoryRepository.save(categories);
         return categoriesResult;
+    }
+
+    public List<Categories> getCategoriesByCidIn(Collection<Integer> ids) {
+        List<Categories> categoriesList = categoryRepository.findByCidIn(ids);
+        return categoriesList;
     }
     public Boolean isHas (Integer id){
         return categoryRepository.existsById(id);

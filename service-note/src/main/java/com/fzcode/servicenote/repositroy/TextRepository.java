@@ -32,26 +32,26 @@ public interface TextRepository extends JpaRepository<Texts, Integer> {
 
     Texts findByTid(Integer id);
 
-    @Query(nativeQuery = true, value = "SELECT " +
-            "texts.tid, " +
-            "texts.description, " +
-            "texts.is_delete, " +
-            "texts.title, " +
-            "texts.create_by, " +
-            "texts.update_by, " +
-            "texts.update_time, " +
-            "texts.top, " +
-            "users.uid, " +
-            "users.username " +
-            "FROM texts " +
-            "JOIN users ON texts.create_by = users.uid " +
-            "WHERE " +
-            "texts.is_delete = 0 " +
-            "ORDER BY " +
-            "update_time DESC " +
-            "LIMIT ?1 OFFSET ?2 "
-    )
-    List<TextDBFindListMapper> findList(Integer limit , Integer offset);
+//    @Query(nativeQuery = true, value = "SELECT " +
+//            "texts.tid, " +
+//            "texts.description, " +
+//            "texts.is_delete, " +
+//            "texts.title, " +
+//            "texts.create_by, " +
+//            "texts.update_by, " +
+//            "texts.update_time, " +
+//            "texts.top, " +
+//            "users.uid, " +
+//            "users.username " +
+//            "FROM texts " +
+//            "JOIN users ON texts.create_by = users.uid " +
+//            "WHERE " +
+//            "texts.is_delete = 0 " +
+//            "ORDER BY " +
+//            "update_time DESC " +
+//            "LIMIT ?1 OFFSET ?2 "
+//    )
+//    List<TextDBFindListMapper> findList(Integer limit , Integer offset);
     @Query(nativeQuery = true, value = "SELECT " +
             "COUNT(texts.tid) as count " +
             "FROM " +

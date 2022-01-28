@@ -1,5 +1,6 @@
 package com.fzcode.servicenote.entity;
 
+import com.fzcode.internalcommon.ifs.entity.INote;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Note {
+public class Note  implements INote {
 
     @Id
     private Integer id;

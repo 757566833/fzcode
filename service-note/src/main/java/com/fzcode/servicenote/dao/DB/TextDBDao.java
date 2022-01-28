@@ -1,25 +1,16 @@
 package com.fzcode.servicenote.dao.DB;
 
-import com.fzcode.internalcommon.dto.common.ListResponseDTO;
+import com.fzcode.internalcommon.dto.common.ListDTO;
 import com.fzcode.internalcommon.dto.servicenote.response.text.TextResponse;
-import com.fzcode.internalcommon.exception.CustomizeException;
-import com.fzcode.internalcommon.utils.JSONUtils;
+import com.fzcode.servicenote.repositroy.CategoryRepository;
 import com.fzcode.servicenote.repositroy.CidTidRepository;
-import com.fzcode.servicenote.repositroy.mapper.CidTidMapper;
-import com.fzcode.servicenote.repositroy.mapper.TextDBFindListMapper;
-import com.fzcode.servicenote.repositroy.mapper.TextDBGetByIdMapper;
 import com.fzcode.servicenote.entity.Texts;
 import com.fzcode.servicenote.repositroy.TextRepository;
-import com.fzcode.servicenote.utils.ListUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,52 +31,30 @@ public class TextDBDao {
         this.cidTidRepository = cidTidRepository;
     }
 
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+
     public Texts save(Texts texts) {
         Texts textsResult = textRepository.save(texts);
         return textsResult;
     }
 
-    public ListResponseDTO<TextResponse> findAll(int page, int size) {
-        ListResponseDTO<TextResponse> resDTO = new ListResponseDTO<>();
-
-        List<TextDBFindListMapper> list = textRepository.findList(size,(page-1)*size);
-        String tidString ="";
-        for (TextDBFindListMapper t:list) {
-            tidString+=t.getTid();
-            tidString+=",";
-        }
-        List<CidTidMapper> list2 = new ArrayList<>();
-        if(tidString.length()>=2){
-            tidString = tidString.substring(0,tidString.length()-2);
-            list2 = cidTidRepository.findList(tidString);
-        }
-
-
-        HashMap<Integer,String> hashMap = new HashMap<>();
-        for (CidTidMapper t:list2) {
-            hashMap.put(t.getTid(),t.getCidList());
-        }
-        Integer count = textRepository.findListCount(size,(page-1)*size).get(0).getCount();
-        resDTO.setList(new ArrayList<>());
-        List<TextResponse> resList = resDTO.getList();
-        // todo 这里类型不对 主要是uid
-        ListUtils.copyList(list,resList, TextResponse.class);
-        for (TextResponse t:resList) {
-            String arrStr =hashMap.get(t.getTid());
-            if(arrStr!=null){
-                String[] arr =  arrStr.split(",");
-                List<Integer> numArr = new ArrayList<>();
-                for (String s: arr) {
-                    numArr.add(Integer.parseInt(s));
-                }
-                t.setCategories(numArr);
-            }
-
-        }
-        resDTO.setCount(count);
-        resDTO.setPage(page);
-        resDTO.setPageSize(size);
-        return resDTO;
+    public ListDTO<Texts> findByPage(Integer page, Integer size) {
+        ListDTO<Texts> listDTO = new ListDTO<>();
+        Pageable pageable = PageRequest.of(page-1,size);
+        Page<Texts> texts = textRepository.findAll(pageable);
+        listDTO.setList(texts.toList());
+        Texts item = new Texts();
+        Long count = textRepository.count(Example.of(item));
+        listDTO.setCount(count);
+        listDTO.setPage(page);
+        listDTO.setPageSize(size);
+        return  listDTO;
     }
 
     public Texts findById(Integer id) {
@@ -115,17 +84,16 @@ public class TextDBDao {
         Texts textsResult = textRepository.save(texts);
         return textsResult;
     }
-    public  ListResponseDTO<TextResponse> findSelfList (String uid,String search ,Integer page, Integer size){
+    public ListDTO<TextResponse> findSelfList (String uid, String search , Integer page, Integer size){
         Pageable pageable = PageRequest.of(page-1, size);
         Page list =  textRepository.findByTitleContaining(search,pageable);
-        ListResponseDTO<TextResponse> resDTO = new ListResponseDTO<>();
+        ListDTO<TextResponse> resDTO = new ListDTO<>();
         resDTO.setList(list.toList());
         resDTO.setPage(page);
         resDTO.setPageSize(size);
         Texts texts = new Texts();
         texts.setCreateBy(uid);
-        Long c  = textRepository.count(Example.of(texts));
-        Integer count = c != null ? c.intValue() : null;
+        Long count  = textRepository.count(Example.of(texts));
         resDTO.setCount(count);
         return  resDTO;
     }

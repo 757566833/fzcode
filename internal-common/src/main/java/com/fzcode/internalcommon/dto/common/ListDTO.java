@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ListResponseDTO<R> {
-    private Integer count;
+public class ListDTO<R> {
+    private Long count;
     private Integer page;
     private Integer pageSize;
     private List<R> list;
