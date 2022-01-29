@@ -12,8 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class TokenUtils {
@@ -28,21 +26,18 @@ public class TokenUtils {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret.getSecret()));
     }
 
-    public  String createBearer(String aid,String uid,String username) {
+    public  String createBearer(String aid,String uid,String email) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, 3);
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("email", username);
-        header.put("aid", aid);
-        System.out.println("JwtUtils.key:" + this.key);
         String compactJws = Jwts.builder()
-                .setHeader(header)
                 .setSubject(uid)
                 .setIssuedAt(new Date())
                 .setExpiration(c.getTime())
                 .signWith(this.key, SignatureAlgorithm.HS256)
+                .claim("aid",aid)
+                .claim("uid",uid)
+                .claim("email",email)
                 .compact();
         return "bearer " + compactJws;
 
