@@ -66,28 +66,14 @@ public class AuthFilter implements Ordered, GlobalFilter {
         else if(uri.getPath().indexOf("test") > 0){
             return chain.filter(exchange);
         }
-        // 所有的文章查询，都是不需要token的
+        // todo 有一部分查询，是不需要token的
         else if(request.getMethod() == HttpMethod.GET &&(
                 uri.getPath().indexOf("/note/") >= 0||
                 uri.getPath().indexOf("/text/") >= 0||
-                uri.getPath().indexOf("/category/") >= 0)){
-            /**
-             * 不一定所有的都是免登录
-             */
-            if(auth!=null&&!auth.equals("")){
-                TokenInfoDTO tokenInfoDTO = this.tokenUtils.parseBearer(auth);
-                String email = tokenInfoDTO.getEmail();
-                String aid = tokenInfoDTO.getAid();
-                String uid = tokenInfoDTO.getUid();
-                ServerHttpRequest nextRequest = request
-                        .mutate()
-                        .header("email", email)
-                        .header("aid", aid)
-                        .header("uid", uid)
-                        .build();
-                ServerWebExchange nextExchange = exchange.mutate().request(nextRequest).build();
-                chain.filter(nextExchange);
-            }
+                uri.getPath().indexOf("/category/") >= 0)&&
+                (uri.getPath().indexOf("/self/")<0)
+        ){
+
             return chain.filter(exchange);
         }
         // admin 管理员相关的接口
