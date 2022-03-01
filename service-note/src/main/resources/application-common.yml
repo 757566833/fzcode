@@ -9,6 +9,12 @@ spring:
     name: SERVICE-NOTE
   config:
     import: "optional:configserver:"
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      ACCEPT_SINGLE_VALUE_AS_ARRAY: true
 management:
   endpoints:
     web:

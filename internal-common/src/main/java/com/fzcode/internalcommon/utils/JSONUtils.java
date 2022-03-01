@@ -7,8 +7,11 @@ import com.fzcode.internalcommon.dto.common.Users;
 
 public class JSONUtils {
     private static ObjectMapper objectMapper = new ObjectMapper()
+            // 据说是解析arraylist用的
             .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+            // 遇到未知的属性跳过
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false)
+            // 遇到空的bean不报错
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
 
     public static <T> T parse (String content, Class<T> valueType){

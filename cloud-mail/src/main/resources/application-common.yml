@@ -9,6 +9,12 @@ spring:
     name: CLOUD-MAIL
 #  config:
 #    import: "optional:configserver:"
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      ACCEPT_SINGLE_VALUE_AS_ARRAY: true
   mail:
     host: smtp.126.com
     username: fzcode@126.com

@@ -9,7 +9,12 @@ spring:
     name: SERVICE-AUTH
   config:
     import: "optional:configserver:"
-
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      ACCEPT_SINGLE_VALUE_AS_ARRAY: true
   # 文档首页点击 spring 相关 进入 spring文档
   # https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-usagenotes-spring-config.html
 management:

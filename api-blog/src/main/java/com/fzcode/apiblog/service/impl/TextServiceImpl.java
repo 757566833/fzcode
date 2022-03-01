@@ -7,6 +7,7 @@ import com.fzcode.internalcommon.dto.serviceauth.common.Users;
 import com.fzcode.internalcommon.dto.servicenote.common.db.Texts;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.http.Http;
+import com.fzcode.internalcommon.utils.CopyUtils;
 import com.fzcode.internalcommon.utils.JSONUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,9 @@ public class TextServiceImpl implements TextService {
         Users users = http.get(services.getService().getAuth().getHost()+"/user/get/"+uid, Users.class);
         System.out.println(JSONUtils.stringify(users));
         TextDetailDTO textDetailDTO = new TextDetailDTO();
-        BeanUtils.copyProperties(texts,textDetailDTO);
-        BeanUtils.copyProperties(users,textDetailDTO);
+        CopyUtils.copyProperties(texts,textDetailDTO);
+        CopyUtils.copyProperties(users,textDetailDTO);
+        System.out.println("textDetailDTO");
         System.out.println(JSONUtils.stringify(textDetailDTO));
         return textDetailDTO;
     }

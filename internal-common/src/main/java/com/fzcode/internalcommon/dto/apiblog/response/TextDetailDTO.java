@@ -2,9 +2,11 @@ package com.fzcode.internalcommon.dto.apiblog.response;
 
 import com.fzcode.internalcommon.ifs.entity.IUsers;
 import com.fzcode.internalcommon.ifs.entity.ITexts;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class TextDetailDTO implements ITexts, IUsers {
     private String uid;
     private Date updateTime;
