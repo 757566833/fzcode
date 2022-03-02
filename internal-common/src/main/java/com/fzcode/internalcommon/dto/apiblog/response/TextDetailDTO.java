@@ -17,4 +17,13 @@ public class TextDetailDTO implements ITexts, IUsers {
     private String githubUrl;
     private String blog;
     private String aid;
+    private Integer tid ;
+    private Date createTime ;
+    private String createBy ;
+    private String title ;
+    private String description ;
+    private String value ;
+    private Integer isDelete;
+    private Integer top ;
+    private Integer type ;
 }
