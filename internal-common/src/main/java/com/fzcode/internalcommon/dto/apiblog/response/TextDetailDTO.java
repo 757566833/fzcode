@@ -23,6 +23,7 @@ public class TextDetailDTO implements ITexts, IUsers {
     private String title ;
     private String description ;
     private String value ;
+    private String content ;
     private Integer isDelete;
     private Integer top ;
     private Integer type ;

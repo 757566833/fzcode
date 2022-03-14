@@ -12,6 +12,7 @@ public interface ITexts {
       String title = null;
       String description = null;
       String value = null;
+      String content = null;
       Integer isDelete = 0;
       Integer top = 0;
       Integer type = null;

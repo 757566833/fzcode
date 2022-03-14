@@ -18,6 +18,7 @@ public class TextResponse implements ITexts, IUsers {
     private String title;
     private String description;
     private String value;
+    private String content;
     private Integer isDelete = 0;
     private Integer top = 0;
     private Integer type;

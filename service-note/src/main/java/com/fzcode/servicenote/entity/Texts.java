@@ -44,6 +44,9 @@ public class Texts implements ITexts {
     @Column(name = "value", columnDefinition="varchar(2048) COMMENT 'value'")
     private String value;
 
+    @Column(name = "content", columnDefinition="varchar(2048) COMMENT 'content'")
+    private String content;
+
     @Column(name = "is_delete")
     private Integer isDelete = 0;
 
