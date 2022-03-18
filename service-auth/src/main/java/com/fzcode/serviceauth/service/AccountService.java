@@ -251,7 +251,7 @@ public class AccountService {
 
     }
 
-    public ListDTO<Map<String, Object>> findAllAccount(AccountListRequest accountListRequest) {
+    public ListDTO<Accounts> findAllAccount(AccountListRequest accountListRequest) {
         return accountDao.findList(accountListRequest);
     }
 

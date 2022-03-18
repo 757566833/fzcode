@@ -8,7 +8,9 @@ import com.fzcode.internalcommon.utils.JSONUtils;
 import com.fzcode.serviceauth.entity.Accounts;
 import com.fzcode.serviceauth.entity.Users;
 import com.fzcode.serviceauth.repositroy.AccountRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +60,7 @@ public class AccountDao {
         return accounts;
     }
 
-    public ListDTO<Map<String, Object>> findList(AccountListRequest accountDTO) {
+    public ListDTO<Accounts> findList(AccountListRequest accountDTO) {
         Integer offset = (accountDTO.getPage() - 1) * accountDTO.getPageSize();
         Integer length = accountDTO.getPageSize();
         String desc = null;
@@ -105,12 +107,19 @@ public class AccountDao {
                 asc = "users." + accountDTO.getAsc();
             }
         }
-        List<Map<String, Object>> accounts = accountRepository.findList(offset, length, accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl(), desc, asc);
+//        Example<S> example, Sort sort
+//        Sort sort = Sort.by(Sort.Direction.ASC,accountDTO.getAsc());
+//        accountRepository.findAll(Example.of(accountDTO),sort);
+        Accounts params = new Accounts();
+        BeanUtils.copyProperties(accountDTO,params);
+        Example<Accounts> example =  Example.of(params);
+
+        List<Accounts> accounts = accountRepository.findAll(example);
+        Long count = accountRepository.count(example);
         List<Map<String, Object>> countList = accountRepository.findListCount(accountDTO.getUsername(), accountDTO.getAccount(), accountDTO.getGithubUrl());
-        System.out.println(JSONUtils.stringify(countList.get(0)));
-        String count = countList.get(0).get("COUNT(1)").toString();
-        ListDTO<Map<String, Object>> listListResDTO = new ListDTO<>();
-//        listListResDTO.setCount();
+
+        ListDTO<Accounts> listListResDTO = new ListDTO<>();
+        listListResDTO.setCount(count);
         listListResDTO.setList(accounts);
         listListResDTO.setPage(accountDTO.getPage());
         listListResDTO.setPageSize(accountDTO.getPageSize());

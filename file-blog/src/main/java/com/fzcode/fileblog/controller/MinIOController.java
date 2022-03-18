@@ -1,6 +1,8 @@
 package com.fzcode.fileblog.controller;
 
 import com.fzcode.fileblog.config.Minio;
+import com.fzcode.internalcommon.dto.fileblog.response.UrlResponse;
+import com.fzcode.internalcommon.dto.http.SuccessResponse;
 import com.fzcode.internalcommon.exception.CustomizeException;
 import com.fzcode.internalcommon.utils.FileUtils;
 import io.minio.BucketExistsArgs;
@@ -83,7 +85,7 @@ public class MinIOController {
     }
     @ApiOperation(value = "上传接口")
     @PostMapping(value = "/test/upload")
-    public String upload(@RequestParam("file") MultipartFile file) throws CustomizeException {
+    public SuccessResponse upload(@RequestParam("file") MultipartFile file) throws CustomizeException {
         String name = file.getOriginalFilename();
         String suffix =  FileUtils.getFileSuffix(name);
         String type = file.getContentType();
@@ -142,7 +144,7 @@ public class MinIOController {
         }catch (Exception e){
             throw  new CustomizeException(HttpStatus.INTERNAL_SERVER_ERROR,"设置类型异常");
         }
-        return "/file/blog/io/test/"+filename;
+        return new SuccessResponse("上传成功",new UrlResponse("/file/blog/io/test/"+filename));
     }
 
     @ApiOperation(value = "获取接口")
